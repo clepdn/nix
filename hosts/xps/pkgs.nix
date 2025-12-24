@@ -24,4 +24,4 @@ with pkgs; [
 	hyfetch
 	fastfetch
 	gnome-font-viewer
-];
+]

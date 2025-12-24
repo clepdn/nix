@@ -182,6 +182,22 @@
 
   services.flatpak.enable = true;
 
+  hardware.bluetooth = {
+	enable = true;
+	powerOnBoot = true;
+	settings = {
+		General = {
+			# Show battery charge of connected devices.
+			Experimental = true;
+			# Faster connections. Uses more power.
+			FastConnectable = false;
+		};
+		Policy = {
+			AutoEnable = true;
+		};
+	};
+  };
+
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
