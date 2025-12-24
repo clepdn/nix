@@ -129,6 +129,8 @@
 
   # Programs
 
+  environment.systemPackages = with pkgs; import ./pkgs.nix { inherit pkgs; };
+
   programs.firefox.enable     	 = true;
   programs.neovim.enable      	 = true;
   programs.git.enable         	 = true;
@@ -137,31 +139,6 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-	vim 
-	wget
-	kitty
-	mpv
-	wl-clipboard
-	file
-	vesktop
-	vicinae
-	findutils
-	mlocate
-	kdePackages.kwalletmanager
-	sbctl # secure boot
-	powertop
-	mesa-demos # glxinfo, glxgears
-	vulkan-tools
-	pciutils
-	nix-index # nix-locate
-	btop
-	gnome-software
-	rofimoji
-	fuzzel
-	hyfetch
-	fastfetch
-  ];
 
   fonts.packages = with pkgs; [
 	noto-fonts-cjk-sans
