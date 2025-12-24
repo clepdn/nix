@@ -8,13 +8,6 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      /*(
-      	let revision = "100b4e000032b865563a9754e5bca189bc544764"; in
-	builtins.fetchTarball {
-		url = "https://github.com/Jovian-Experiments/Jovian-NixOS/archive/${revision}.tar.gz";
-		sha256 = "sha256:1jma1ij8h04ac3jg9sm9bash307rih4c9fsismlkric3rq5q50rq";
-	} + "/modules"
-       )*/
     ];
 
   jovian.steam.enable         = true;
