@@ -149,6 +149,7 @@
 	};
   };
   services.tailscale.enable = true; 
+  services.avahi.nssmdns4.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

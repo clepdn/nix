@@ -157,20 +157,24 @@
 
   # List services that you want to enable:
 
-  services.openssh = {
-	enable = true;
-	settings = {
-	PasswordAuthentication = false;
-		KbdInteractiveAuthentication = false;
-		PermitRootLogin = "no";
-	};
-  };
   services.logind = {
   	settings.Login = {
 		HandleLidSwitch = "suspend";
 	};
   };
+
+  services.openssh = {
+	enable = true;
+	settings = {
+	PasswordAuthentication = false;
+		KbdInteractiveAuthentication = false;
+		PermitRootLogin = "no"; # Maybe prohibit-password for nix build. dunno. not gonna be building shit on my laptop.
+	};
+  };
+
+  # services.avahi.nssmdns4.enable = true; # I don't particularly need this to be enabled on my (portable) laptop.
   services.tailscale.enable = true;
+  services.resolved.enable = true;
   networking.networkmanager.enable = true;
 
   services.fprintd.enable  = true;
@@ -197,6 +201,8 @@
 		};
 	};
   };
+
+  virtualisation.waydroid.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
