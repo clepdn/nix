@@ -25,4 +25,5 @@ with pkgs; [
 	fastfetch
 	gnome-font-viewer
 	prismlauncher
+	krita
 ]
