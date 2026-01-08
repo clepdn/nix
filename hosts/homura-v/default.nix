@@ -80,6 +80,7 @@
      vim
      wget
      git
+     parted
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -96,12 +97,12 @@
 	settings = {
 	PasswordAuthentication = false;
 		KbdInteractiveAuthentication = false;
-		PermitRootLogin = "no";
+		PermitRootLogin = "prohibit-password";
 	};
   };
 
   services.tailscale.enable = true;
-  services.avahi.nssmdns4.enable = true
+  services.avahi.nssmdns4.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
