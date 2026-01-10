@@ -26,4 +26,5 @@ with pkgs; [
 	gnome-font-viewer
 	prismlauncher
 	krita
+	mosh
 ]

@@ -10,6 +10,14 @@
       ./hardware-configuration.nix
     ];
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  fileSystems."/mnt/hdd" = {
+	device = "/dev/disk/by-uuid/eafaf86c-1442-4512-91d2-28c63f79547b";
+	fsType = "btrfs";
+	options = [ "compress=zstd" ];
+  };
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -68,8 +76,6 @@
     ];
   };
 
-  # Packages
-
   programs.firefox.enable = true;
   programs.neovim.enable  = true;
   programs.fish.enable    = true;
@@ -81,6 +87,9 @@
      wget
      git
      parted
+     btrfs-progs
+     rclone
+     mosh
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -101,8 +110,49 @@
 	};
   };
 
+  # rclone
+  
+  /*
+  users.users.rclone-s3 = {
+	isSystemUser = true;
+	group = "s3";
+	description = "rclone S3 bucket service user.";
+  };
+
+  systemd.services.rclone-s3 = {
+	description = "rclone S3 host";
+	after = [ "network.target" ];
+	wantedBy = [ "multi-user.target" ];
+
+	serviceConfig = {
+		Type = "simple";
+		User = "rclone-s3";
+		ExecStart = "${pkgs.rclone}/bin/rclone serve s3 /mnt/hdd/s3 --addr :9000";
+		Restart = "always";
+
+		NoNewPrivileges = true;
+		PrivateTmp = true;
+		ProtectSystem = "strict";
+		ProtectHome = true;
+		ReadWritePaths = [ "/mnt/hdd/s3" ];
+	};
+  };
+  */
+
+  /*services.minio = {
+	enable = true;
+	dataDir = [ "/mnt/hdd/s3" ];
+	rootCredentialsFile = "";
+  };*/
+
+  systemd.tmpfiles.rules = [
+	"d /mnt/hdd/s3 0750 minio minio -"
+  ];
+
   services.tailscale.enable = true;
   services.avahi.nssmdns4.enable = true;
+
+  services.qbittorrent.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

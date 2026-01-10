@@ -22,6 +22,10 @@
 		      url = "github:samuelngs/apple-emoji-linux";
 		      inputs.nixpkgs.follows = "nixpkgs";  
 		};
+		agenix = {
+			url = "github:ryantm/agenix";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
 	outputs = 
@@ -31,6 +35,7 @@
 	  lanzaboote,
 	  apple-color-emoji,
 	  jovian,
+	  agenix,
 	  ... 
 	} @ inputs: {
 		nixosConfigurations.deck = nixpkgs.lib.nixosSystem {
@@ -53,6 +58,7 @@
 			specialArgs = { inherit inputs; };
 			modules = [
 				./hosts/homura-v
+				agenix.nixosModules.default
 			];
 		};
 	};
