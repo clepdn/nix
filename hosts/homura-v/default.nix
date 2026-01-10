@@ -139,11 +139,18 @@
   };
   */
 
-  /*services.minio = {
+  age.secrets.minio = {
+	file = ../../secrets/minio.age;
+	owner = "minio";
+	group = "minio";
+	mode = "400";
+  };
+
+  services.minio = {
 	enable = true;
 	dataDir = [ "/mnt/hdd/s3" ];
-	rootCredentialsFile = "";
-  };*/
+	rootCredentialsFile = config.age.secrets.minio.path;
+  };
 
   systemd.tmpfiles.rules = [
 	"d /mnt/hdd/s3 0750 minio minio -"
