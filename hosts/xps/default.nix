@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, system, ... }:
 
 {
   imports =
@@ -129,7 +129,11 @@
 
   # Programs
 
-  environment.systemPackages = with pkgs; import ./pkgs.nix { inherit pkgs; };
+  environment.systemPackages = with pkgs;
+  	import ./pkgs.nix { inherit pkgs; }
+	++ [ inputs.agenix.packages.${pkgs.system}.default ];
+  	/*(with pkgs; import ./pkgs.nix { inherit pkgs; })
+  	++ [ inputs.agenix.packages.${system}.default ];*/
 
   programs.firefox.enable     	 = true;
   programs.neovim.enable      	 = true;

@@ -26,10 +26,12 @@
 			url = "github:ryantm/agenix";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		flake-utils.url = "github:numtide/flake-utils";
 	};
 
-	outputs = 
-	{ self, 
+	outputs =
+	inputs @ { self, nixpkgs, flake-utils, ... }:
+	/*{ self, 
 	  nixpkgs, 
 	  zen-browser, 
 	  lanzaboote,
@@ -37,12 +39,14 @@
 	  jovian,
 	  agenix,
 	  ... 
-	} @ inputs: {
+	} @ inputs: 
+	*/
+	{
 		nixosConfigurations.deck = nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
 			modules = [
 				./hosts/deck
-				jovian.nixosModules.jovian
+				inputs.jovian.nixosModules.jovian
 			];
 		};
 		nixosConfigurations.xps = nixpkgs.lib.nixosSystem {
@@ -50,7 +54,8 @@
 			specialArgs = { inherit inputs; };
 			modules = [
 				./hosts/xps
-				lanzaboote.nixosModules.lanzaboote
+				inputs.lanzaboote.nixosModules.lanzaboote
+				inputs.agenix.nixosModules.default
 			];
 		};
 		nixosConfigurations.homura-v = nixpkgs.lib.nixosSystem {
@@ -58,12 +63,7 @@
 			specialArgs = { inherit inputs; };
 			modules = [
 				./hosts/homura-v
-				agenix.nixosModules.default
-			];
-		};
-		devShells.aarch64-linux.default = pkgs.mkShell {
-			packages = [
-				agenix.packages.aarch64-linux.default
+				inputs.agenix.nixosModules.default
 			];
 		};
 	};
