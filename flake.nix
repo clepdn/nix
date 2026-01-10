@@ -61,5 +61,10 @@
 				agenix.nixosModules.default
 			];
 		};
+		devShells.aarch64-linux.default = pkgs.mkShell {
+			packages = [
+				agenix.packages.aarch64-linux.default
+			];
+		};
 	};
 }
