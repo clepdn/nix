@@ -90,6 +90,7 @@
      btrfs-progs
      rclone
      mosh
+     fio
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

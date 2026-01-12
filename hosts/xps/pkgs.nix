@@ -27,4 +27,5 @@ with pkgs; [
 	prismlauncher
 	krita
 	mosh
+	minio-client
 ]
