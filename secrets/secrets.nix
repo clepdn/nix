@@ -20,5 +20,6 @@ let hosts = [
 	keys = systemKeys ++ userKeys;
 	in {
 		"minio.age".publicKeys = keys;
+		"tailscale.age".publicKeys = keys;
 	}
 

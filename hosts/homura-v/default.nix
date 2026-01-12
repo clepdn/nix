@@ -76,12 +76,6 @@
     ];
   };
 
-  systemd.user.services.tailscale-u = {
-	ExecStart = "${pkgs.tailscale}/bin/tailscaled --tun=userspace-networking --login-server=https://vpn.gaze.systems --auth-key ${secret}";
-	Restart = "on-failure";
-	RestartSec = "5s";
-  }
-
   programs.firefox.enable = true;
   programs.neovim.enable  = true;
   programs.fish.enable    = true;
@@ -162,6 +156,33 @@
   systemd.tmpfiles.rules = [
 	"d /mnt/hdd/s3 0750 minio minio -"
   ];
+  
+  age.secrets.tail = {
+	file = ../../secrets/tailscale.age;
+	owner = "tscl-minio";
+	group = "tscl-minio";
+	mode = "400";
+  };
+
+  users.users.tscl-minio = {
+	isSystemUser = true;
+	group = "tscl-minio";
+	description = "Tailscale user networking service user";
+	createHome = false;
+  };
+  users.groups.tscl-minio = {};
+
+  systemd.services.tailscale-u = {
+  	enable = true;
+	serviceConfig = {
+		Type = "simple";
+		ExecStart = "${pkgs.tailscale}/bin/tailscaled --tun=userspace-networking --login-server=https://vpn.gaze.systems --auth-key=file:${config.age.secrets.tail.path}";
+		Restart = "on-failure";
+		RestartSec = "5s";
+		User = "tscl-minio";
+		Group = "tscl-mino";
+	};
+  };
 
   services.tailscale.enable = true;
   services.avahi.nssmdns4.enable = true;

@@ -31,16 +31,7 @@
 
 	outputs =
 	inputs @ { self, nixpkgs, flake-utils, ... }:
-	/*{ self, 
-	  nixpkgs, 
-	  zen-browser, 
-	  lanzaboote,
-	  apple-color-emoji,
-	  jovian,
-	  agenix,
-	  ... 
-	} @ inputs: 
-	*/
+	
 	{
 		nixosConfigurations.deck = nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
@@ -66,5 +57,15 @@
 				inputs.agenix.nixosModules.default
 			];
 		};
-	};
+	}
+
+	// flake-utils.lib.eachDefaultSystem(system: let 
+		pkgs = import nixpkgs { inherit system; };
+	in {
+		devShells.default = pkgs.mkShell {
+			packages = with pkgs; [
+				inputs.agenix.packages.${system}.default
+			];
+		};
+	});
 }
