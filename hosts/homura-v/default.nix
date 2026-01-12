@@ -76,6 +76,12 @@
     ];
   };
 
+  systemd.user.services.tailscale-u = {
+	ExecStart = "${pkgs.tailscale}/bin/tailscaled --tun=userspace-networking --login-server=https://vpn.gaze.systems --auth-key ${secret}";
+	Restart = "on-failure";
+	RestartSec = "5s";
+  }
+
   programs.firefox.enable = true;
   programs.neovim.enable  = true;
   programs.fish.enable    = true;
