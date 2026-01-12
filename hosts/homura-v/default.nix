@@ -171,16 +171,27 @@
 	createHome = false;
   };
   users.groups.tscl-minio = {};
-
-  systemd.services.tailscale-u = {
+  
+  systemd.services.tscl-minio = {
   	enable = true;
+	after = [ "network.target" ];
+	wants = [ "network.target" ];
+	wantedBy = [ "multi-user.target" ];
 	serviceConfig = {
 		Type = "simple";
-		ExecStart = "${pkgs.tailscale}/bin/tailscaled --tun=userspace-networking --login-server=https://vpn.gaze.systems --auth-key=file:${config.age.secrets.tail.path}";
+		ExecStart = "${pkgs.tailscale}/bin/tailscaled --tun=userspace-networking --socket /run/tscl-minio/tailscaled-minio.sock";
+		ExecStartPost = "${pkgs.tailscale}/bin/tailscale --socket /run/tscl-minio/tailscaled-minio.sock up --login-server=https://vpn.gaze.systems --auth-key=file:${config.age.secrets.tail.path}";
 		Restart = "on-failure";
 		RestartSec = "5s";
 		User = "tscl-minio";
-		Group = "tscl-mino";
+		Group = "tscl-minio";
+
+		RuntimeDirectory = "tscl-minio";
+		RuntimeDirectoryMode = "0755";
+		StateDirectory = "tscl-minio";
+		StateDirectoryMode = "0755";
+		CacheDirectory = "tscl-minio";
+		CacheDirectoryMode = "0755";
 	};
   };
 
