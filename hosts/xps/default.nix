@@ -18,7 +18,10 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.systemd.enable = true;
   boot.kernelModules = [ "bbswitch" ];
-  boot.blacklistedKernelModules = [ "nouveau" ];
+  boot.blacklistedKernelModules = [ 
+  	"nouveau"
+	"nvidia"
+  ];
   boot.kernelParams = [ "resume_offset=13154304" "kernel.nmi_watchdog=0" ];
   boot.resumeDevice = "/dev/disk/by-uuid/ecd7de27-4f77-43e6-b739-6a1152933f98";
 
@@ -38,7 +41,11 @@
 	pkiBundle = "/var/lib/sbctl";
   };
 
-  boot.extraModulePackages = [ config.boot.kernelPackages.bbswitch ];
+  boot.extraModulePackages = [ 
+  	config.boot.kernelPackages.bbswitch
+	config.boot.kernelPackages.xpadneo
+	config.boot.kernelPackages.nvidiaPackages.stable
+  ];
 
   swapDevices = [{
   	device = "/var/lib/swapfile";
@@ -114,7 +121,7 @@
   users.users.callie = {
     isNormalUser = true;
     description = "Callie";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "input" "video" ];
     shell = pkgs.fish;
     packages = with pkgs; [
       kdePackages.kate

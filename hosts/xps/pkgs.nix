@@ -28,4 +28,5 @@ with pkgs; [
 	krita
 	mosh
 	minio-client
+	linuxPackages.nvidia_x11
 ]
