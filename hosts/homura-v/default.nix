@@ -193,7 +193,52 @@
   services.tailscale.enable = true;
   services.avahi.nssmdns4.enable = true;
 
-  services.qbittorrent.enable = true;
+  age.secrets.wg-key = {
+	file = ../../secrets/muliphein.age;
+	mode = "400";
+	owner = "systemd-network";
+  };
+  age.secrets.wg-pskey = {
+	file = ../../secrets/muliphein-pskey.age;
+	mode = "400";
+	owner = "systemd-network";
+  };
+
+  containers.qbittorrent = {
+	autoStart = true;
+	privateNetwork = true;
+	hostAddress = "192.168.100.10";
+	localAddress = "192.168.100.11";
+
+	config = { config, pkgs, ... }: {
+		networking.wireguard.interfaces.wg0 = {
+			ips = [ "10.147.64.105/32" "fd7d:76ee:e68f:a993:7674:a0a7:95c0:b24e/128" ];
+			privateKeyFile = "/run/agenix/wireguard-privatekey";
+			mtu = 1320;
+			peers = [
+				{
+					publicKey = "pylcxaqt8kkm4t+dusoqfn+ub3pgxfglxkiapuig+hk=";
+					presharedKeyFile = "/run/agenix/wireguard-presharedkey";
+					endpoint = "198.44.136.238:1637";
+					allowedIPs = [ "0.0.0.0/0" "::/0" ];
+				}
+			];
+			
+		};
+
+		networking.nameservers = [
+			"10.128.0.1"
+			"fd7d:76ee:e68f:a993::1"
+		];
+	};
+
+	bindMounts."/run/agenix/wireguard-privatekey" = {
+		hostPath = config.age.secrets.wg-key.path;
+	};
+	bindMounts."/run/agenix/wireguard-presharedkey" = {
+		hostPath = config.age.secrets.wg-pskey.path;
+	};
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

@@ -21,5 +21,7 @@ let hosts = [
 	in {
 		"minio.age".publicKeys = keys;
 		"tailscale.age".publicKeys = keys;
+		"muliphein.age".publicKeys = keys;
+		"muliphein-pskey.age".publicKeys = keys;
 	}
 
