@@ -211,25 +211,40 @@
 	localAddress = "192.168.100.11";
 
 	config = { config, pkgs, ... }: {
-		networking.wireguard.interfaces.wg0 = {
-			ips = [ "10.147.64.105/32" "fd7d:76ee:e68f:a993:7674:a0a7:95c0:b24e/128" ];
-			privateKeyFile = "/run/agenix/wireguard-privatekey";
-			mtu = 1320;
-			peers = [
-				{
-					publicKey = "pylcxaqt8kkm4t+dusoqfn+ub3pgxfglxkiapuig+hk=";
-					presharedKeyFile = "/run/agenix/wireguard-presharedkey";
-					endpoint = "198.44.136.238:1637";
-					allowedIPs = [ "0.0.0.0/0" "::/0" ];
-				}
+		networking = {
+			wireguard.interfaces.wg0 = {
+				ips = [ "10.147.64.105/32" "fd7d:76ee:e68f:a993:7674:a0a7:95c0:b24e/128" ];
+				privateKeyFile = "/run/agenix/wireguard-privatekey";
+				mtu = 1320;
+				peers = [
+					{
+						publicKey = "pylcxaqt8kkm4t+dusoqfn+ub3pgxfglxkiapuig+hk=";
+						presharedKeyFile = "/run/agenix/wireguard-presharedkey";
+						endpoint = "198.44.136.238:1637";
+						allowedIPs = [ "0.0.0.0/0" "::/0" ];
+					}
+				];
+				
+			};
+
+			nameservers = [
+				"10.128.0.1"
+				"fd7d:76ee:e68f:a993::1"
 			];
-			
+			useHostResolvConf = false;
+			firewall.enable = false;
 		};
 
-		networking.nameservers = [
-			"10.128.0.1"
-			"fd7d:76ee:e68f:a993::1"
-		];
+		services.resolved.enable = true;
+
+		services.qbittorrent = {
+			enable = true;
+			openFirewall = true;
+			serverConfig = {
+				WebUI.Address = "0.0.0.0";
+				WebUI.Port = 8080;
+			};
+		};
 	};
 
 	bindMounts."/run/agenix/wireguard-privatekey" = {
@@ -240,11 +255,38 @@
 	};
   };
 
+  systemd.services.qbit-fw = { # Stupid fucking socat port forward. I can't get NAT to work :(
+	description = "Port forward to qbittorrent webui";
+	after = [ "network.target" "container@qbittorrent.service" ];
+	wantedBy = [ "multi-user.target" ];
+
+	serviceConfig = {
+		ExecStart = "${pkgs.socat}/bin/socat TCP-LISTEN:8080,fork,reuseaddr TCP:192.168.100.11:8080";
+		Restart = "always";
+	};
+  };
+
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [
+  	8080 # qbittorrent container
+  ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  #networking.firewall.enable = false;
+
+  /*networking.nat = {
+	enable = true;
+	internalInterfaces = ["ve-qbittorrent"];
+	externalInterface = "eth0";
+	forwardPorts = [
+		{
+			destination = "192.168.100.11:8080";
+			sourcePort = 8080;
+		}
+	];
+  };*/
+
+  networking.nat.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
