@@ -5,5 +5,7 @@ pkgs.buildEnv {
   paths = with pkgs; [
   	nixos-rebuild
 	vicinae
+	lemonade
+	opencode
   ];
 }
