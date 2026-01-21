@@ -29,4 +29,7 @@ with pkgs; [
 	mosh
 	minio-client
 	linuxPackages.nvidia_x11
+	gcc
+	clang
+	gdb
 ]
