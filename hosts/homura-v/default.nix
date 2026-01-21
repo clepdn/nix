@@ -90,7 +90,8 @@
      btrfs-progs
      rclone
      mosh
-     fio
+     lemonade 
+     kitty
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -211,6 +212,7 @@
 	localAddress = "192.168.100.11";
 
 	config = { config, pkgs, ... }: {
+		
 		networking = {
 			wireguard.interfaces.wg0 = {
 				ips = [ "10.147.64.105/32" "fd7d:76ee:e68f:a993:7674:a0a7:95c0:b24e/128" ];
@@ -221,28 +223,34 @@
 						publicKey = "pylcxaqt8kkm4t+dusoqfn+ub3pgxfglxkiapuig+hk=";
 						presharedKeyFile = "/run/agenix/wireguard-presharedkey";
 						endpoint = "198.44.136.238:1637";
-						allowedIPs = [ "0.0.0.0/0" "::/0" ];
+						allowedIPs = [ "10.147.64.0/24" ];
 					}
 				];
 				
 			};
-
+			/*
 			nameservers = [
 				"10.128.0.1"
 				"fd7d:76ee:e68f:a993::1"
-			];
-			useHostResolvConf = false;
+			];]
+			*/
+			useHostResolvConf = true;
 			firewall.enable = false;
 		};
 
-		services.resolved.enable = true;
-
+		#services.resolved.enable = true;
+		
 		services.qbittorrent = {
 			enable = true;
 			openFirewall = true;
 			serverConfig = {
-				WebUI.Address = "0.0.0.0";
-				WebUI.Port = 8080;
+				#WebUI.Address = "0.0.0.0";
+				#WebUI.Port = 8080;
+				Preferences.WebUI.Password_PBKDF2 = "@ByteArray(L2lxLViRgfULqaqyyrJFlg==:7Cd75WXRgMEx2328yhpApfk28+ZtzF6I1CcHKyDK6WfX+0KjM1D5bL+5Juzc1rqyxfHucnNo6I7g/SoFZzT+Fw==)";
+
+				BitTorrent.Session.Interface = "wg0";
+				BitTorrent.Session.InterfaceName= "wg0";
+				BitTorrent.Session.Port = 29955;
 			};
 		};
 	};
@@ -255,7 +263,7 @@
 	};
   };
 
-  systemd.services.qbit-fw = { # Stupid fucking socat port forward. I can't get NAT to work :(
+  /*systemd.services.qbit-fw = { # Stupid fucking socat port forward. I can't get NAT to work :(
 	description = "Port forward to qbittorrent webui";
 	after = [ "network.target" "container@qbittorrent.service" ];
 	wantedBy = [ "multi-user.target" ];
@@ -264,7 +272,7 @@
 		ExecStart = "${pkgs.socat}/bin/socat TCP-LISTEN:8080,fork,reuseaddr TCP:192.168.100.11:8080";
 		Restart = "always";
 	};
-  };
+  };*/
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [
@@ -274,7 +282,7 @@
   # Or disable the firewall altogether.
   #networking.firewall.enable = false;
 
-  /*networking.nat = {
+  networking.nat = {
 	enable = true;
 	internalInterfaces = ["ve-qbittorrent"];
 	externalInterface = "eth0";
@@ -284,9 +292,8 @@
 			sourcePort = 8080;
 		}
 	];
-  };*/
+  };
 
-  networking.nat.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
