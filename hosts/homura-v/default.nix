@@ -90,8 +90,9 @@
      btrfs-progs
      rclone
      mosh
-     lemonade 
+     #lemonade 
      kitty
+     opencode
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -208,8 +209,8 @@
   containers.qbittorrent = {
 	autoStart = true;
 	privateNetwork = true;
-	hostAddress = "192.168.100.10";
-	localAddress = "192.168.100.11";
+	hostAddress = "192.168.100.11";
+	localAddress = "192.168.100.10";
 
 	config = { config, pkgs, ... }: {
 		
@@ -223,18 +224,19 @@
 						publicKey = "pylcxaqt8kkm4t+dusoqfn+ub3pgxfglxkiapuig+hk=";
 						presharedKeyFile = "/run/agenix/wireguard-presharedkey";
 						endpoint = "198.44.136.238:1637";
-						allowedIPs = [ "10.147.64.0/24" ];
+						allowedIPs = [ "0.0.0.0/0" "::/0" ];
 					}
 				];
-				
+				postSetup = ''
+				  ip route add 198.44.136.238 via 192.168.100.11 dev eth0
+				'';
 			};
-			/*
+
 			nameservers = [
 				"10.128.0.1"
 				"fd7d:76ee:e68f:a993::1"
-			];]
-			*/
-			useHostResolvConf = true;
+			];
+			
 			firewall.enable = false;
 		};
 
@@ -253,6 +255,10 @@
 				BitTorrent.Session.Port = 29955;
 			};
 		};
+
+		environment.systemPackages = with pkgs; [
+			traceroute
+		];
 	};
 
 	bindMounts."/run/agenix/wireguard-privatekey" = {
