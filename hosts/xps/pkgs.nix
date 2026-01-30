@@ -37,4 +37,5 @@ with pkgs; [
 	obs-studio
 	ffmpeg-full
 	qemu_full
+	neovim-remote
 ]
