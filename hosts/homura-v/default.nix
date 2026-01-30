@@ -8,9 +8,13 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../../modules/gregtech
     ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings = {
+	experimental-features = [ "nix-command" "flakes" ];
+	trusted-users = [ "root" "callie" ];
+  };
 
   fileSystems."/mnt/hdd" = {
 	device = "/dev/disk/by-uuid/eafaf86c-1442-4512-91d2-28c63f79547b";
@@ -39,6 +43,8 @@
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
+
+  services.gregtech.enable = true;
 
   services.xserver.enable = false;
 
