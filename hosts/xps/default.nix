@@ -10,6 +10,8 @@
       ./hardware-configuration.nix
     ];
 
+  hardware.nvidia.open = true;
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   security.tpm2.enable = true;

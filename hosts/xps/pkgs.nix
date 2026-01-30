@@ -32,4 +32,9 @@ with pkgs; [
 	gcc
 	clang
 	gdb
+	openai-whisper
+	opencode
+	obs-studio
+	ffmpeg-full
+	qemu_full
 ]
