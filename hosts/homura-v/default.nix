@@ -219,23 +219,22 @@
 	localAddress = "192.168.100.10";
 
 	config = { config, pkgs, ... }: {
-		
 		networking = {
-			wireguard.interfaces.wg0 = {
-				ips = [ "10.147.64.105/32" "fd7d:76ee:e68f:a993:7674:a0a7:95c0:b24e/128" ];
+			wg-quick.interfaces.wg0 = {
+				address = [ "10.147.64.105/32" "fd7d:76ee:e68f:a993:7674:a0a7:95c0:b24e/128" ];
 				privateKeyFile = "/run/agenix/wireguard-privatekey";
 				mtu = 1320;
+				dns = [ "10.128.0.1" "fd7d:76ee:e68f:a993::1" ];
+
 				peers = [
 					{
-						publicKey = "pylcxaqt8kkm4t+dusoqfn+ub3pgxfglxkiapuig+hk=";
+						publicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
 						presharedKeyFile = "/run/agenix/wireguard-presharedkey";
 						endpoint = "198.44.136.238:1637";
 						allowedIPs = [ "0.0.0.0/0" "::/0" ];
+						persistentKeepalive = 15;
 					}
 				];
-				postSetup = ''
-				  ip route add 198.44.136.238 via 192.168.100.11 dev eth0
-				'';
 			};
 
 			nameservers = [
@@ -243,7 +242,7 @@
 				"fd7d:76ee:e68f:a993::1"
 			];
 			
-			firewall.enable = false;
+			#firewall.enable = false;
 		};
 
 		#services.resolved.enable = true;
@@ -265,6 +264,8 @@
 		environment.systemPackages = with pkgs; [
 			traceroute
 		];
+
+		system.stateVersion = "26.05";
 	};
 
 	bindMounts."/run/agenix/wireguard-privatekey" = {
@@ -300,7 +301,7 @@
 	externalInterface = "eth0";
 	forwardPorts = [
 		{
-			destination = "192.168.100.11:8080";
+			destination = "192.168.100.10:8080";
 			sourcePort = 8080;
 		}
 	];
