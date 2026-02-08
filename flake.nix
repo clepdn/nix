@@ -49,11 +49,11 @@
 				inputs.agenix.nixosModules.default
 			];
 		};
-		nixosConfigurations.homura-v = nixpkgs.lib.nixosSystem {
+		nixosConfigurations.homura = nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
 			specialArgs = { inherit inputs; };
 			modules = [
-				./hosts/homura-v
+				./hosts/homura
 				inputs.agenix.nixosModules.default
 			];
 		};

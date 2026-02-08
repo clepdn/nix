@@ -27,7 +27,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "homura-v"; # like hyperv
+  networking.hostName = "homura"; # she graduated
   networking.networkmanager.enable = true;
 
   time.timeZone = "America/New_York";
