@@ -5,12 +5,12 @@ let
 */
 	
 let hosts = [
-		#"megatron",
+		"megatron"
 		"xps"
 		"homura-v"
 	];
 	users = [
-		#"callie_megatron"
+		"callie_megatron"
 		"callie_xps"
 		"callie_homura-v"
 		# "root_homura-v", # Not what you're supposed to do?
@@ -23,5 +23,6 @@ let hosts = [
 		"tailscale.age".publicKeys = keys;
 		"muliphein.age".publicKeys = keys;
 		"muliphein-pskey.age".publicKeys = keys;
+		"gluetun.age".publicKeys = keys;
 	}
 
