@@ -10,6 +10,7 @@
       ./hardware-configuration.nix
       ../../modules/gregtech
       ./modules/qbittorrent.nix
+      ./modules/audiobookshelf.nix
     ];
 
   nix.settings = {
