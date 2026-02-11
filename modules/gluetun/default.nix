@@ -22,6 +22,12 @@ in
 			backend = "podman";
 			containers.gluetun = {
 				image = "qmcgaw/gluetun";
+				environment = {
+					SHADOWSOCKS = "on";
+					SHADOWSOCKS_LOG = "on";
+					SHADOWSOCKS_CIPHER = "chacha20-ietf-poly1305";
+					# SHADOWSOCKS_PASSWORD = down here vvv
+				};
 				environmentFiles = [
 					cfg.envPath
 				];
@@ -30,11 +36,24 @@ in
 					"--device=/dev/net/tun"
 				];
 				ports = [ 
-					"8888:8888"
-					"8388:8388"
-					"8000:8000"
+					"1080:1080" # socks
 				];
 			};
+
+			containers.socks5 = {
+				image = "serjs/go-socks5-proxy";
+				environment = {
+					REQUIRE_AUTH = "false";
+				};
+				extraOptions = [
+					"--network=container:gluetun"
+				];
+				dependsOn = [ "gluetun" ];
+			};
 		};
+
+	  	networking.firewall.allowedTCPPorts = [
+			1080
+		]; 
 	};
 }
