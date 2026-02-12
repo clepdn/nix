@@ -54,6 +54,9 @@
 	size = 32*1024;
   }];
 
+  fileSystems."/".options = [ "noatime" ];
+  fileSystems."/home".options = [ "relatime" ];
+
   powerManagement.enable = true;
 
   networking.hostName = "xps"; # Define your hostname.

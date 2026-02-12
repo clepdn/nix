@@ -38,4 +38,6 @@ with pkgs; [
 	ffmpeg-full
 	qemu_full
 	neovim-remote
+	llvmPackages_20.systemLibcxxClang
+	clang-tools
 ]
