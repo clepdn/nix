@@ -9,7 +9,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ../../modules/gregtech
-      ./modules/qbittorrent.nix
+      ./modules/gluetun.nix
       ./modules/audiobookshelf.nix
     ];
 

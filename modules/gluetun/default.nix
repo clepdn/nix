@@ -37,6 +37,8 @@ in
 				];
 				ports = [ 
 					"1080:1080" # socks
+					"8080:8080"
+					"29955:29955"
 				];
 			};
 
@@ -44,9 +46,24 @@ in
 				image = "serjs/go-socks5-proxy";
 				environment = {
 					REQUIRE_AUTH = "false";
+					TORRENTING_PORT = "29955";
+					#PUID="1000";
+					#PGID="1000";
 				};
 				extraOptions = [
 					"--network=container:gluetun"
+				];
+				dependsOn = [ "gluetun" ];
+			};
+
+			containers.qbittorrent = {
+				image = "linuxserver/qbittorrent";
+				extraOptions = [
+					"--network=container:gluetun"
+				];
+				volumes = [
+					"/var/lib/qbittorrent/config:/config"
+					"/var/lib/qbittorrent/downloads:/downloads"
 				];
 				dependsOn = [ "gluetun" ];
 			};
@@ -54,6 +71,8 @@ in
 
 	  	networking.firewall.allowedTCPPorts = [
 			1080
+			8080
+			29955
 		]; 
 	};
 }
