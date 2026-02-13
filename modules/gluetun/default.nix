@@ -10,6 +10,12 @@ in
 			type = lib.types.path;
 			description = "Path to environment file.";
 		};
+
+		port = lib.mkOption {
+			type = lib.types.int;
+			description = "Port to forward for qbittorrent";
+			default = 29955;
+		};
 	};
 
 	config = lib.mkIf cfg.enable {
@@ -23,8 +29,9 @@ in
 			containers.gluetun = {
 				image = "qmcgaw/gluetun";
 				environment = {
+					FIREWALL_VPN_INPUT_PORTS = "${toString cfg.port}";
 					SHADOWSOCKS = "on";
-					SHADOWSOCKS_LOG = "on";
+					# SHADOWSOCKS_LOG = "on";
 					SHADOWSOCKS_CIPHER = "chacha20-ietf-poly1305";
 					# SHADOWSOCKS_PASSWORD = down here vvv
 				};
@@ -38,18 +45,13 @@ in
 				ports = [ 
 					"1080:1080" # socks
 					"8080:8080"
-					"29955:29955"
+					"${toString cfg.port}:${toString cfg.port}"
+					"${toString cfg.port}:${toString cfg.port}/udp"
 				];
 			};
 
 			containers.socks5 = {
 				image = "serjs/go-socks5-proxy";
-				environment = {
-					REQUIRE_AUTH = "false";
-					TORRENTING_PORT = "29955";
-					#PUID="1000";
-					#PGID="1000";
-				};
 				extraOptions = [
 					"--network=container:gluetun"
 				];
@@ -61,18 +63,37 @@ in
 				extraOptions = [
 					"--network=container:gluetun"
 				];
+				environment = {
+					TORRENTING_PORT = toString cfg.port;
+					PUID = toString config.users.users.qbit-container.uid;
+					PGID = toString config.users.groups.users.gid;
+				};
 				volumes = [
-					"/var/lib/qbittorrent/config:/config"
-					"/var/lib/qbittorrent/downloads:/downloads"
+					"/var/lib/qbit-container/config:/config"
+					"/mnt/hdd/library:/downloads"
 				];
 				dependsOn = [ "gluetun" ];
 			};
 		};
 
+		users.users.qbit-container = {
+			isSystemUser = true;
+			group = "users";
+		};
+
 	  	networking.firewall.allowedTCPPorts = [
 			1080
 			8080
-			29955
+			cfg.port
 		]; 
+
+	  	networking.firewall.allowedUDPPorts = [
+			cfg.port
+		]; 
+
+		systemd.tmpfiles.rules = [
+			"d /var/lib/qbit-container 0755 qbit-container users -"
+			"d /var/lib/qbit-container/config 0755 qbit-container users -"
+		];
 	};
 }
