@@ -56,6 +56,9 @@ in
 					"--network=container:gluetun"
 				];
 				dependsOn = [ "gluetun" ];
+				environment = {
+					REQUIRE_AUTH = "false";
+				};
 			};
 
 			containers.qbittorrent = {
