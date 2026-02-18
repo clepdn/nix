@@ -40,4 +40,6 @@ with pkgs; [
 	neovim-remote
 	llvmPackages_20.systemLibcxxClang
 	clang-tools
+	steam-run
+	rustup
 ]

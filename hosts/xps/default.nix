@@ -178,12 +178,16 @@
 	};
   };
 
+  systemd.sleep.extraConfig = ''
+    HibernateDelaySec=8h
+  '';
+
   services.openssh = {
 	enable = true;
 	settings = {
 	PasswordAuthentication = false;
 		KbdInteractiveAuthentication = false;
-		PermitRootLogin = "no"; # Maybe prohibit-password for nix build. dunno. not gonna be building shit on my laptop.
+		PermitRootLogin = "no"; 
 	};
   };
 
