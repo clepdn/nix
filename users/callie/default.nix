@@ -16,4 +16,6 @@
   };
 
   programs.fish.enable = true;
+
+  nix.settings.trusted-users = [ "callie" ];
 }

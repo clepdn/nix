@@ -22,7 +22,6 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "deck"; # Define your hostname.
-  networking.networkmanager.enable = true;
 
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
@@ -31,10 +30,6 @@
   # Enable the KDE Plasma Desktop Environment.
   # services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
-
-
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nixpkgs.config.allowUnfree = true;
 
   programs.firefox.enable = true;
   environment.systemPackages = with pkgs; [

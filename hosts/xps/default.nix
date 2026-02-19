@@ -76,8 +76,6 @@
   # and wayland :ujel:
   # services.xserver.libinput.enable = true;
 
-  nixpkgs.config.allowUnfree = true;
-
   # Programs
 
   environment.systemPackages = with pkgs;
@@ -121,7 +119,6 @@
   # services.avahi.nssmdns4.enable = true; # I don't particularly need this to be enabled on my (portable) laptop.
   services.tailscale.enable = true;
   services.resolved.enable = true;
-  networking.networkmanager.enable = true;
 
   # no relation
   services.fprintd.enable  = true;

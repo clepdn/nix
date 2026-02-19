@@ -2,6 +2,7 @@
 {
 	imports = [
 		"${self}/modules/ssh/"		
+		"${self}/modules/nix/"		
 	];
 
 	environment.systemPackages = with pkgs; [
@@ -20,4 +21,6 @@
 	programs.tmux.enable = true;
 	programs.fish.enable = true;
 	programs.neovim.enable  = true;
+
+	networking.networkmanager.enable = true;
 }
