@@ -11,8 +11,8 @@
       ./modules/jovian.nix
       "${self}/users/callie"
       "${self}/modules/tz/ny.nix"
-      "${self}/modules/ssh"
       "${self}/modules/pipewire"
+      "${self}/modules/base"
     ];
 
   services.udisks2.enable = true;
