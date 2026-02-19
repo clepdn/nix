@@ -19,7 +19,7 @@
 
   networking.hostName = "xps"; # Define your hostname.
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  users.mutableUsers = false;
 
   security.tpm2.enable = true;
 
@@ -78,6 +78,7 @@
 
   # Programs
 
+  # This is a hack. Just convert pkgs.nix to a normal file sob. And then agenix can just... go in there like normal. lol.
   environment.systemPackages = with pkgs;
   	import ./pkgs.nix { inherit pkgs; }
 	++ [ inputs.agenix.packages.${pkgs.system}.default ];

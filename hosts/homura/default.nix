@@ -3,8 +3,9 @@
   imports =
     [ 
       ./hardware-configuration.nix
-      ./modules/gluetun.nix
       ./modules/audiobookshelf.nix
+      ./modules/jellyfin.nix
+      ./modules/gluetun.nix
       ./modules/minio.nix
       "${self}/users/callie" 
       "${self}/modules/gregtech"
@@ -24,6 +25,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "homura"; # she graduated
+
+  users.mutableUsers = false;
 
   services.gregtech.enable = true;
 
