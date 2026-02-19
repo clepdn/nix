@@ -15,6 +15,13 @@
     ];
   };
 
+  home-manager.users.callie = { pkgs, ... }: {
+    home = {
+      homeDirectory = config.users.users.callie.home;
+      # packages = 
+    };
+  };
+
   programs.fish.enable = true;
 
   nix.settings.trusted-users = [ "callie" ];
