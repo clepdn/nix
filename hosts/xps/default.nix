@@ -158,7 +158,7 @@
   fonts.packages = with pkgs; [
 	noto-fonts-cjk-sans
 	maple-mono.variable
-	inputs.apple-color-emoji.packages."${pkgs.system}".default
+        # inputs.apple-color-emoji.packages."${pkgs.system}".default
   ];
   fonts.fontconfig.defaultFonts.emoji = [ "Apple Color Emoji" ];
 
