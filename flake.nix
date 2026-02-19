@@ -44,7 +44,7 @@
 		};
 		nixosConfigurations.xps = nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
-			specialArgs = { inherit inputs; };
+			specialArgs = { inherit inputs self; };
 			modules = [
 				./hosts/xps
 				inputs.lanzaboote.nixosModules.lanzaboote
@@ -53,7 +53,7 @@
 		};
 		nixosConfigurations.homura = nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
-			specialArgs = { inherit inputs; };
+			specialArgs = { inherit inputs self; };
 			modules = [
 				./hosts/homura
 				inputs.agenix.nixosModules.default

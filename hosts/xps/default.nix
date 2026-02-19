@@ -2,15 +2,21 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, inputs, system, ... }:
+{ config, pkgs, lib, inputs, system, self, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./modules/bluetooth.nix
+      ./modules/nvidia.nix
+      "i${self}/users/callie" 
+      "${self}/modules/base" 
+      "${self}/modules/tz/ny.nix" 
     ];
 
-  hardware.nvidia.open = true;
+
+  networking.hostName = "xps"; # Define your hostname.
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -19,17 +25,8 @@
   # Bootloader.
   boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.systemd.enable = true;
-  boot.kernelModules = [ "bbswitch" ];
-  boot.blacklistedKernelModules = [ 
-  	"nouveau"
-	"nvidia"
-  ];
   boot.kernelParams = [ "resume_offset=13154304" "kernel.nmi_watchdog=0" ];
   boot.resumeDevice = "/dev/disk/by-uuid/ecd7de27-4f77-43e6-b739-6a1152933f98";
-
-  boot.extraModprobeConfig = ''
-	options bbswitch load_state=0 unload_state=1	
-  '';
 
   boot.initrd.luks.devices."luks-60eb24d2-61d5-4f6e-9912-0534a366e72c" = {
 	# device = "/dev/disk/by-uuid/60eb24d2-61d5-4f6e-9912-0534a366e72c";
@@ -44,9 +41,7 @@
   };
 
   boot.extraModulePackages = [ 
-  	config.boot.kernelPackages.bbswitch
 	config.boot.kernelPackages.xpadneo
-	config.boot.kernelPackages.nvidiaPackages.stable
   ];
 
   swapDevices = [{
@@ -59,29 +54,9 @@
 
   powerManagement.enable = true;
 
-  networking.hostName = "xps"; # Define your hostname.
-
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Set your time zone.
-  time.timeZone = "America/New_York";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
 
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
@@ -90,8 +65,8 @@
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
-
-  #security.pam.services.sddm.fprintAuth = false;
+  
+  # SDDM does not display that it's waiting for a fingerprint. Disable it entirely.
   security.pam.services.login = {
 	rules.auth.fprintd = lib.mkForce { enable = false; };
   };
@@ -119,22 +94,8 @@
   };
 
   # Enable touchpad support (enabled default in most desktopManager).
+  # and wayland :ujel:
   # services.xserver.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.callie = {
-    isNormalUser = true;
-    description = "Callie";
-    extraGroups = [ "networkmanager" "wheel" "input" "video" ];
-    shell = pkgs.fish;
-    packages = with pkgs; [
-      kdePackages.kate
-      inputs.zen-browser.packages."${pkgs.system}".default
-      qdirstat
-      feishin
-      thunderbird
-    ];
-  };
 
   nixpkgs.config.allowUnfree = true;
 
@@ -146,11 +107,8 @@
   	/*(with pkgs; import ./pkgs.nix { inherit pkgs; })
   	++ [ inputs.agenix.packages.${system}.default ];*/
 
-  programs.firefox.enable     	 = true;
-  programs.neovim.enable      	 = true;
-  programs.git.enable         	 = true;
-  programs.tmux.enable        	 = true;
-  programs.fish.enable        	 = true;
+  programs.firefox.enable = true;
+  programs.neovim.enable  = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -160,7 +118,7 @@
 	maple-mono.variable
         # inputs.apple-color-emoji.packages."${pkgs.system}".default
   ];
-  fonts.fontconfig.defaultFonts.emoji = [ "Apple Color Emoji" ];
+  # fonts.fontconfig.defaultFonts.emoji = [ "Apple Color Emoji" ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -182,44 +140,19 @@
     HibernateDelaySec=8h
   '';
 
-  services.openssh = {
-	enable = true;
-	settings = {
-	PasswordAuthentication = false;
-		KbdInteractiveAuthentication = false;
-		PermitRootLogin = "no"; 
-	};
-  };
-
   # services.avahi.nssmdns4.enable = true; # I don't particularly need this to be enabled on my (portable) laptop.
   services.tailscale.enable = true;
   services.resolved.enable = true;
   networking.networkmanager.enable = true;
 
+  # no relation
   services.fprintd.enable  = true;
   services.printing.enable = true; # CUPS
-  # no relation
 
   services.power-profiles-daemon.enable = false;
   services.tlp.enable = true;
 
   services.flatpak.enable = true;
-
-  hardware.bluetooth = {
-	enable = true;
-	powerOnBoot = true;
-	settings = {
-		General = {
-			# Show battery charge of connected devices.
-			Experimental = true;
-			# Faster connections. Uses more power.
-			FastConnectable = false;
-		};
-		Policy = {
-			AutoEnable = true;
-		};
-	};
-  };
 
   virtualisation.waydroid.enable = true;
 
