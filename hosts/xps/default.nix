@@ -10,8 +10,9 @@
       ./hardware-configuration.nix
       ./modules/bluetooth.nix
       ./modules/nvidia.nix
-      "i${self}/users/callie" 
+      "${self}/users/callie" 
       "${self}/modules/base" 
+      "${self}/modules/pipewire" 
       "${self}/modules/tz/ny.nix" 
     ];
 
@@ -46,7 +47,7 @@
 
   swapDevices = [{
   	device = "/var/lib/swapfile";
-	size = 32*1024;
+	size = 64*1024;
   }];
 
   fileSystems."/".options = [ "noatime" ];
@@ -71,28 +72,6 @@
 	rules.auth.fprintd = lib.mkForce { enable = false; };
   };
 
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-     alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
-
   # Enable touchpad support (enabled default in most desktopManager).
   # and wayland :ujel:
   # services.xserver.libinput.enable = true;
@@ -108,7 +87,6 @@
   	++ [ inputs.agenix.packages.${system}.default ];*/
 
   programs.firefox.enable = true;
-  programs.neovim.enable  = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -137,7 +115,7 @@
   };
 
   systemd.sleep.extraConfig = ''
-    HibernateDelaySec=8h
+    HibernateDelaySec=4h
   '';
 
   # services.avahi.nssmdns4.enable = true; # I don't particularly need this to be enabled on my (portable) laptop.
@@ -162,12 +140,6 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.11"; # Did you read the comment?
+  system.stateVersion = "25.11"; # Don't change me : )
 
 }
