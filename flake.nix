@@ -29,14 +29,18 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		home-manager = {
-			url = "github:nix-community/home-manger";
+			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		flake-utils.url = "github:numtide/flake-utils";
+		nix-sweep = {
+			url = "github:jzbor/nix-sweep";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
 	outputs =
-	inputs @ { self, nixpkgs, flake-utils, home-manager, ... }:
+	inputs @ { self, nixpkgs, flake-utils, home-manager, nix-sweep, ... }:
 	
 	{
 		nixosConfigurations.deck = nixpkgs.lib.nixosSystem {
@@ -54,6 +58,7 @@
 				./hosts/xps
 				inputs.lanzaboote.nixosModules.lanzaboote
 				inputs.agenix.nixosModules.default
+				inputs.home-manager.nixosModules.home-manager
 			];
 		};
 		nixosConfigurations.homura = nixpkgs.lib.nixosSystem {

@@ -18,8 +18,12 @@
   home-manager.users.callie = { pkgs, ... }: {
     home = {
       homeDirectory = config.users.users.callie.home;
-      # packages = 
-    };
+      # packages =
+      packages = [
+        inputs.nix-sweep.packages."${pkgs.system}".default
+      ];
+      stateVersion = "25.11";
+     };
   };
 
   programs.fish.enable = true;

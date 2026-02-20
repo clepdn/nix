@@ -42,4 +42,5 @@ with pkgs; [
 	clang-tools
 	steam-run
 	rustup
+	nixd
 ]
