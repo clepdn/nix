@@ -13,6 +13,7 @@
       "${self}/users/callie" 
       "${self}/modules/base" 
       "${self}/modules/pipewire" 
+      "${self}/modules/plymouth" 
       "${self}/modules/tz/ny.nix" 
     ];
 
