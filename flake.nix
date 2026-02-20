@@ -11,7 +11,7 @@
 				# to have it up-to-date or simply don't specify the nixpkgs input
 				nixpkgs.follows = "nixpkgs";
 				# enable if we start using home manager
-				#home-manager.follows = "home-manager"; 
+				home-manager.follows = "home-manager"; 
 			};
 		};
 		lanzaboote = {
@@ -28,11 +28,15 @@
 			url = "github:ryantm/agenix";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		home-manager = {
+			url = "github:nix-community/home-manager";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 		flake-utils.url = "github:numtide/flake-utils";
 	};
 
 	outputs =
-	inputs @ { self, nixpkgs, flake-utils, ... }:
+	inputs @ { self, nixpkgs, flake-utils, home-manager, ... }:
 	
 	{
 		nixosConfigurations.deck = nixpkgs.lib.nixosSystem {
@@ -50,6 +54,7 @@
 				./hosts/xps
 				inputs.lanzaboote.nixosModules.lanzaboote
 				inputs.agenix.nixosModules.default
+				inputs.home-manager.nixosModules.home-manager
 			];
 		};
 		nixosConfigurations.homura = nixpkgs.lib.nixosSystem {
