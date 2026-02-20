@@ -19,6 +19,9 @@
     home = {
       homeDirectory = config.users.users.callie.home;
       # packages =
+      packages = [
+        inputs.nix-sweep.packages."${pkgs.system}".default
+      ];
       stateVersion = "25.11";
      };
   };

@@ -33,10 +33,14 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		flake-utils.url = "github:numtide/flake-utils";
+		nix-sweep = {
+			url = "github:jzbor/nix-sweep";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
 	outputs =
-	inputs @ { self, nixpkgs, flake-utils, home-manager, ... }:
+	inputs @ { self, nixpkgs, flake-utils, home-manager, nix-sweep, ... }:
 	
 	{
 		nixosConfigurations.deck = nixpkgs.lib.nixosSystem {
