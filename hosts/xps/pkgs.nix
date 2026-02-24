@@ -44,4 +44,5 @@ with pkgs; [
 	rustup
 	nixd
 	appimage-run
+	patchelf
 ]
