@@ -27,7 +27,7 @@
   # Bootloader.
   boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.systemd.enable = true;
-  boot.kernelParams = [ "resume_offset=13154304" "kernel.nmi_watchdog=0" ];
+  boot.kernelParams = [ "resume_offset=20391936" "kernel.nmi_watchdog=0" ];
   boot.resumeDevice = "/dev/disk/by-uuid/ecd7de27-4f77-43e6-b739-6a1152933f98";
 
   boot.initrd.luks.devices."luks-60eb24d2-61d5-4f6e-9912-0534a366e72c" = {
