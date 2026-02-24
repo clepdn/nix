@@ -43,4 +43,5 @@ with pkgs; [
 	steam-run
 	rustup
 	nixd
+	appimage-run
 ]
