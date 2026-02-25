@@ -14,6 +14,9 @@ in {
 
   networking.firewall.allowedTCPPorts = [ 9091 ];
 
+# evaluation warning: Please replace services.authelia.instances.main.settings.{host,port,path} with services.authelia.instances.main.settings.address, before release 5.0.0
+
+
   services.authelia.instances.main = {
     enable = true;
     secrets = {
@@ -23,22 +26,23 @@ in {
     };
     settings = {
       theme = "dark";
-      server = {
-        host = "0.0.0.0";
-        port = 9091;
-      };
-
+      server.address = "tcp://0.0.0.0:9091/";
       log.level = "info";
 
       authentication_backend = {
-        file.path = "/var/lib/authelia-main/users_database.yml";
+        file.path = config.age.secrets."authelia-users.yml".path;
       };
 
       access_control = {
         default_policy = "deny";
         rules = [
           {
-            domain = "*.fixme.com";
+            domain = "*.nematodes.net";
+            policy = "one_factor";
+            #subject = "group:<groupname>";
+          }
+          {
+            domain = "*.on-her.computer";
             policy = "one_factor";
           }
         ];
@@ -46,9 +50,20 @@ in {
 
       session = {
         name = "authelia_session";
-        domain = "fixme.com";
-        expiration = "1h";
-        inactivity = "5m";
+        expiration = "0";
+        inactivity = "2w";
+        cookies = [
+          {
+            domain = "nematodes.net";
+            authelia_url = "https://auth.nematodes.net";
+            default_redirection_url = "https://nematodes.net";
+          }
+          {
+            domain = "on-her.computer";
+            authelia_url = "https://auth.on-her.computer";
+            default_redirection_url = "https://callie.on-her.computer";
+          }
+        ];
       };
 
       storage.local.path = "/var/lib/authelia-main/db.sqlite3";
