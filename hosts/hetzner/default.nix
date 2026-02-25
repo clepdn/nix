@@ -13,5 +13,5 @@
 	services.tailscale.enable  = true;
 	networking.firewall.enable = true;
 
-	# system.stateVersion = 
+	system.stateVersion = 25.11;
 }
