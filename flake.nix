@@ -33,41 +33,27 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		flake-utils.url = "github:numtide/flake-utils";
-		nix-sweep = {
-			url = "github:jzbor/nix-sweep";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
 	};
 
 	outputs =
-	inputs @ { self, nixpkgs, flake-utils, home-manager, nix-sweep, ... }:
-	
-	{
-		nixosConfigurations.deck = nixpkgs.lib.nixosSystem {
-			system = "x86_64-linux";
+	inputs @ { self, nixpkgs, flake-utils, home-manager, ... }:
+
+	let
+		mkHost = host: extraModules: nixpkgs.lib.nixosSystem {
+			system = "x64_64-linux";
 			specialArgs = { inherit inputs self; };
 			modules = [
-				./hosts/deck
-				inputs.jovian.nixosModules.jovian
-			];
-		};
-		nixosConfigurations.xps = nixpkgs.lib.nixosSystem {
-			system = "x86_64-linux";
-			specialArgs = { inherit inputs self; };
-			modules = [
-				./hosts/xps
-				inputs.lanzaboote.nixosModules.lanzaboote
+				./hosts/${host}
 				inputs.agenix.nixosModules.default
 				inputs.home-manager.nixosModules.home-manager
-			];
+			] ++ extraModules;
 		};
-		nixosConfigurations.homura = nixpkgs.lib.nixosSystem {
-			system = "x86_64-linux";
-			specialArgs = { inherit inputs self; };
-			modules = [
-				./hosts/homura
-				inputs.agenix.nixosModules.default
-			];
+	in
+	{
+		nixosConfigurations = {
+			deck   = mkHost "deck"   [ inputs.jovian.nixosModules.jovian ];
+			homura = mkHost "homura" [  ];
+			xps    = mkHost "xps"    [ inputs.lanzaboote.nixosModules.lanzaboote ];
 		};
 	}
 
