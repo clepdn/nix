@@ -10,7 +10,6 @@
 				# IMPORTANT: we're using "libgbm" and is only available in unstable so ensure
 				# to have it up-to-date or simply don't specify the nixpkgs input
 				nixpkgs.follows = "nixpkgs";
-				# enable if we start using home manager
 				home-manager.follows = "home-manager"; 
 			};
 		};
@@ -51,9 +50,10 @@
 	in
 	{
 		nixosConfigurations = {
-			deck   = mkHost "deck"   [ inputs.jovian.nixosModules.jovian ];
-			homura = mkHost "homura"    [ inputs.lanzaboote.nixosModules.lanzaboote ];
-			xps    = mkHost "xps" [];
+			deck    = mkHost "deck"   [ inputs.jovian.nixosModules.jovian ];
+			xps     = mkHost "xps"    [ inputs.lanzaboote.nixosModules.lanzaboote ];
+			homura  = mkHost "homura" [  ];
+			hetzner = mkHost "hetzner" [  ];
 		};
 	}
 
