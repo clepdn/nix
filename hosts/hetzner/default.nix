@@ -9,9 +9,11 @@
 
 	networking.hostName = "hetzner";
 	users.mutableUsers = false;
+
+	boot.loader.grub.devices = [ "/dev/sda" ];
 	
 	services.tailscale.enable  = true;
 	networking.firewall.enable = true;
 
-	system.stateVersion = 25.11;
+	system.stateVersion = "25.11";
 }
