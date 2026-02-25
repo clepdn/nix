@@ -7,6 +7,7 @@
       ./modules/jellyfin.nix
       ./modules/gluetun.nix
       ./modules/minio.nix
+      ./modules/authelia.nix
       "${self}/users/callie" 
       "${self}/modules/gregtech"
       "${self}/modules/base" 

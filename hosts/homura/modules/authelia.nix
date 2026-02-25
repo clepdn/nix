@@ -14,6 +14,9 @@ in {
 
   networking.firewall.allowedTCPPorts = [ 9091 ];
 
+# evaluation warning: Please replace services.authelia.instances.main.settings.{host,port,path} with services.authelia.instances.main.settings.address, before release 5.0.0
+
+
   services.authelia.instances.main = {
     enable = true;
     secrets = {
@@ -23,11 +26,7 @@ in {
     };
     settings = {
       theme = "dark";
-      server = {
-        host = "0.0.0.0";
-        port = 9091;
-      };
-
+      server.address = "tcp://0.0.0.0:9091/";
       log.level = "info";
 
       authentication_backend = {
