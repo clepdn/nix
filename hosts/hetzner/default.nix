@@ -1,7 +1,7 @@
 { config, pkgs, self, ... }:
 {
 	imports = [
-		#./hardware-configuration.nix
+	      ./hardware-configuration.nix
 	      "${self}/users/callie" 
 	      "${self}/modules/base" 
 	      "${self}/modules/tz/ny.nix" 
