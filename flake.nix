@@ -54,10 +54,10 @@
 	in
 	{
 		nixosConfigurations = {
-			deck    = mkHost "deck"   [ inputs.jovian.nixosModules.jovian ];
-			xps     = mkHost "xps"    [ inputs.lanzaboote.nixosModules.lanzaboote ];
+			deck    = mkHost "deck"    [ inputs.jovian.nixosModules.jovian ];
 			hetzner = mkHost "hetzner" [ inputs.disko.nixosModules.disko ];
-			homura  = mkHost "homura" [  ];
+			madoka  = mkHost "madoka"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
+			homura  = mkHost "homura"  [  ];
 		};
 	}
 

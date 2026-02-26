@@ -1,11 +1,11 @@
 let hosts = [
 		"megatron"
-		"xps"
+		"madoka"
 		"homura-v"
 	];
 	users = [
 		"callie_megatron"
-		"callie_xps"
+		"callie_madoka"
 		"callie_homura-v"
 	];
 	systemKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;

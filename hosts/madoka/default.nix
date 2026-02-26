@@ -18,7 +18,7 @@
     ];
 
 
-  networking.hostName = "xps"; # Define your hostname.
+  networking.hostName = "madoka"; # Define your hostname.
 
   users.mutableUsers = false;
 
