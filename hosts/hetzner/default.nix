@@ -1,6 +1,7 @@
 { config, pkgs, self, ... }:
 {
 	imports = [
+	      ./disko.nix
 	      ./hardware-configuration.nix
 	      "${self}/users/callie" 
 	      "${self}/modules/base" 
@@ -10,7 +11,9 @@
 	networking.hostName = "hetzner";
 	users.mutableUsers = false;
 
-	boot.loader.grub.devices = [ "/dev/sda" ];
+	boot.loader.grub = {
+		enable = true;
+	};
 	
 	services.tailscale.enable  = true;
 	networking.firewall.enable = true;

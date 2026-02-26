@@ -32,6 +32,10 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		flake-utils.url = "github:numtide/flake-utils";
+		disko = {
+			url = "github:nix-community/disko";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
 	outputs =
@@ -39,7 +43,7 @@
 
 	let
 		mkHost = host: extraModules: nixpkgs.lib.nixosSystem {
-			system = "x64_64-linux";
+			system = "x86_64-linux";
 			specialArgs = { inherit inputs self; };
 			modules = [
 				./hosts/${host}
@@ -52,8 +56,8 @@
 		nixosConfigurations = {
 			deck    = mkHost "deck"   [ inputs.jovian.nixosModules.jovian ];
 			xps     = mkHost "xps"    [ inputs.lanzaboote.nixosModules.lanzaboote ];
+			hetzner = mkHost "hetzner" [ inputs.disko.nixosModules.disko ];
 			homura  = mkHost "homura" [  ];
-			hetzner = mkHost "hetzner" [  ];
 		};
 	}
 
