@@ -21,5 +21,6 @@ let hosts = [
 		"authelia-session.age".publicKeys = keys;
 		"authelia-storagekey.age".publicKeys = keys;
 		"authelia-users.yml.age".publicKeys = keys;
+		"authentik.env.age".publicKeys = keys;
 	}
 
