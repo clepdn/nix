@@ -45,4 +45,5 @@ with pkgs; [
 	nixd
 	appimage-run
 	patchelf
+	bitwarden-desktop
 ]

@@ -8,7 +8,7 @@
 	      "${self}/modules/tz/ny.nix" 
 	];
 
-	networking.hostName = "hetzner";
+	networking.hostName = "sayaka";
 	users.mutableUsers = false;
 
 	boot.loader.grub = {
