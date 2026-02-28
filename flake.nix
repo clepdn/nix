@@ -10,7 +10,6 @@
 				# IMPORTANT: we're using "libgbm" and is only available in unstable so ensure
 				# to have it up-to-date or simply don't specify the nixpkgs input
 				nixpkgs.follows = "nixpkgs";
-				# enable if we start using home manager
 				home-manager.follows = "home-manager"; 
 			};
 		};
@@ -33,6 +32,10 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		flake-utils.url = "github:numtide/flake-utils";
+		disko = {
+			url = "github:nix-community/disko";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
 	outputs =
@@ -40,7 +43,7 @@
 
 	let
 		mkHost = host: extraModules: nixpkgs.lib.nixosSystem {
-			system = "x64_64-linux";
+			system = "x86_64-linux";
 			specialArgs = { inherit inputs self; };
 			modules = [
 				./hosts/${host}
@@ -51,9 +54,10 @@
 	in
 	{
 		nixosConfigurations = {
-			deck   = mkHost "deck"   [ inputs.jovian.nixosModules.jovian ];
-			homura = mkHost "homura"    [ inputs.lanzaboote.nixosModules.lanzaboote ];
-			xps    = mkHost "xps" [];
+			deck    = mkHost "deck"    [ inputs.jovian.nixosModules.jovian ];
+			hetzner = mkHost "hetzner" [ inputs.disko.nixosModules.disko ];
+			madoka  = mkHost "madoka"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
+			homura  = mkHost "homura"  [  ];
 		};
 	}
 

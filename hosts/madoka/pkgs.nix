@@ -43,4 +43,8 @@ with pkgs; [
 	steam-run
 	rustup
 	nixd
+	appimage-run
+	patchelf
+	bitwarden-desktop
+	openssl
 ]

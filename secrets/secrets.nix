@@ -1,11 +1,11 @@
 let hosts = [
 		"megatron"
-		"xps"
+		"madoka"
 		"homura-v"
 	];
 	users = [
 		"callie_megatron"
-		"callie_xps"
+		"callie_madoka"
 		"callie_homura-v"
 	];
 	systemKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
@@ -21,5 +21,6 @@ let hosts = [
 		"authelia-session.age".publicKeys = keys;
 		"authelia-storagekey.age".publicKeys = keys;
 		"authelia-users.yml.age".publicKeys = keys;
+		"authentik.env.age".publicKeys = keys;
 	}
 
