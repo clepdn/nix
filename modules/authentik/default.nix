@@ -7,6 +7,16 @@
     file = "${self}/secrets/authentik.env.age";
     mode  = "400";
   };
+
+
+  systemd.tmpfiles.rules = [
+    "d /var/lib/authentik 0755 root root -"
+    "d /var/lib/authentik/custom-templates 0755 root root -"
+    "d /var/lib/authentik/certs 0755 root root -"
+    "d /var/lib/authentik/data 0755 root root -"
+    "d /var/lib/authentik/data 0755 root root -"
+    "d /var/lib/authentik-postgresql/data 0755 root root -"
+  ];
   
   # Runtime
   virtualisation.podman = {
@@ -31,22 +41,26 @@
       config.age.secrets.authentik.path
     ];
     volumes = [
-      "authentik_database:/var/lib/postgresql/data:rw"
+      "authentik_database:/var/lib/authentik-postgresql/data:rw"
     ];
     log-driver = "journald";
     extraOptions = [
       "--health-cmd=pg_isready -d \${POSTGRES_DB} -U \${POSTGRES_USER}"
       "--health-interval=30s"
       "--health-retries=5"
-      "--health-start-period=20s"
-      "--health-timeout=5s"
+      "--health-start-period=60s"
+      "--health-timeout=20s"
       "--network-alias=postgresql"
       "--network=authentik_default"
     ];
   };
+  /*
   systemd.services."podman-authentik-postgresql" = {
     serviceConfig = {
       Restart = lib.mkOverride 90 "always";
+    };
+    unitConfig = {
+      StartLimitIntervalSec = 0;
     };
     after = [
       "podman-network-authentik_default.service"
@@ -63,6 +77,7 @@
       "podman-compose-authentik-root.target"
     ];
   };
+  */
   virtualisation.oci-containers.containers."authentik-server" = {
     image = "ghcr.io/goauthentik/server:2026.2.0";
     environmentFiles = [
@@ -87,6 +102,7 @@
       "--shm-size=536870912"
     ];
   };
+  /*
   systemd.services."podman-authentik-server" = {
     serviceConfig = {
       Restart = lib.mkOverride 90 "always";
@@ -104,6 +120,7 @@
       "podman-compose-authentik-root.target"
     ];
   };
+  */
   virtualisation.oci-containers.containers."authentik-worker" = {
     image = "ghcr.io/goauthentik/server:2026.2.0";
     environmentFiles = [
@@ -126,6 +143,7 @@
       "--shm-size=536870912"
     ];
   };
+  /*
   systemd.services."podman-authentik-worker" = {
     serviceConfig = {
       Restart = lib.mkOverride 90 "always";
@@ -182,4 +200,5 @@
     };
     wantedBy = [ "multi-user.target" ];
   };
+  */
 }
