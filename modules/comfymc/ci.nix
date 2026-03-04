@@ -22,7 +22,6 @@ let
       }
     }]
     EOF
-    cat $HOOKS >&2
     exec ${pkgs.webhook}/bin/webhook -hooks $HOOKS -port 9097
   '';
 in
