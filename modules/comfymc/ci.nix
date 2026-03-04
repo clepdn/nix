@@ -18,7 +18,7 @@ let
       }
     }]
     EOF
-    exec ${pkgs.webhook}/bin/webhook -hooks $HOOKS -port 9000
+    exec ${pkgs.webhook}/bin/webhook -hooks $HOOKS -port 9097
   '';
 in
 {
