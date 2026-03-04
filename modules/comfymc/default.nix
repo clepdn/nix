@@ -26,7 +26,7 @@
 
   virtualisation.oci-containers.backend = "podman";
 
-  virtualisation.oci-containers.containers."mc-mc" = {
+  virtualisation.oci-containers.containers.minecraft = {
     image = "itzg/minecraft-server";
     environment = {
       "DATAPACKS" = "https://modrinth.com/datapack/kawamood-no-creeper-grief";
@@ -46,9 +46,11 @@
       "25565:25565/tcp"
     ];
     log-driver = "journald";
-    extraOptions = [
+    extraOptions = [ "--network=host" ];
+    /*extraOptions = [
       "--network-alias=mc"
       "--network=mc_default"
     ];
+    */
   };
 }

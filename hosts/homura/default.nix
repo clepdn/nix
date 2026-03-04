@@ -7,8 +7,8 @@
       ./modules/jellyfin.nix
       ./modules/gluetun.nix
       ./modules/minio.nix
-      ./modules/comfymc/default.nix
       "${self}/users/callie" 
+      "${self}/modules/comfymc"
       "${self}/modules/gregtech"
       "${self}/modules/base" 
       "${self}/modules/pipewire" 
