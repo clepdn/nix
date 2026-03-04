@@ -3,6 +3,9 @@
 { pkgs, lib, config, ... }:
 
 {
+  imports = [
+    ./ci.nix
+  ];
   # Runtime
   virtualisation.podman = {
     enable = true;
