@@ -6,9 +6,13 @@ let
     HOOKS=$(mktemp)
     cat > $HOOKS <<EOF
     [{
-      "id": "restart-myservice",
+      "id": "restart-comfymc",
       "execute-command": "/run/wrappers/bin/sudo",
-      ...
+      "pass-arguments-to-command": [
+        {"source": "string", "name": "/run/current-system/sw/bin/systemctl"},
+        {"source": "string", "name": "restart"},
+        {"source": "string", "name": "podman-minecraft"}
+      ],
       "trigger-rule": {
         "match": {
           "type": "payload-hmac-sha256",
@@ -18,6 +22,7 @@ let
       }
     }]
     EOF
+    cat $HOOKS >&2
     exec ${pkgs.webhook}/bin/webhook -hooks $HOOKS -port 9097
   '';
 in
