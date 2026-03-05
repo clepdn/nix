@@ -7,11 +7,12 @@
       ./modules/jellyfin.nix
       ./modules/gluetun.nix
       ./modules/minio.nix
-      ./modules/authelia.nix
       "${self}/users/callie" 
+      "${self}/modules/comfymc"
       "${self}/modules/gregtech"
       "${self}/modules/base" 
       "${self}/modules/pipewire" 
+      "${self}/modules/authentik" 
       "${self}/modules/tz/ny.nix" 
     ];
 
@@ -29,7 +30,7 @@
 
   users.mutableUsers = false;
 
-  services.gregtech.enable = true;
+  services.gregtech.enable = false;
 
   services.xserver.enable = false;
 

@@ -46,4 +46,5 @@ with pkgs; [
 	appimage-run
 	patchelf
 	bitwarden-desktop
+	openssl
 ]
