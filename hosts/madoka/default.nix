@@ -14,6 +14,7 @@
       "${self}/modules/base" 
       "${self}/modules/pipewire" 
       "${self}/modules/plymouth" 
+      "${self}/modules/altserver" 
       "${self}/modules/tz/ny.nix" 
     ];
 

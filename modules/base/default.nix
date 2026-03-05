@@ -15,6 +15,8 @@
 		mosh # shrug
 		wl-clipboard
 		mosh
+
+		openssl
 	];
 
 	programs.git.enable  = true;
