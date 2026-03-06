@@ -1,19 +1,9 @@
+{ config, lib, self, ... }:
 let
-  mainCert = {
-    # FIXME: This should be agenix.
-    sslCertificate = "/etc/letsencrypt/live/on-her.computer/fullchain.pem";
-    sslCertificateKey = "/etc/letsencrypt/live/on-her.computer/privkey.pem";
-  };
-
   port8443 = [
     { addr = "[::]";   port = 8443; ssl = true; extraParameters = [ "http2" ]; }
     { addr = "0.0.0.0"; port = 8443; ssl = true; extraParameters = [ "http2" ]; }
   ];
-
-  letsencryptOptions = ''
-    include /etc/letsencrypt/options-ssl-nginx.conf;
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-  '';
 
   commonProxyHeaders = ''
     proxy_pass_request_headers on;
@@ -28,9 +18,10 @@ let
   '';
 
   # Generates a simple reverse proxy vhost on port 8443
-  proxyVhost = { target, extraLocationConfig ? "", extraVhostConfig ? "" }: mainCert // {
+  proxyVhost = { target, extraLocationConfig ? "", extraVhostConfig ? "" }: {
     listen = port8443;
-    extraConfig = letsencryptOptions + extraVhostConfig;
+    extraConfig = extraVhostConfig;
+    forceSSL = true;
     locations."/" = {
       proxyPass = target;
       extraConfig = commonProxyHeaders + extraLocationConfig;
@@ -39,7 +30,7 @@ let
 
   # Generates a pdsall-based vhost (no port 8443, uses snippet)
   # TODO: Redo this shit
-  pdsVhost = { port, cert ? mainCert }: cert // {
+  pdsVhost = { port }: {
     extraConfig = ''
       include /etc/nginx/snippets/pdsall.conf;
       # port ${toString port}
@@ -47,41 +38,57 @@ let
   };
 in
 {
+  imports = [
+    ./vhost.nix
+  ];
+
+  age.secrets.cloudflare = {
+	file = "${self}/secrets/cloudflare-dns.age";
+	owner = "nginx";
+	group = "nginx";
+	mode = "400";
+  };
+
+  myServices.acme."pds.on-her.computer" = {
+    dnsProvider = "cloudflare";
+    environmentFile = config.age.secrets.cloudflare.path;
+    port = 3000;
+    target = "100.102.161.7";
+  };
+
+  security.acme = {
+      acceptTerms = true;
+      defaults.email = "calliepeden+acme@gmail.com";
+  };
+  
   services.nginx = {
     enable = true;
-
-    appendHttpConfig = ''
-      # map $http_user_agent $blocked_user_agent { ... }
-    '';
-
-    virtualHosts = {
-      "pds.on-her.computer"       = pdsVhost { port = 3000; };
-      "*.pds.on-her.computer"     = pdsVhost { port = 3000; cert = {
-        sslCertificate    = "/etc/letsencrypt/live/pds.on-her.computer/fullchain.pem";
-        sslCertificateKey = "/etc/letsencrypt/live/pds.on-her.computer/privkey.pem";
-      }; };
-      "pegasus.on-her.computer"   = pdsVhost { port = 4000; };
-      "*.pegasus.on-her.computer" = pdsVhost { port = 4000; cert = {
-        sslCertificate    = "/etc/letsencrypt/live/pegasus.on-her.computer/fullchain.pem";
-        sslCertificateKey = "/etc/letsencrypt/live/pegasus.on-her.computer/privkey.pem";
-      }; };
-
-      "cobalt.on-her.computer" = proxyVhost {
-        target = "http://100.102.158.29:9000";
-      };
-
-      "book.on-her.computer" = proxyVhost {
-        target = "http://100.116.202.116:6969";
-        extraLocationConfig = "client_max_body_size 0;";
-      };
-
-      "auth.on-her.computer" = mainCert // {
-        listen = port8443;
-        extraConfig = letsencryptOptions + ''
-          include /etc/nginx/snippets/authelia-authpage.conf;
-        '';
-      };
-    };
   };
+
+    #virtualHosts = {
+    #  "pds.on-her.computer"       = pdsVhost { port = 3000; };
+    #  "*.pds.on-her.computer"     = pdsVhost { port = 3000; };
+    #  "pegasus.on-her.computer"   = pdsVhost { port = 4000; };
+    #  "*.pegasus.on-her.computer" = pdsVhost { port = 4000; cert = {
+    #    sslCertificate    = "/etc/letsencrypt/live/pegasus.on-her.computer/fullchain.pem";
+    #    sslCertificateKey = "/etc/letsencrypt/live/pegasus.on-her.computer/privkey.pem";
+    #  }; };
+
+    #  "cobalt.on-her.computer" = proxyVhost {
+    #    target = "http://100.102.158.29:9000";
+    #  };
+#
+ #     "book.on-her.computer" = proxyVhost {
+#       target = "http://100.116.202.116:6969";
+#        extraLocationConfig = "client_max_body_size 0;";
+#      };
+#
+#      "auth.on-her.computer" = {
+#        listen = port8443;
+#        extraConfig =  ''
+#          include /etc/nginx/snippets/authelia-authpage.conf;
+#        '';
+#      };
+#    };
 }
 

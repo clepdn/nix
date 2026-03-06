@@ -55,7 +55,7 @@
 	{
 		nixosConfigurations = {
 			deck    = mkHost "deck"    [ inputs.jovian.nixosModules.jovian ];
-			hetzner = mkHost "hetzner" [ inputs.disko.nixosModules.disko ];
+			sayaka  = mkHost "sayaka"  [ inputs.disko.nixosModules.disko ];
 			madoka  = mkHost "madoka"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
 			homura  = mkHost "homura"  [  ];
 		};

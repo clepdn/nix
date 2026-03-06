@@ -23,5 +23,6 @@ let hosts = [
 		"authelia-users.yml.age".publicKeys = keys;
 		"authentik.env.age".publicKeys = keys;
 		"webhook.age".publicKeys = keys;
+		"cloudflare-dns.age".publicKeys = keys;
 	}
 
