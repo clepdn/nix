@@ -5,6 +5,11 @@ let
     { addr = "0.0.0.0"; port = 8443; ssl = true; extraParameters = [ "http2" ]; }
   ];
 
+  cloudflareDNS = {
+      dnsProvider = "cloudflare";
+      environmentFile = config.age.secrets.cloudflare.path;
+  };
+
   commonProxyHeaders = ''
     proxy_pass_request_headers on;
     proxy_set_header Host $host;
@@ -49,11 +54,31 @@ in
 	mode = "400";
   };
 
-  myServices.acme."pds.on-her.computer" = {
-    dnsProvider = "cloudflare";
-    environmentFile = config.age.secrets.cloudflare.path;
-    port = 3000;
-    target = "100.102.161.7";
+  myServices.acme = {
+    "pds.on-her.computer" = cloudflareDNS // {
+      port = 3000;
+      target = "100.102.161.7";
+    };
+    "*.pds.on-her.computer" = cloudflareDNS // {
+      port = 3000;
+      target = "100.102.161.7";
+    };
+    "pegasus.on-her.computer" = cloudflareDNS // {
+      port = 4000;
+      target = "100.102.161.7";
+    };
+    "*.pegasus.on-her.computer" = cloudflareDNS // {
+      port = 4000;
+      target = "100.102.161.7";
+    };
+    "cobalt.on-her.computer" = cloudflareDNS // {
+      port = 9000;
+      target = "100.102.158.29";
+    };
+    "book.on-her.computer" = cloudflareDNS // {
+      port = 6969;
+      target = "100.116.202.116";
+    };
   };
 
   security.acme = {
