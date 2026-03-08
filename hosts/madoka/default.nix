@@ -18,7 +18,16 @@
       "${self}/modules/tz/ny.nix" 
     ];
 
-
+  users.users.meleeto = {
+    isNormalUser = true;
+    description = "Melee TO Account";
+    extraGroups = [ "networkmanager" "input" "video" ];
+    shell = pkgs.fish;
+    hashedPassword = "$y$j9T$thtLWbD83433DrQvv0uPX0$AWbc3P/COW1XKM0ZI5oo915PL3kajwngPa45mCy3D38";
+    packages = [
+      inputs.zen-browser.packages."${pkgs.system}".default
+    ];
+  };
   networking.hostName = "madoka"; # Define your hostname.
 
   users.mutableUsers = false;
