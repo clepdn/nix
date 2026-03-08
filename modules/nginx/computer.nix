@@ -58,19 +58,21 @@ in
     "pds.on-her.computer" = cloudflareDNS // {
       port = 3000;
       target = "100.102.161.7";
+      wildcard = true;
     };
-    "*.pds.on-her.computer" = cloudflareDNS // {
+    /*"*.pds.on-her.computer" = cloudflareDNS // {
       port = 3000;
       target = "100.102.161.7";
-    };
+    };*/
     "pegasus.on-her.computer" = cloudflareDNS // {
       port = 4000;
       target = "100.102.161.7";
+      wildcard = true;
     };
-    "*.pegasus.on-her.computer" = cloudflareDNS // {
+    /*"*.pegasus.on-her.computer" = cloudflareDNS // {
       port = 4000;
       target = "100.102.161.7";
-    };
+    };*/
     "cobalt.on-her.computer" = cloudflareDNS // {
       port = 9000;
       target = "100.102.158.29";
@@ -90,30 +92,32 @@ in
     enable = true;
   };
 
-    #virtualHosts = {
-    #  "pds.on-her.computer"       = pdsVhost { port = 3000; };
-    #  "*.pds.on-her.computer"     = pdsVhost { port = 3000; };
-    #  "pegasus.on-her.computer"   = pdsVhost { port = 4000; };
-    #  "*.pegasus.on-her.computer" = pdsVhost { port = 4000; cert = {
-    #    sslCertificate    = "/etc/letsencrypt/live/pegasus.on-her.computer/fullchain.pem";
-    #    sslCertificateKey = "/etc/letsencrypt/live/pegasus.on-her.computer/privkey.pem";
-    #  }; };
+/*
+    virtualHosts = {
+      "pds.on-her.computer"       = pdsVhost { port = 3000; };
+      "*.pds.on-her.computer"     = pdsVhost { port = 3000; };
+      "pegasus.on-her.computer"   = pdsVhost { port = 4000; };
+      "*.pegasus.on-her.computer" = pdsVhost { port = 4000; cert = {
+        sslCertificate    = "/etc/letsencrypt/live/pegasus.on-her.computer/fullchain.pem";
+        sslCertificateKey = "/etc/letsencrypt/live/pegasus.on-her.computer/privkey.pem";
+      }; };
 
-    #  "cobalt.on-her.computer" = proxyVhost {
-    #    target = "http://100.102.158.29:9000";
-    #  };
-#
- #     "book.on-her.computer" = proxyVhost {
-#       target = "http://100.116.202.116:6969";
-#        extraLocationConfig = "client_max_body_size 0;";
-#      };
-#
-#      "auth.on-her.computer" = {
-#        listen = port8443;
-#        extraConfig =  ''
-#          include /etc/nginx/snippets/authelia-authpage.conf;
-#        '';
-#      };
-#    };
+      "cobalt.on-her.computer" = proxyVhost {
+        target = "http://100.102.158.29:9000";
+      };
+
+      "book.on-her.computer" = proxyVhost {
+       target = "http://100.116.202.116:6969";
+        extraLocationConfig = "client_max_body_size 0;";
+      };
+
+      "auth.on-her.computer" = {
+        listen = port8443;
+        extraConfig =  ''
+          include /etc/nginx/snippets/authelia-authpage.conf;
+        '';
+      };
+    };
+*/
 }
 

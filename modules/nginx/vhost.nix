@@ -1,7 +1,7 @@
 { config, lib, ... }:
 let cfg = config.myServices.acme;
   port8443 = [
-    { addr = "[::]";   port = 8443; ssl = true; extraParameters = [ "http2" ]; }
+    { addr = "[::]";   port = 8443; ssl = true;  extraParameters = [ "http2" ]; }
     { addr = "0.0.0.0"; port = 8443; ssl = true; extraParameters = [ "http2" ]; }
   ];
   
@@ -28,18 +28,22 @@ in {
         default = {};
       };
       options.extraLocationConfig = lib.mkOption { type = lib.types.str; };
+      options.wildcard = lib.mkOption { type = lib.types.bool; default = false; };
     });
     default = {};
   };
 
   config = {
     security.acme.certs = lib.mapAttrs (name: opts: {
-      domain = name;
+      domain = if opts.wildcard then "*.${name}" else name;
       extraDomainNames = [ name ];
       group = "nginx";
+      dnsProvider = opts.dnsProvider;
+      environmentFile = opts.environmentFile;
     }) cfg;
 
-    services.nginx.virtualHosts = lib.mapAttrs (name: opts: {
+
+    /*services.nginx.virtualHosts = lib.mapAttrs (name: opts: {
       forceSSL = true;
       listen = port8443; # Listen on internal upstream proxied HTTP port. Eventually translated to 443 upstream.
       useACMEHost = name;
@@ -48,5 +52,15 @@ in {
         extraConfig = commonProxyHeaders + "\n" + opts.extraLocationConfig;
       };
     } // opts.extraNginxOpts) cfg;
+    */
+
+    services.nginx.virtualHosts = lib.listToAttrs (lib.flatten (lib.mapAttrsToList (name: opts:
+    let mkVhost = n: lib.nameValuePair n ({
+    } // opts.extraNginxOpts);
+    in 
+      if opts.wildcard
+      then [ (mkVhost name) (mkVhost "*.${name}") ]
+      else [ (mkVhost name) ]
+      ) cfg));
   };
 }
