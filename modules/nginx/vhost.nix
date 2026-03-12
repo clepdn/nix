@@ -27,7 +27,10 @@ in {
         type = lib.types.attrsOf lib.types.anything;
         default = {};
       };
-      options.extraLocationConfig = lib.mkOption { type = lib.types.str; };
+      options.extraLocationConfig = lib.mkOption { 
+        type = lib.types.str; 
+        default = "";
+      };
       options.wildcard = lib.mkOption { type = lib.types.bool; default = false; };
     });
     default = {};
@@ -42,20 +45,15 @@ in {
       environmentFile = opts.environmentFile;
     }) cfg;
 
-
-    /*services.nginx.virtualHosts = lib.mapAttrs (name: opts: {
-      forceSSL = true;
-      listen = port8443; # Listen on internal upstream proxied HTTP port. Eventually translated to 443 upstream.
-      useACMEHost = name;
-      locations."/" = {
-        proxyPass = "http://${opts.target}:${opts.port}";
-        extraConfig = commonProxyHeaders + "\n" + opts.extraLocationConfig;
-      };
-    } // opts.extraNginxOpts) cfg;
-    */
-
     services.nginx.virtualHosts = lib.listToAttrs (lib.flatten (lib.mapAttrsToList (name: opts:
     let mkVhost = n: lib.nameValuePair n ({
+      forceSSL = true;
+      listen = port8443;
+      useACMEHost = name;
+      locations."/" = {
+        proxyPass = "http://${opts.target}:${toString opts.port}";
+        extraConfig = commonProxyHeaders + "\n" + opts.extraLocationConfig;
+      };
     } // opts.extraNginxOpts);
     in 
       if opts.wildcard
