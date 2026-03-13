@@ -51,6 +51,21 @@
           isDefault = true;
         }
       ];
+      dashboards.settings = {
+        apiVersion = 1;
+        providers = [
+          {
+            name = "System Dashboards";
+            orgId = 1;
+            folder = "";
+            type = "file";
+            disableDeletion = false;
+            updateIntervalSeconds = 10;
+            allowUiUpdates = true;
+            options.path = ./dashboards;
+          }
+        ];
+      };
     };
   };
 
