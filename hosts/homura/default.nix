@@ -24,6 +24,17 @@
 	options = [ "compress=zstd" ];
   };
 
+  hardware.graphics.enable = true;  # was hardware.opengl.enable before NixOS 24.11
+
+  services.xserver.videoDrivers = [ "nvidia" ];
+
+  hardware.nvidia = {
+    modesetting.enable = true;
+    nvidiaSettings = true;
+    open = false;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
