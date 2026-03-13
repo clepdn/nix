@@ -18,6 +18,9 @@
       "${self}/modules/tz/ny.nix" 
     ];
 
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "callie" ];
+
   users.users.meleeto = {
     isNormalUser = true;
     description = "Melee TO Account";
