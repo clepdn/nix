@@ -23,6 +23,7 @@
 	programs.tmux.enable = true;
 	programs.fish.enable = true;
 	programs.neovim.enable  = true;
+	documentation.man.generateCaches = false;
 
 	networking.networkmanager.enable = true;
 }

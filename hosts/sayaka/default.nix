@@ -6,6 +6,7 @@
 	      "${self}/users/callie" 
 	      "${self}/modules/base" 
 	      "${self}/modules/tz/ny.nix" 
+	      "${self}/modules/nginx" 
 	];
 
 	networking.hostName = "sayaka";
