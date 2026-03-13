@@ -47,4 +47,5 @@ with pkgs; [
 	patchelf
 	bitwarden-desktop
 	openssl
+	virtualbox
 ]
