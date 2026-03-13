@@ -11,7 +11,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -89,7 +89,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "node_filesystem_size_bytes{fstype!~\"tmpfs|fuse.*\"} - node_filesystem_avail_bytes{fstype!~\"tmpfs|fuse.*\"}",
           "refId": "A",
@@ -98,7 +98,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "node_filesystem_avail_bytes{fstype!~\"tmpfs|fuse.*\"}",
           "refId": "B",
@@ -111,7 +111,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -172,7 +172,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "1 - (node_filesystem_avail_bytes{fstype!~\"tmpfs|fuse.*\"} / node_filesystem_size_bytes{fstype!~\"tmpfs|fuse.*\"})",
           "refId": "A",
@@ -185,7 +185,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -264,7 +264,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "irate(node_disk_reads_completed_total[5m])",
           "refId": "A",
@@ -273,7 +273,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "irate(node_disk_writes_completed_total[5m])",
           "refId": "B",
@@ -286,7 +286,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -365,7 +365,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "irate(node_disk_read_time_seconds_total[5m]) / irate(node_disk_reads_completed_total[5m])",
           "refId": "A",
@@ -374,7 +374,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "irate(node_disk_write_time_seconds_total[5m]) / irate(node_disk_writes_completed_total[5m])",
           "refId": "B",
@@ -387,7 +387,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -438,7 +438,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "node_filesystem_files{fstype!~\"tmpfs|fuse.*\"} - node_filesystem_files_free{fstype!~\"tmpfs|fuse.*\"}",
           "refId": "A",

@@ -24,7 +24,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -102,7 +102,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "100 - (avg by (instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
           "refId": "A",
@@ -115,7 +115,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -193,7 +193,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "100 * (1 - ((node_memory_MemAvailable_bytes) / (node_memory_MemTotal_bytes)))",
           "refId": "A",
@@ -206,7 +206,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -295,7 +295,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "irate(node_disk_read_bytes_total[5m])",
           "refId": "A",
@@ -304,7 +304,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "irate(node_disk_written_bytes_total[5m])",
           "refId": "B",
@@ -317,7 +317,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -406,7 +406,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "irate(node_network_receive_bytes_total{device!~\"lo\"}[5m]) * 8",
           "refId": "A",
@@ -415,7 +415,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "irate(node_network_transmit_bytes_total{device!~\"lo\"}[5m]) * 8",
           "refId": "B",
@@ -428,7 +428,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -486,7 +486,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "100 - ((node_filesystem_avail_bytes{mountpoint=\"/\",fstype!=\"rootfs\"} * 100) / node_filesystem_size_bytes{mountpoint=\"/\",fstype!=\"rootfs\"})",
           "refId": "A"
@@ -498,7 +498,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -548,7 +548,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "node_time_seconds - node_boot_time_seconds",
           "refId": "A"
@@ -560,7 +560,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -635,7 +635,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "node_load1",
           "refId": "A",
@@ -644,7 +644,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "node_load5",
           "refId": "B",
@@ -653,7 +653,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": null
           },
           "expr": "node_load15",
           "refId": "C",
