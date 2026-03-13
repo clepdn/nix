@@ -49,6 +49,7 @@
           access = "proxy";
           url = "http://localhost:${toString config.services.prometheus.port}";
           isDefault = true;
+          uid = "prometheus";
         }
       ];
       dashboards.settings = {
