@@ -1,4 +1,4 @@
-{ config, self, ... }:
+{ config, self, lib, ... }:
 
 {
   # Format of dex.age:
@@ -17,6 +17,19 @@
     mode = "400";
   };
 
+  age.secrets.dex-oauth2-proxy = {
+    file = "${self}/secrets/dex-oauth2-proxy.age";
+    owner = "dex";
+    group = "dex";
+    mode = "400";
+  };
+
+  users.users.dex = {
+    isSystemUser = true;
+    group = "dex";
+  };
+  users.groups.dex = { };
+
   services.dex = {
     enable = true;
     environmentFile = config.age.secrets.dex.path;
@@ -29,7 +42,7 @@
         config.file = "/var/lib/dex/dex.db";
       };
 
-      web.http = "127.0.0.1:5556";
+      web.http = "0.0.0.0:5556";
 
       connectors = [
         {
@@ -67,11 +80,24 @@
           redirectURIs = [ "https://tv.on-her.computer/sso/OID/redirect/dex" ];
           secretFile = config.age.secrets.dex-jellyfin.path;
         }
+        {
+          id = "oauth2-proxy";
+          name = "OAuth2 Proxy";
+          redirectURIs = [ "https://auth.on-her.computer/oauth2/callback" ];
+          secretFile = config.age.secrets.dex-oauth2-proxy.path;
+        }
       ];
     };
   };
 
+  systemd.services.dex.serviceConfig = {
+    StateDirectory = "dex";
+    DynamicUser = lib.mkForce false;
+    User = "dex";
+    Group = "dex";
+  };
+
   systemd.tmpfiles.rules = [
-    "d /var/lib/dex 0750 dex dex -"
+    "d /var/lib/dex/state 0750 dex dex -"
   ];
 }

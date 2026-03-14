@@ -30,5 +30,7 @@ let hosts = [
 		"atlogin.age".publicKeys = keys;
 		"dex.age".publicKeys = keys;
 		"dex-jellyfin.age".publicKeys = keys;
+		"dex-oauth2-proxy.age".publicKeys = keys;
+		"oauth2-proxy.age".publicKeys = keys;
 	}
 

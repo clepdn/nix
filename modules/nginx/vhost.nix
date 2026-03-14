@@ -17,26 +17,18 @@ let cfg = config.myServices.acme;
     proxy_buffering off;
   '';
 
-  authentikOutpost = "https://auth.on-her.computer/outpost.goauthentik.io/auth/nginx";
+  oauth2ProxyAddr = "http://100.116.202.116:4180";
 
   forwardAuthConfig = ''
-    auth_request /outpost.goauthentik.io/auth/nginx;
-    error_page 401 = @authentik_start;
+    auth_request /oauth2/auth;
 
-    auth_request_set $authentik_set_cookie $upstream_http_set_cookie;
-    add_header Set-Cookie $authentik_set_cookie;
+    auth_request_set $user  $upstream_http_x_auth_request_user;
+    auth_request_set $email $upstream_http_x_auth_request_email;
+    auth_request_set $auth_cookie $upstream_http_set_cookie;
 
-    auth_request_set $authentik_username $upstream_http_x_authentik_username;
-    auth_request_set $authentik_groups $upstream_http_x_authentik_groups;
-    auth_request_set $authentik_email $upstream_http_x_authentik_email;
-    auth_request_set $authentik_name $upstream_http_x_authentik_name;
-    auth_request_set $authentik_uid $upstream_http_x_authentik_uid;
-
-    proxy_set_header X-authentik-username $authentik_username;
-    proxy_set_header X-authentik-groups $authentik_groups;
-    proxy_set_header X-authentik-email $authentik_email;
-    proxy_set_header X-authentik-name $authentik_name;
-    proxy_set_header X-authentik-uid $authentik_uid;
+    proxy_set_header X-User  $user;
+    proxy_set_header X-Email $email;
+    add_header Set-Cookie $auth_cookie;
   '';
 in {
   options.myServices.acme = lib.mkOption {
@@ -79,15 +71,19 @@ in {
           + lib.optionalString opts.forwardAuth ("\n" + forwardAuthConfig);
       };
     } // lib.optionalAttrs opts.forwardAuth {
-      locations."/outpost.goauthentik.io" = {
-        proxyPass = "https://auth.on-her.computer/outpost.goauthentik.io";
-        extraConfig = commonProxyHeaders;
+      locations."/oauth2/" = {
+        proxyPass = "${oauth2ProxyAddr}/oauth2/";
+        extraConfig = commonProxyHeaders + ''
+          proxy_set_header X-Scheme $scheme;
+          proxy_set_header X-Auth-Request-Redirect $scheme://$host$request_uri;
+          auth_request off;
+        '';
       };
       extraConfig = ''
-        error_page 401 = @authentik_start;
-        location @authentik_start {
+        error_page 401 = @oauth2_login;
+        location @oauth2_login {
           internal;
-          return 302 https://auth.on-her.computer/outpost.goauthentik.io/start?rd=$scheme://$http_host$request_uri;
+          return 302 ${oauth2ProxyAddr}/oauth2/start?rd=$scheme://$host$request_uri;
         }
       '';
     } // opts.extraNginxOpts);

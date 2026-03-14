@@ -10,6 +10,7 @@
       ./modules/authelia.nix
       "${self}/modules/atlogin"
       "${self}/modules/dex"
+      "${self}/modules/oauth2-proxy"
       "${self}/users/callie"
       "${self}/modules/comfymc"
       "${self}/modules/gregtech"

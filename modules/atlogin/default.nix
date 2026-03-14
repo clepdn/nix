@@ -40,7 +40,7 @@ in
       Group = "atlogin";
       WorkingDirectory = "/var/lib/atlogin";
       # config.json is the agenix secret — atlogin reads it from its working dir
-      ExecStartPre = "${pkgs.coreutils}/bin/ln -sf ${config.age.secrets.atlogin.path} /var/lib/atlogin/config.json";
+      ExecStartPre = "${pkgs.coreutils}/bin/ln -sf ${config.age.secrets.atlogin.path} /var/lib/atlogin/state/config.json";
       ExecStart = "${atlogin}/bin/atlogin";
       Restart = "on-failure";
       RestartSec = 5;
