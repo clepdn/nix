@@ -8,6 +8,8 @@
       ./modules/gluetun.nix
       ./modules/minio.nix
       ./modules/authelia.nix
+      "${self}/modules/atlogin"
+      "${self}/modules/dex"
       "${self}/users/callie"
       "${self}/modules/comfymc"
       "${self}/modules/gregtech"

@@ -16,6 +16,28 @@ let cfg = config.myServices.acme;
     proxy_set_header Connection $http_connection;
     proxy_buffering off;
   '';
+
+  authentikOutpost = "https://auth.on-her.computer/outpost.goauthentik.io/auth/nginx";
+
+  forwardAuthConfig = ''
+    auth_request /outpost.goauthentik.io/auth/nginx;
+    error_page 401 = @authentik_start;
+
+    auth_request_set $authentik_set_cookie $upstream_http_set_cookie;
+    add_header Set-Cookie $authentik_set_cookie;
+
+    auth_request_set $authentik_username $upstream_http_x_authentik_username;
+    auth_request_set $authentik_groups $upstream_http_x_authentik_groups;
+    auth_request_set $authentik_email $upstream_http_x_authentik_email;
+    auth_request_set $authentik_name $upstream_http_x_authentik_name;
+    auth_request_set $authentik_uid $upstream_http_x_authentik_uid;
+
+    proxy_set_header X-authentik-username $authentik_username;
+    proxy_set_header X-authentik-groups $authentik_groups;
+    proxy_set_header X-authentik-email $authentik_email;
+    proxy_set_header X-authentik-name $authentik_name;
+    proxy_set_header X-authentik-uid $authentik_uid;
+  '';
 in {
   options.myServices.acme = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
@@ -32,6 +54,7 @@ in {
         default = "";
       };
       options.wildcard = lib.mkOption { type = lib.types.bool; default = false; };
+      options.forwardAuth = lib.mkOption { type = lib.types.bool; default = false; };
     });
     default = {};
   };
@@ -52,8 +75,21 @@ in {
       useACMEHost = name;
       locations."/" = {
         proxyPass = "http://${opts.target}:${toString opts.port}";
-        extraConfig = commonProxyHeaders + "\n" + opts.extraLocationConfig;
+        extraConfig = commonProxyHeaders + "\n" + opts.extraLocationConfig
+          + lib.optionalString opts.forwardAuth ("\n" + forwardAuthConfig);
       };
+    } // lib.optionalAttrs opts.forwardAuth {
+      locations."/outpost.goauthentik.io" = {
+        proxyPass = "https://auth.on-her.computer/outpost.goauthentik.io";
+        extraConfig = commonProxyHeaders;
+      };
+      extraConfig = ''
+        error_page 401 = @authentik_start;
+        location @authentik_start {
+          internal;
+          return 302 https://auth.on-her.computer/outpost.goauthentik.io/start?rd=$scheme://$http_host$request_uri;
+        }
+      '';
     } // opts.extraNginxOpts);
     in 
       if opts.wildcard
