@@ -9,6 +9,7 @@
       ./modules/minio.nix
       ./modules/authelia.nix
       ./modules/home-assistant.nix
+      ./modules/wyoming-parakeet.nix
       "${self}/users/callie"
       "${self}/modules/comfymc"
       "${self}/modules/base"

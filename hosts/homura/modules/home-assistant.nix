@@ -13,7 +13,15 @@
   services.home-assistant = {
     enable = true;
     openFirewall = true;
-    extraComponents = [ "tuya" ];
+    extraComponents = [
+      # onboarding
+      "analytics" "google_translate" "met" "radio_browser" "shopping_list" "isal"
+      # core components HA loads automatically
+      "conversation" "assist_pipeline" "recorder" "frontend" "logbook" "history"
+      "cloud" "mobile_app" "stream" "media_source"
+      # integrations
+      "tuya" "wyoming"
+    ];
     config = {
       http = {
         use_x_forwarded_for = true;
@@ -21,6 +29,6 @@
       };
     };
     configWritable = true;
-    extraPackages = ps: with ps; [ hassil ];
+    extraPackages = ps: with ps; [ hassil home-assistant-intents isal numpy pyturbojpeg ];
   };
 }
