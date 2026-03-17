@@ -8,15 +8,11 @@
       ./modules/gluetun.nix
       ./modules/minio.nix
       ./modules/authelia.nix
-      "${self}/modules/atlogin"
-      "${self}/modules/dex"
-      "${self}/modules/oauth2-proxy"
+      ./modules/home-assistant.nix
       "${self}/users/callie"
       "${self}/modules/comfymc"
-      "${self}/modules/gregtech"
       "${self}/modules/base"
       "${self}/modules/pipewire"
-      "${self}/modules/authentik"
       "${self}/modules/monitoring"
       "${self}/modules/tz/ny.nix"
     ];
@@ -45,8 +41,6 @@
   networking.hostName = "homura"; # she graduated
 
   users.mutableUsers = false;
-
-  services.gregtech.enable = false;
 
   services.xserver.enable = false;
 

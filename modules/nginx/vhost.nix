@@ -17,18 +17,24 @@ let cfg = config.myServices.acme;
     proxy_buffering off;
   '';
 
-  oauth2ProxyAddr = "http://100.116.202.116:4180";
+  autheliaAddr = "http://100.116.202.116:9091";
 
   forwardAuthConfig = ''
-    auth_request /oauth2/auth;
+    auth_request /internal/authelia/authz;
 
-    auth_request_set $user  $upstream_http_x_auth_request_user;
-    auth_request_set $email $upstream_http_x_auth_request_email;
-    auth_request_set $auth_cookie $upstream_http_set_cookie;
+    auth_request_set $redirection_url $upstream_http_location;
 
-    proxy_set_header X-User  $user;
-    proxy_set_header X-Email $email;
-    add_header Set-Cookie $auth_cookie;
+    auth_request_set $user   $upstream_http_remote_user;
+    auth_request_set $groups $upstream_http_remote_groups;
+    auth_request_set $name   $upstream_http_remote_name;
+    auth_request_set $email  $upstream_http_remote_email;
+
+    proxy_set_header Remote-User   $user;
+    proxy_set_header Remote-Groups $groups;
+    proxy_set_header Remote-Name   $name;
+    proxy_set_header Remote-Email  $email;
+
+    error_page 401 =302 $redirection_url;
   '';
 in {
   options.myServices.acme = lib.mkOption {
@@ -61,32 +67,33 @@ in {
     }) cfg;
 
     services.nginx.virtualHosts = lib.listToAttrs (lib.flatten (lib.mapAttrsToList (name: opts:
-    let mkVhost = n: lib.nameValuePair n ({
-      forceSSL = true;
-      listen = port8443;
-      useACMEHost = name;
-      locations."/" = {
-        proxyPass = "http://${opts.target}:${toString opts.port}";
-        extraConfig = commonProxyHeaders + "\n" + opts.extraLocationConfig
-          + lib.optionalString opts.forwardAuth ("\n" + forwardAuthConfig);
+    let
+      baseVhost = {
+        forceSSL = true;
+        listen = port8443;
+        useACMEHost = name;
+        locations."/" = {
+          proxyPass = "http://${opts.target}:${toString opts.port}";
+          extraConfig = commonProxyHeaders + "\n" + opts.extraLocationConfig
+            + lib.optionalString opts.forwardAuth ("\n" + forwardAuthConfig);
+        };
       };
-    } // lib.optionalAttrs opts.forwardAuth {
-      locations."/oauth2/" = {
-        proxyPass = "${oauth2ProxyAddr}/oauth2/";
-        extraConfig = commonProxyHeaders + ''
-          proxy_set_header X-Scheme $scheme;
-          proxy_set_header X-Auth-Request-Redirect $scheme://$host$request_uri;
-          auth_request off;
-        '';
+      autheliaVhost = lib.optionalAttrs opts.forwardAuth {
+        locations."/internal/authelia/authz" = {
+          proxyPass = "${autheliaAddr}/api/authz/auth-request";
+          extraConfig = ''
+            internal;
+            proxy_pass_request_body off;
+            proxy_set_header Content-Length "";
+            proxy_set_header Connection "";
+            proxy_set_header X-Original-Method $request_method;
+            proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
+            proxy_set_header X-Forwarded-For $remote_addr;
+          '';
+        };
       };
-      extraConfig = ''
-        error_page 401 = @oauth2_login;
-        location @oauth2_login {
-          internal;
-          return 302 ${oauth2ProxyAddr}/oauth2/start?rd=$scheme://$host$request_uri;
-        }
-      '';
-    } // opts.extraNginxOpts);
+      mkVhost = n: lib.nameValuePair n
+        (lib.recursiveUpdate (lib.recursiveUpdate baseVhost autheliaVhost) opts.extraNginxOpts);
     in 
       if opts.wildcard
       then [ (mkVhost name) (mkVhost "*.${name}") ]

@@ -60,7 +60,7 @@ in {
           }
           {
             domain = "on-her.computer";
-            authelia_url = "https://authelia.on-her.computer";
+            authelia_url = "https://au.on-her.computer";
             default_redirection_url = "https://callie.on-her.computer";
           }
         ];
