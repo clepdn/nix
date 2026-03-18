@@ -10,6 +10,7 @@
       ./modules/authelia.nix
       ./modules/home-assistant.nix
       ./modules/wyoming-parakeet.nix
+      ./modules/sunshine.nix
       "${self}/users/callie"
       "${self}/modules/comfymc"
       "${self}/modules/base"
@@ -43,7 +44,7 @@
 
   users.mutableUsers = false;
 
-  services.xserver.enable = false;
+  services.xserver.enable = true;
 
   programs.firefox.enable = true;
 
@@ -55,7 +56,8 @@
   ];
 
   services.tailscale.enable = true;
-  services.avahi.nssmdns4.enable = true;
+  services.avahi.enable = true;
+  services.avahi.nssmdns4 = true;
 
   networking.firewall.enable = true;
 
