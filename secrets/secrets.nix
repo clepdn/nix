@@ -1,0 +1,32 @@
+let hosts = [
+		"megatron"
+		"madoka"
+		"homura-v"
+		"sayaka"
+	];
+	users = [
+		"callie_megatron"
+		"callie_madoka"
+		"callie_homura-v"
+		"callie_sayaka"
+	];
+	systemKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
+	userKeys = map(user: builtins.readFile ./publicKeys/${user}.pub) users;
+	keys = systemKeys ++ userKeys;
+	in {
+		"minio.age".publicKeys = keys;
+		"tailscale.age".publicKeys = keys;
+		"muliphein.age".publicKeys = keys;
+		"muliphein-pskey.age".publicKeys = keys;
+		"gluetun.age".publicKeys = keys;
+		"authelia-jwt.age".publicKeys = keys;
+		"authelia-session.age".publicKeys = keys;
+		"authelia-storagekey.age".publicKeys = keys;
+		"authelia-users.yml.age".publicKeys = keys;
+		"authentik.env.age".publicKeys = keys;
+		"webhook.age".publicKeys = keys;
+		"cloudflare-dns.age".publicKeys = keys;
+		"grafana-secret-key.age".publicKeys = keys;
+		"home-assistant-secrets.age".publicKeys = keys;
+	}
+
