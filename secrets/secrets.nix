@@ -26,5 +26,6 @@ let hosts = [
 		"authentik.env.age".publicKeys = keys;
 		"webhook.age".publicKeys = keys;
 		"cloudflare-dns.age".publicKeys = keys;
+		"grafana-secret-key.age".publicKeys = keys;
 	}
 

@@ -1,20 +1,21 @@
 { config, pkgs, self, ... }:
 {
   imports =
-    [ 
+    [
       ./hardware-configuration.nix
       ./modules/audiobookshelf.nix
       ./modules/jellyfin.nix
       ./modules/gluetun.nix
       ./modules/minio.nix
       ./modules/authelia.nix
-      "${self}/users/callie" 
+      "${self}/users/callie"
       "${self}/modules/comfymc"
       "${self}/modules/gregtech"
-      "${self}/modules/base" 
-      "${self}/modules/pipewire" 
-      "${self}/modules/authentik" 
-      "${self}/modules/tz/ny.nix" 
+      "${self}/modules/base"
+      "${self}/modules/pipewire"
+      "${self}/modules/authentik"
+      "${self}/modules/monitoring"
+      "${self}/modules/tz/ny.nix"
     ];
 
   fileSystems."/mnt/hdd" = {
