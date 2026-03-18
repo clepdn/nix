@@ -48,4 +48,5 @@ with pkgs; [
 	bitwarden-desktop
 	openssl
 	claude-code
+	aseprite
 ]

@@ -55,7 +55,7 @@ in {
         cookies = [
           {
             domain = "nematodes.net";
-            authelia_url = "https://authelia.nematodes.net";
+            authelia_url = "https://au.nematodes.net";
             default_redirection_url = "https://nematodes.net";
           }
           {
