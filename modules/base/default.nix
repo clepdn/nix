@@ -1,8 +1,8 @@
 { config, pkgs, lib, self, ... }:
 {
 	imports = [
-		"${self}/modules/ssh/"		
-		"${self}/modules/nix/"		
+		"${self}/modules/ssh/"
+		"${self}/modules/nix/"
 	];
 
 	environment.systemPackages = with pkgs; [
