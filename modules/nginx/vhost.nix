@@ -17,7 +17,7 @@ let cfg = config.myServices.acme;
     proxy_buffering off;
   '';
 
-  autheliaAddr = "http://100.116.202.116:9091";
+  autheliaAddr = "https://au.on-her.computer";
 
   forwardAuthConfig = ''
     auth_request /internal/authelia/authz;

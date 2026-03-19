@@ -127,9 +127,9 @@
 	};
   };
 
-  systemd.sleep.extraConfig = ''
-    HibernateDelaySec=4h
-  '';
+  systemd.sleep.settings.Sleep = {
+    HibernateDelaySec = "4h";
+  };
 
   # services.avahi.nssmdns4.enable = true; # I don't particularly need this to be enabled on my (portable) laptop.
   services.tailscale.enable = true;

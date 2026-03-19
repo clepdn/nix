@@ -24,6 +24,7 @@
 	programs.fish.enable = true;
 	programs.neovim.enable  = true;
 	documentation.man.generateCaches = false;
+	documentation.man.man-db.enable = false;
 
 	networking.networkmanager.enable = true;
 }
