@@ -39,6 +39,23 @@ in
       target = "100.116.202.116";
       extraLocationConfig = ''client_max_body_size 10G;'';
     };
+    "au.on-her.computer" = cloudflareDNS // {
+      port = 9091;
+      target = "100.116.202.116";
+    };
+    "cubit.on-her.computer" = cloudflareDNS // {
+      port = 8080;
+      target = "100.116.202.116";
+      forwardAuth = true;
+    };
+    "tv.on-her.computer" = cloudflareDNS // {
+      port = 8096;
+      target = "100.116.202.116";
+    };
+    "home.on-her.computer" = cloudflareDNS // {
+      port = 8123;
+      target = "100.116.202.116";
+    };
   };
 }
 

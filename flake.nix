@@ -1,6 +1,6 @@
 {
 	inputs = {
-		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+		nixpkgs.url = "github:NixOS/nixpkgs/d6c71932130818840fc8fe9509cf50be8c64634f";
 		jovian = {
 			url = "github:Jovian-Experiments/Jovian-NixOS";
 		};
@@ -57,7 +57,7 @@
 			deck    = mkHost "deck"    [ inputs.jovian.nixosModules.jovian ];
 			sayaka  = mkHost "sayaka"  [ inputs.disko.nixosModules.disko ];
 			madoka  = mkHost "madoka"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
-			homura  = mkHost "homura"  [  ];
+			homura  = mkHost "homura"  [ inputs.jovian.nixosModules.jovian ];
 		};
 	}
 

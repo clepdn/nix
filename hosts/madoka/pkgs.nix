@@ -32,7 +32,6 @@ with pkgs; [
 	gcc
 	clang
 	gdb
-	openai-whisper
 	opencode
 	obs-studio
 	ffmpeg-full
@@ -49,4 +48,5 @@ with pkgs; [
 	openssl
 	claude-code
 	aseprite
+	pi-coding-agent
 ]

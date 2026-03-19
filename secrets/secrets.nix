@@ -27,5 +27,6 @@ let hosts = [
 		"webhook.age".publicKeys = keys;
 		"cloudflare-dns.age".publicKeys = keys;
 		"grafana-secret-key.age".publicKeys = keys;
+		"home-assistant-secrets.age".publicKeys = keys;
 	}
 
