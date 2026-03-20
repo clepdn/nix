@@ -9,7 +9,7 @@
       ./modules/minio.nix
       ./modules/authelia.nix
       ./modules/home-assistant.nix
-      ./modules/wyoming-parakeet.nix
+      #./modules/wyoming-parakeet.nix
       ./modules/sunshine.nix
       "${self}/users/callie"
       "${self}/modules/comfymc"
@@ -45,6 +45,8 @@
   users.mutableUsers = false;
 
   services.xserver.enable = true;
+  #services.displayManager.sddm.enable = true;
+  #services.desktopManager.plasma6.enable = true;
 
   programs.firefox.enable = true;
 

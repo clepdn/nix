@@ -43,6 +43,22 @@
 	inputs @ { self, nixpkgs, flake-utils, home-manager, ... }:
 
 	let
+		# Workaround: nix-prefetch-git binary is named "nix-prefetch-git-26.05pre-git"
+		# but fetchCargoVendor expects "nix-prefetch-git". Add a symlink.
+		fixNixPrefetchGit = { lib, ... }: {
+			nixpkgs.overlays = [
+				(final: prev: {
+					nix-prefetch-git = prev.nix-prefetch-git.overrideAttrs (old: {
+						postFixup = (old.postFixup or "") + ''
+							if [ ! -e "$out/bin/nix-prefetch-git" ]; then
+								ln -s "$out/bin/nix-prefetch-git-"* "$out/bin/nix-prefetch-git" 2>/dev/null || true
+							fi
+						'';
+					});
+				})
+			];
+		};
+
 		mkHost = host: extraModules: nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
 			specialArgs = { inherit inputs self; };
@@ -50,6 +66,7 @@
 				./hosts/${host}
 				inputs.agenix.nixosModules.default
 				inputs.home-manager.nixosModules.home-manager
+				fixNixPrefetchGit
 			] ++ extraModules;
 		};
 	in

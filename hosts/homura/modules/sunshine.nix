@@ -17,8 +17,7 @@
   jovian.steam.user = "runner";
   jovian.steam.desktopSession = "plasma"; # fallback DE if Steam exits
 
-  # Display manager with autologin wired up by jovian.steam
-  #services.displayManager.sddm.enable = true;
+  # Plasma as fallback DE when exiting Steam/gamescope
   services.desktopManager.plasma6.enable = true;
 
   # Sunshine game-streaming server
