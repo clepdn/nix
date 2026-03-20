@@ -16,6 +16,26 @@ let cfg = config.myServices.acme;
     proxy_set_header Connection $http_connection;
     proxy_buffering off;
   '';
+
+  autheliaAddr = "https://au.on-her.computer";
+
+  forwardAuthConfig = ''
+    auth_request /internal/authelia/authz;
+
+    auth_request_set $redirection_url $upstream_http_location;
+
+    auth_request_set $user   $upstream_http_remote_user;
+    auth_request_set $groups $upstream_http_remote_groups;
+    auth_request_set $name   $upstream_http_remote_name;
+    auth_request_set $email  $upstream_http_remote_email;
+
+    proxy_set_header Remote-User   $user;
+    proxy_set_header Remote-Groups $groups;
+    proxy_set_header Remote-Name   $name;
+    proxy_set_header Remote-Email  $email;
+
+    error_page 401 =302 $redirection_url;
+  '';
 in {
   options.myServices.acme = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
@@ -32,6 +52,7 @@ in {
         default = "";
       };
       options.wildcard = lib.mkOption { type = lib.types.bool; default = false; };
+      options.forwardAuth = lib.mkOption { type = lib.types.bool; default = false; };
     });
     default = {};
   };
@@ -46,15 +67,33 @@ in {
     }) cfg;
 
     services.nginx.virtualHosts = lib.listToAttrs (lib.flatten (lib.mapAttrsToList (name: opts:
-    let mkVhost = n: lib.nameValuePair n ({
-      forceSSL = true;
-      listen = port8443;
-      useACMEHost = name;
-      locations."/" = {
-        proxyPass = "http://${opts.target}:${toString opts.port}";
-        extraConfig = commonProxyHeaders + "\n" + opts.extraLocationConfig;
+    let
+      baseVhost = {
+        forceSSL = true;
+        listen = port8443;
+        useACMEHost = name;
+        locations."/" = {
+          proxyPass = "http://${opts.target}:${toString opts.port}";
+          extraConfig = commonProxyHeaders + "\n" + opts.extraLocationConfig
+            + lib.optionalString opts.forwardAuth ("\n" + forwardAuthConfig);
+        };
       };
-    } // opts.extraNginxOpts);
+      autheliaVhost = lib.optionalAttrs opts.forwardAuth {
+        locations."/internal/authelia/authz" = {
+          proxyPass = "${autheliaAddr}/api/authz/auth-request";
+          extraConfig = ''
+            internal;
+            proxy_pass_request_body off;
+            proxy_set_header Content-Length "";
+            proxy_set_header Connection "";
+            proxy_set_header X-Original-Method $request_method;
+            proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
+            proxy_set_header X-Forwarded-For $remote_addr;
+          '';
+        };
+      };
+      mkVhost = n: lib.nameValuePair n
+        (lib.recursiveUpdate (lib.recursiveUpdate baseVhost autheliaVhost) opts.extraNginxOpts);
     in 
       if opts.wildcard
       then [ (mkVhost name) (mkVhost "*.${name}") ]

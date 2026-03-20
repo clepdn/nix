@@ -8,12 +8,13 @@
       ./modules/gluetun.nix
       ./modules/minio.nix
       ./modules/authelia.nix
+      ./modules/home-assistant.nix
+      #./modules/wyoming-parakeet.nix
+      ./modules/sunshine.nix
       "${self}/users/callie"
       "${self}/modules/comfymc"
-      "${self}/modules/gregtech"
       "${self}/modules/base"
       "${self}/modules/pipewire"
-      "${self}/modules/authentik"
       "${self}/modules/monitoring"
       "${self}/modules/tz/ny.nix"
     ];
@@ -24,6 +25,17 @@
 	options = [ "compress=zstd" ];
   };
 
+  hardware.graphics.enable = true;  # was hardware.opengl.enable before NixOS 24.11
+
+  services.xserver.videoDrivers = [ "nvidia" ];
+
+  hardware.nvidia = {
+    modesetting.enable = true;
+    nvidiaSettings = true;
+    open = false;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -32,9 +44,9 @@
 
   users.mutableUsers = false;
 
-  services.gregtech.enable = false;
-
-  services.xserver.enable = false;
+  services.xserver.enable = true;
+  #services.displayManager.sddm.enable = true;
+  #services.desktopManager.plasma6.enable = true;
 
   programs.firefox.enable = true;
 
@@ -46,7 +58,8 @@
   ];
 
   services.tailscale.enable = true;
-  services.avahi.nssmdns4.enable = true;
+  services.avahi.enable = true;
+  services.avahi.nssmdns4 = true;
 
   networking.firewall.enable = true;
 

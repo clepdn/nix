@@ -10,12 +10,13 @@
       ./hardware-configuration.nix
       ./modules/bluetooth.nix
       ./modules/nvidia.nix
-      "${self}/users/callie" 
-      "${self}/modules/base" 
-      "${self}/modules/pipewire" 
-      "${self}/modules/plymouth" 
-      "${self}/modules/altserver" 
-      "${self}/modules/tz/ny.nix" 
+      "${self}/users/callie"
+      "${self}/modules/base"
+      "${self}/modules/pipewire"
+      "${self}/modules/plymouth"
+      "${self}/modules/altserver"
+      "${self}/modules/tz/ny.nix"
+      "${self}/modules/pi-coding-agent"
     ];
 
   virtualisation.virtualbox.host.enable = true;
@@ -127,9 +128,14 @@
 	};
   };
 
+
   systemd.sleep.extraConfig = ''
     HibernateDelaySec=4h
   '';
+  /* Uncomment me and delete above when you upgrade nixpkgs
+  systemd.sleep.settings.Sleep = {
+    HibernateDelaySec = "4h";
+  };*/
 
   # services.avahi.nssmdns4.enable = true; # I don't particularly need this to be enabled on my (portable) laptop.
   services.tailscale.enable = true;
