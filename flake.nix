@@ -3,6 +3,7 @@
 		nixpkgs.url = "github:NixOS/nixpkgs/d6c71932130818840fc8fe9509cf50be8c64634f";
 		jovian = {
 			url = "github:Jovian-Experiments/Jovian-NixOS";
+			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		zen-browser = {
 			url = "github:0xc000022070/zen-browser-flake";

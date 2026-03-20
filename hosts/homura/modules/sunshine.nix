@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   users.users.runner = {
     isNormalUser = true;
@@ -7,6 +7,9 @@
     # Locked password — access is via autologin only
     hashedPassword = "!";
   };
+
+  # inputplumber is a Steam Deck controller remapper — not needed on homura
+  services.inputplumber.enable = lib.mkForce false;
 
   # Jovian Steam — boots directly into Steam/gamescope on login
   jovian.steam.enable = true;
