@@ -10,7 +10,8 @@
       ./modules/authelia.nix
       ./modules/home-assistant.nix
       #./modules/wyoming-parakeet.nix
-      ./modules/sunshine.nix
+      #./modules/sunshine.nix
+      ./modules/sleepless.nix
       "${self}/users/callie"
       "${self}/modules/comfymc"
       "${self}/modules/base"
@@ -45,8 +46,8 @@
   users.mutableUsers = false;
 
   services.xserver.enable = true;
-  #services.displayManager.sddm.enable = true;
-  #services.desktopManager.plasma6.enable = true;
+  services.displayManager.sddm.enable = true;
+  services.desktopManager.plasma6.enable = true;
 
   programs.firefox.enable = true;
 

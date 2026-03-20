@@ -1,12 +1,12 @@
 {
   services.logind = {
     lidSwitch = "ignore";          # ignore lid close
-    extraConfig = ''
-      HandleSuspendKey=ignore
-      HandleHibernateKey=ignore
-      HandleLidSwitch=ignore
-      HandleLidSwitchExternalPower=ignore
-    '';
+    settings.Login = {
+      HandleSuspendKey = "ignore";
+      HandleHibernateKey = "ignore";
+      HandleLidSwitch = "ignore";
+      HandleLidSwitchExternalPower = "ignore";
+    };
   };
 
   systemd.targets = {
