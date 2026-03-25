@@ -28,5 +28,6 @@ let hosts = [
 		"cloudflare-dns.age".publicKeys = keys;
 		"grafana-secret-key.age".publicKeys = keys;
 		"home-assistant-secrets.age".publicKeys = keys;
+		"pds.env.age".publicKeys = keys;
 	}
 
