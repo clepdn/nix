@@ -14,7 +14,4 @@
 		enable = true;
 		envPath = config.age.secrets.gluetun.path;
 	};
-
-
-
 }

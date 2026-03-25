@@ -49,4 +49,6 @@ with pkgs; [
 	claude-code
 	aseprite
 	pi-coding-agent
+	gf
+	blender
 ]

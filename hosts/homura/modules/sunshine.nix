@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   users.users.runner = {
     isNormalUser = true;
@@ -8,14 +8,16 @@
     hashedPassword = "!";
   };
 
+  # inputplumber is a Steam Deck controller remapper — not needed on homura
+  services.inputplumber.enable = lib.mkForce false;
+
   # Jovian Steam — boots directly into Steam/gamescope on login
   jovian.steam.enable = true;
   jovian.steam.autoStart = true;
   jovian.steam.user = "runner";
   jovian.steam.desktopSession = "plasma"; # fallback DE if Steam exits
 
-  # Display manager with autologin wired up by jovian.steam
-  services.displayManager.sddm.enable = true;
+  # Plasma as fallback DE when exiting Steam/gamescope
   services.desktopManager.plasma6.enable = true;
 
   # Sunshine game-streaming server
