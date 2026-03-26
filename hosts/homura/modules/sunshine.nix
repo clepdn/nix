@@ -11,6 +11,8 @@
   # inputplumber is a Steam Deck controller remapper — not needed on homura
   services.inputplumber.enable = lib.mkForce false;
 
+  programs.steam.enable = true;
+
   # Jovian Steam — boots directly into Steam/gamescope on login
   jovian.steam.enable = true;
   jovian.steam.autoStart = true;
