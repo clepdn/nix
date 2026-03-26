@@ -66,6 +66,7 @@ in
         "com.atproto.repo.putRecord"
         "com.atproto.repo.applyWrites"
         "com.atproto.repo.importRepo"
+        "com.atproto.server.createSession"
       ];
     };
   };
