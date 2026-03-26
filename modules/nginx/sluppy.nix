@@ -12,6 +12,15 @@ let
     value = {
       proxyPass = "http://${pds.middleware.address}:${toString pds.middleware.port}";
       extraConfig = ''
+        if ($request_method = OPTIONS) {                                                                         
+          add_header 'Access-Control-Allow-Origin' $http_origin always;                                          
+          add_header 'Access-Control-Allow-Credentials' 'true' always;                                           
+          add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS' always;                                 
+          add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, atproto-proxy, atproto-accept-labelers' always;                                                                                   
+          add_header 'Access-Control-Max-Age' '86400' always;                                                    
+          return 204;                                                                                            
+        }
+
         proxy_pass_request_headers on;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -49,7 +58,7 @@ in
     hostname = "pds.sluppy.moe";
     environmentFile = config.age.secrets.pds-env.path;
     middleware = {
-      address = "100.116.202.116";
+      address = "100.80.201.30";
       port = 4004;
       routes = [
         "com.atproto.repo.createRecord"

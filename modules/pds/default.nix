@@ -74,7 +74,7 @@ in
           "${cfg.dataDir}:/pds:rw"
         ];
         ports = [
-          "127.0.0.1:${toString cfg.port}:${toString cfg.port}"
+          "${toString cfg.port}:${toString cfg.port}"
         ];
         log-driver = "journald";
       };
