@@ -1,10 +1,10 @@
 { config, lib, self, ... }:
 
 let
-  cfg = config.services.pds;
+  cfg = config.myNixOS.pds;
 in
 {
-  options.services.pds = {
+  options.myNixOS.pds = {
     enable = lib.mkEnableOption "Bluesky PDS container";
 
     hostname = lib.mkOption {

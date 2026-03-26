@@ -1,4 +1,4 @@
-{ config, pkgs, lib, self, ... }:
+{ config, pkgs, lib, self, inputs, ... }:
 {
 	imports = [
 		"${self}/modules/ssh/"
@@ -15,8 +15,8 @@
 		mosh # shrug
 		wl-clipboard
 		mosh
-
 		openssl
+		inputs.agenix.packages.${pkgs.system}.default
 	];
 
 	programs.git.enable  = true;

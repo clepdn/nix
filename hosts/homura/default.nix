@@ -18,6 +18,7 @@
       "${self}/modules/pipewire"
       "${self}/modules/monitoring"
       "${self}/modules/tz/ny.nix"
+      "${self}/modules/pi-coding-agent"
     ];
 
   fileSystems."/mnt/hdd" = {
@@ -56,6 +57,7 @@
      btrfs-progs
      rclone
      opencode
+     pi-coding-agent
   ];
 
   services.tailscale.enable = true;

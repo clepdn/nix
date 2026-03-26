@@ -5,7 +5,7 @@ let
     environmentFile = config.age.secrets.cloudflare.path;
   };
 
-  pds = config.services.pds;
+  pds = config.myNixOS.pds;
 
   middlewareLocations = lib.listToAttrs (map (route: {
     name  = "= /xrpc/${route}";
@@ -44,7 +44,7 @@ in
     mode = "400";
   };
 
-  services.pds = {
+  myNixOS.pds = {
     enable = true;
     hostname = "pds.sluppy.moe";
     environmentFile = config.age.secrets.pds-env.path;
