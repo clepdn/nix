@@ -120,6 +120,7 @@
     ];
 
     plugins = {
+      web-devicons.enable = true;
       telescope = {
         enable = true;
         extensions.file-browser.enable = true;
@@ -167,11 +168,12 @@
       # Replace the hash after first failed build - nix will print the correct one
       (pkgs.vimUtils.buildVimPlugin {
         name = "evergarden";
+        nvimSkipModule = [ "evergarden.extras" "minidoc" ];
         src = pkgs.fetchFromGitHub {
           owner = "everviolet";
           repo = "nvim";
           rev = "main";
-          hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+          hash = "sha256-UEnor+FziURTnBKtDyMJPu3GzkdjEZ7XQyePsCA5HIY=";
         };
       })
     ];
