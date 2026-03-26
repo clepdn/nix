@@ -32,6 +32,10 @@
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		nixvim = {
+			url = "github:nix-community/nixvim";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 		flake-utils.url = "github:numtide/flake-utils";
 		disko = {
 			url = "github:nix-community/disko";
