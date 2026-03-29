@@ -1,10 +1,10 @@
 { config, lib, self, ... }:
 
 let
-  cfg = config.services.pds;
+  cfg = config.myNixOS.pds;
 in
 {
-  options.services.pds = {
+  options.myNixOS.pds = {
     enable = lib.mkEnableOption "Bluesky PDS container";
 
     hostname = lib.mkOption {
@@ -74,7 +74,7 @@ in
           "${cfg.dataDir}:/pds:rw"
         ];
         ports = [
-          "127.0.0.1:${toString cfg.port}:${toString cfg.port}"
+          "${toString cfg.port}:${toString cfg.port}"
         ];
         log-driver = "journald";
       };

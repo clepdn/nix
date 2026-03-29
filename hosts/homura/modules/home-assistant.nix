@@ -14,14 +14,15 @@
     enable = true;
     openFirewall = true;
     extraComponents = [
-      # onboarding
+      # pulls in assist_pipeline, bluetooth, cloud, conversation, dhcp, energy,
+      # history, homeassistant_alerts, logbook, media_source, mobile_app, stream, etc.
+      "default_config"
+      # onboarding & perf
       "analytics" "google_translate" "met" "radio_browser" "shopping_list" "isal"
-      # core components HA loads automatically
-      "conversation" "assist_pipeline" "recorder" "frontend" "logbook" "history"
-      "cloud" "mobile_app" "stream" "media_source"
+      # still need these explicitly
+      "recorder" "frontend"
       # integrations
       "tuya" "wyoming" "google_generative_ai_conversation" "piper"
-      # light switches
       "netatmo" "lutron_caseta"
     ];
     config = {

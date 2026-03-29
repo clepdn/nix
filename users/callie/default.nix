@@ -1,7 +1,4 @@
 { config, pkgs, lib, inputs, ... }:
-let
-  piWebAccess = pkgs.callPackage ../../modules/pi-coding-agent/pi-web-access.nix { };
-in
 {
   users.users.callie = {
     isNormalUser = true;
@@ -26,32 +23,16 @@ in
     ];
   };
 
-  home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
+  home-manager.sharedModules = [ inputs.nixvim.homeManagerModules.nixvim ];
 
-  home-manager.users.callie = { pkgs, lib, ... }: {
+  home-manager.users.callie = { pkgs, ... }: {
     imports = [ ../../modules/nvim ];
     home = {
       homeDirectory = config.users.users.callie.home;
       packages = [
       ];
       stateVersion = "25.11";
-    };
-
-    home.activation.piWebAccess = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      settings="$HOME/.pi/agent/settings.json"
-      pkg="${piWebAccess}"
-      mkdir -p "$(dirname "$settings")"
-      if [ ! -f "$settings" ]; then
-        echo '{}' > "$settings"
-      fi
-      current=$(cat "$settings")
-      # Add pkg to packages array if not already present
-      if ! echo "$current" | ${pkgs.jq}/bin/jq -e --arg p "$pkg" '.packages // [] | index($p) != null' > /dev/null 2>&1; then
-        echo "$current" \
-          | ${pkgs.jq}/bin/jq --arg p "$pkg" '.packages = ((.packages // []) + [$p] | unique)' \
-          > "$settings.tmp" && mv "$settings.tmp" "$settings"
-      fi
-    '';
+     };
   };
 
   programs.fish.enable = true;
