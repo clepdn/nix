@@ -9,9 +9,10 @@
       "/var/lib/wyoming-faster-whisper:/data:rw"
     ];
     cmd = [
-      "--model" "small-int8"
+      "--model" "small"
       "--language" "en"
       "--device" "cuda"
+      "--compute-type" "int8"
     ];
     extraOptions = [
       "--device=nvidia.com/gpu=all"
