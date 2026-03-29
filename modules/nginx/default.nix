@@ -1,6 +1,7 @@
 {
   imports = [
     ./computer.nix
+    ./sluppy.nix
   ];
 
   security.acme = {

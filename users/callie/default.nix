@@ -23,10 +23,12 @@
     ];
   };
 
+  home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
+
   home-manager.users.callie = { pkgs, ... }: {
+    imports = [ ../../modules/nvim ];
     home = {
       homeDirectory = config.users.users.callie.home;
-      # packages =
       packages = [
       ];
       stateVersion = "25.11";
