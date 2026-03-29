@@ -20,7 +20,7 @@
       "conversation" "assist_pipeline" "recorder" "frontend" "logbook" "history"
       "cloud" "mobile_app" "stream" "media_source"
       # integrations
-      "tuya" "wyoming" "google_generative_ai_conversation"
+      "tuya" "wyoming" "google_generative_ai_conversation" "netatmo" "lutron_caseta"
     ];
     config = {
       http = {
