@@ -14,15 +14,22 @@
     enable = true;
     openFirewall = true;
     extraComponents = [
-      # onboarding
+      # pulls in assist_pipeline, bluetooth, cloud, conversation, dhcp, energy,
+      # history, homeassistant_alerts, logbook, media_source, mobile_app, stream, etc.
+      "default_config"
+      "mobile_app"
+      # onboarding & perf
       "analytics" "google_translate" "met" "radio_browser" "shopping_list" "isal"
-      # core components HA loads automatically
-      "conversation" "assist_pipeline" "recorder" "frontend" "logbook" "history"
-      "cloud" "mobile_app" "stream" "media_source"
+      # still need these explicitly
+      "recorder" "frontend"
       # integrations
-      "tuya" "wyoming"
+      "tuya" "wyoming" "google_generative_ai_conversation" "piper"
+      "netatmo" "lutron_caseta"
     ];
     config = {
+      homeassistant = {
+        external_url = "https://home.on-her.computer";
+      };
       http = {
         use_x_forwarded_for = true;
         trusted_proxies = [ "100.77.12.60/32" ];
