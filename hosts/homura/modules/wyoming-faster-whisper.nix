@@ -3,7 +3,7 @@
   hardware.nvidia-container-toolkit.enable = true;
 
   virtualisation.oci-containers.containers.wyoming-faster-whisper = {
-    image = "ghcr.io/rhasspy/wyoming-faster-whisper:latest";
+    image = "rhasspy/wyoming-whisper:latest";
     ports = [ "10300:10300" ];
     volumes = [
       "/var/lib/wyoming-faster-whisper:/data:rw"
