@@ -9,7 +9,7 @@
       ./modules/minio.nix
       ./modules/authelia.nix
       ./modules/home-assistant.nix
-      #./modules/wyoming-parakeet.nix
+      ./modules/wyoming-faster-whisper.nix
       #./modules/sunshine.nix
       ./modules/sleepless.nix
       "${self}/users/callie"
