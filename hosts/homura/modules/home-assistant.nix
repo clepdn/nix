@@ -17,6 +17,7 @@
       # pulls in assist_pipeline, bluetooth, cloud, conversation, dhcp, energy,
       # history, homeassistant_alerts, logbook, media_source, mobile_app, stream, etc.
       "default_config"
+      "mobile_app"
       # onboarding & perf
       "analytics" "google_translate" "met" "radio_browser" "shopping_list" "isal"
       # still need these explicitly
