@@ -27,6 +27,9 @@
       "netatmo" "lutron_caseta"
     ];
     config = {
+      homeassistant = {
+        external_url = "https://home.on-her.computer";
+      };
       http = {
         use_x_forwarded_for = true;
         trusted_proxies = [ "100.77.12.60/32" ];
