@@ -31,6 +31,8 @@
         },
       }
 
+      vim.opt.clipboard:append("unnamedplus")
+
       vim.lsp.inlay_hint.enable(true)
 
       vim.cmd('colorscheme evergarden-winter')
