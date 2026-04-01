@@ -12,10 +12,11 @@
 		wget
 		kitty # including in base cause pagers freak out when TERM=xterm-kitty
 		btop
-		mosh # shrug
+		mosh 
 		wl-clipboard
 		mosh
 		openssl
+		psmisc # killall
 		inputs.agenix.packages.${pkgs.system}.default
 	];
 

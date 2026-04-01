@@ -14,6 +14,7 @@
       number = true;
       splitright = true;
       showtabline = 2;
+      termguicolors = true;
     };
 
     # OSC 52 clipboard + post-load setup

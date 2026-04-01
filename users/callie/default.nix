@@ -26,7 +26,10 @@
   home-manager.sharedModules = [ inputs.nixvim.homeManagerModules.nixvim ];
 
   home-manager.users.callie = { pkgs, ... }: {
-    imports = [ ../../modules/nvim ];
+    imports = [
+      ../../modules/nvim
+      ../../modules/nmux
+    ];
     home = {
       homeDirectory = config.users.users.callie.home;
       packages = [
