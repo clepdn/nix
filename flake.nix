@@ -42,7 +42,7 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		slugtan = {
-			url = "git+ssh://git@codeberg.org/cowie/nix.git";
+			url = "git+ssh://git@codeberg.org/cowie/slugbot.git";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 	};
