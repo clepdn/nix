@@ -41,6 +41,10 @@
 			url = "github:nix-community/disko";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		slugtan = {
+			url = "git+ssh://git@codeberg.org/cowie/nix.git";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
 	outputs =
@@ -79,7 +83,8 @@
 			deck    = mkHost "deck"    [ inputs.jovian.nixosModules.jovian ];
 			sayaka  = mkHost "sayaka"  [ inputs.disko.nixosModules.disko ];
 			madoka  = mkHost "madoka"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
-			homura  = mkHost "homura"  [ inputs.jovian.nixosModules.jovian ];
+			homura  = mkHost "homura"  [ inputs.jovian.nixosModules.jovian 
+						     inputs.slugtan.nixosModules.default ];
 		};
 	}
 
