@@ -34,7 +34,26 @@ function _nmux_new -a dir name
         return 1
     end
     echo "nmux: creating session '$name'"
-    exec nvim --listen "$sock"
+
+    # start headless server detached from terminal
+    setsid nvim --headless --listen "$sock" &
+    disown
+
+    # wait for socket to appear
+    for i in (seq 1 50)
+        if test -e "$sock"
+            break
+        end
+        sleep 0.05
+    end
+
+    if not test -e "$sock"
+        echo "nmux: timed out waiting for session '$name' to start" >&2
+        return 1
+    end
+
+    # attach UI
+    exec nvim --server "$sock" --remote-ui
 end
 
 function _nmux_attach -a dir name
@@ -51,8 +70,7 @@ function _nmux_attach -a dir name
         return 1
     end
     echo "nmux: attaching to session '$name'"
-    set -gx COLORTERM truecolor
-    exec nvim --server "$sock" --remote-ui -u NONE
+    exec nvim --server "$sock" --remote-ui
 end
 
 function _nmux_list -a dir
@@ -64,8 +82,8 @@ function _nmux_list -a dir
     echo "sessions:"
     for s in $sessions
         set -l sock "$dir/$s"
-        # check if socket is alive
-        if socat -u OPEN:/dev/null "UNIX-CONNECT:$sock" 2>/dev/null
+        # check if socket is alive via fuser
+        if fuser "$sock" >/dev/null 2>&1
             set_color green
             echo "  $s"
         else
