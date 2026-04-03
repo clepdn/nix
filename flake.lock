@@ -387,11 +387,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1775104534,
-        "narHash": "sha256-Uq6miGCTxvH+YCun18p/RxflXMTOA3yXahM7trYUsvc=",
+        "lastModified": 1775106198,
+        "narHash": "sha256-AHXuqcW5UkU8hu2LRxlWxoAsZcOKjHYl3nBP38g58a4=",
         "ref": "refs/heads/main",
-        "rev": "b0496298c9a572fc2c1ad07d3bd906406ee1e5b3",
-        "revCount": 505,
+        "rev": "df2b63c1b675bf9d229e97b03d652c6f5e9797a2",
+        "revCount": 506,
         "type": "git",
         "url": "ssh://git@codeberg.org/cowie/slugbot.git"
       },

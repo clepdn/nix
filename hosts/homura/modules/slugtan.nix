@@ -6,8 +6,8 @@
 		group = "bsky-bot";
 		mode = "400";
 	};
-	services.slugtan = {
+	services.slug-tan = {
 		enable = true;
 		envFile = config.age.secrets.slugtan.path;
-	}
+	};
 }

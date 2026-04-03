@@ -14,6 +14,7 @@
       ./modules/wyoming-piper.nix
       ./modules/sunshine.nix
       ./modules/sleepless.nix
+      ./modules/slugtan.nix
       "${self}/users/callie"
       "${self}/modules/comfymc"
       "${self}/modules/base"
