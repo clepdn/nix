@@ -24,11 +24,26 @@
       "${self}/modules/pi-coding-agent"
     ];
 
-  fileSystems."/mnt/hdd" = {
+  /*fileSystems."/mnt/hdd" = {
 	device = "/dev/disk/by-uuid/eafaf86c-1442-4512-91d2-28c63f79547b";
 	fsType = "btrfs";
 	options = [ "compress=zstd" ];
+  };*/
+
+  boot.initrd.luks.devices."hdd" = {
+    device = "/dev/disk/by-uuid/f43fb5e6-2a5e-42a8-b0d0-fe43f495ad33";
   };
+
+  fileSystems."/mnt/hdd" = {
+    device = "/dev/mapper/hdd";
+    fsType = "btrfs";
+    options = [ "compress=zstd" ];
+  };
+
+  swapDevices = [{
+  	device = "/var/lib/swapfile";
+	size = 64*1024;
+  }];
 
   hardware.graphics.enable = true;  # was hardware.opengl.enable before NixOS 24.11
 
