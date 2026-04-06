@@ -24,11 +24,13 @@
       "${self}/modules/pi-coding-agent"
     ];
 
-  /*fileSystems."/mnt/hdd" = {
-	device = "/dev/disk/by-uuid/eafaf86c-1442-4512-91d2-28c63f79547b";
-	fsType = "btrfs";
-	options = [ "compress=zstd" ];
-  };*/
+  boot.initrd.network.enable = true;
+  boot.initrd.network.ssh = {
+    enable = true;
+    port = 2222;
+    hostKeys = [ "/etc/secrets/initrd/ssh_host_ed25519_key" ];
+    authorizedKeys = config.users.users.callie.openssh.authorizedKeys.keys;
+  };
 
   boot.initrd.luks.devices."hdd" = {
     device = "/dev/disk/by-uuid/f43fb5e6-2a5e-42a8-b0d0-fe43f495ad33";
