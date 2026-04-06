@@ -30,6 +30,5 @@ let hosts = [
 		"home-assistant-secrets.age".publicKeys = keys;
 		"pds.env.age".publicKeys = keys;
 		"slugtan.env.age".publicKeys = keys;
-		"homura-initrd-hostkey.age".publicKeys = keys;
 	}
 
