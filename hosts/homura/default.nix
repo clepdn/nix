@@ -21,7 +21,6 @@
       "${self}/modules/pipewire"
       "${self}/modules/monitoring"
       "${self}/modules/tz/ny.nix"
-      "${self}/modules/pi-coding-agent"
     ];
 
   boot.initrd.network.enable = true;

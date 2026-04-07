@@ -35,7 +35,7 @@ with pkgs; [
 	opencode
 	obs-studio
 	ffmpeg-full
-	qemu_full
+	qemu
 	neovim-remote
 	llvmPackages_20.systemLibcxxClang
 	clang-tools
@@ -46,7 +46,6 @@ with pkgs; [
 	patchelf
 	bitwarden-desktop
 	openssl
-	claude-code
 	aseprite
 	pi-coding-agent
 	gf
