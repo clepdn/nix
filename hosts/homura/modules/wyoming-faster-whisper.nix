@@ -1,25 +1,29 @@
-{ ... }:
-{
-  hardware.nvidia-container-toolkit.enable = true;
+{ pkgs, ... }:
+let
+  ctranslate2-cuda = pkgs.ctranslate2.override { withCUDA = true; };
 
-  virtualisation.oci-containers.containers.wyoming-faster-whisper = {
-    image = "rhasspy/wyoming-whisper:latest";
-    ports = [ "10300:10300" ];
-    volumes = [
-      "/var/lib/wyoming-faster-whisper:/data:rw"
-    ];
-    cmd = [
-      "--model" "small-int8"
-      "--language" "en"
-      "--device" "cuda"
-    ];
-    extraOptions = [
-      "--device=nvidia.com/gpu=all"
-    ];
-    log-driver = "journald";
+  python3 = pkgs.python3.override {
+    packageOverrides = _: super: {
+      ctranslate2 = super.ctranslate2.override {
+        ctranslate2-cpp = ctranslate2-cuda;
+      };
+    };
   };
 
-  systemd.tmpfiles.rules = [
-    "d /var/lib/wyoming-faster-whisper 0755 root root -"
-  ];
+  wyoming-faster-whisper-cuda = pkgs.wyoming-faster-whisper.override {
+    python3Packages = python3.pkgs;
+  };
+in
+{
+  services.wyoming.faster-whisper = {
+    package = wyoming-faster-whisper-cuda;
+
+    servers.main = {
+      enable = true;
+      model = "small-int8";
+      language = "en";
+      device = "cuda";
+      uri = "tcp://0.0.0.0:10300";
+    };
+  };
 }

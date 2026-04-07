@@ -9,9 +9,12 @@
       ./modules/minio.nix
       ./modules/authelia.nix
       ./modules/home-assistant.nix
+      #./modules/wyoming-parakeet.nix
       ./modules/wyoming-faster-whisper.nix
-      #./modules/sunshine.nix
+      ./modules/wyoming-piper.nix
+      ./modules/sunshine.nix
       ./modules/sleepless.nix
+      ./modules/slugtan.nix
       "${self}/users/callie"
       "${self}/modules/comfymc"
       "${self}/modules/base"
@@ -46,8 +49,8 @@
   users.mutableUsers = false;
 
   services.xserver.enable = true;
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
+  #services.displayManager.sddm.enable = true;
+  #services.desktopManager.plasma6.enable = true;
 
   programs.firefox.enable = true;
 
@@ -56,6 +59,7 @@
      btrfs-progs
      rclone
      opencode
+     pi-coding-agent
   ];
 
   services.tailscale.enable = true;

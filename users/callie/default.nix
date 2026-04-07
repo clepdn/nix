@@ -1,7 +1,4 @@
 { config, pkgs, lib, inputs, ... }:
-let
-  systemPkgs = pkgs;
-in
 {
   users.users.callie = {
     isNormalUser = true;
@@ -26,31 +23,37 @@ in
     ];
   };
 
-  home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
+  home-manager.sharedModules = [ inputs.nixvim.homeManagerModules.nixvim ];
 
   home-manager.users.callie = { pkgs, lib, ... }: {
-    imports = [ ../../modules/nvim ];
+    imports = [
+      ../../modules/nvim
+      ../../modules/nmux
+    ];
     home = {
       homeDirectory = config.users.users.callie.home;
-      packages = [
+      packages = with pkgs; [
+        pi-coding-agent
       ];
       stateVersion = "25.11";
     };
 
-    home.activation.piWebAccess = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    home.activation.piSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       settings="$HOME/.pi/agent/settings.json"
-      pkg="${systemPkgs.pi-web-access}"
       mkdir -p "$(dirname "$settings")"
       if [ ! -f "$settings" ]; then
         echo '{}' > "$settings"
       fi
       current=$(cat "$settings")
-      # Add pkg to packages array if not already present
-      if ! echo "$current" | ${pkgs.jq}/bin/jq -e --arg p "$pkg" '.packages // [] | index($p) != null' > /dev/null 2>&1; then
-        echo "$current" \
-          | ${pkgs.jq}/bin/jq --arg p "$pkg" '.packages = ((.packages // []) + [$p] | unique)' \
-          > "$settings.tmp" && mv "$settings.tmp" "$settings"
-      fi
+      echo "$current" \
+        | ${pkgs.jq}/bin/jq '
+          .defaultProvider = "anthropic"
+          | .defaultThinkingLevel = "medium"
+          | .packages = [
+              "https://github.com/nicobailon/pi-web-access",
+              "https://github.com/nicobailon/pi-subagents"
+            ]
+        ' > "$settings.tmp" && mv "$settings.tmp" "$settings"
     '';
   };
 

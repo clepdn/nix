@@ -1,6 +1,7 @@
 {
 	inputs = {
-		nixpkgs.url = "github:NixOS/nixpkgs/d6c71932130818840fc8fe9509cf50be8c64634f";
+		#`nixpkgs.url = "github:NixOS/nixpkgs/d6c71932130818840fc8fe9509cf50be8c64634f";
+		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 		jovian = {
 			url = "github:Jovian-Experiments/Jovian-NixOS";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -41,6 +42,10 @@
 			url = "github:nix-community/disko";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		slugtan = {
+			url = "git+ssh://git@codeberg.org/cowie/slugbot.git";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
 	outputs =
@@ -79,7 +84,8 @@
 			deck    = mkHost "deck"    [ inputs.jovian.nixosModules.jovian ];
 			sayaka  = mkHost "sayaka"  [ inputs.disko.nixosModules.disko ];
 			madoka  = mkHost "madoka"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
-			homura  = mkHost "homura"  [ inputs.jovian.nixosModules.jovian ];
+			homura  = mkHost "homura"  [ inputs.jovian.nixosModules.jovian 
+						     inputs.slugtan.nixosModules.default ];
 		};
 	}
 
