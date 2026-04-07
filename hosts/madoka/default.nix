@@ -143,6 +143,21 @@
   services.power-profiles-daemon.enable = false;
   services.tlp.enable = true;
 
+services.tlp.settings={
+    # CPU - biggest wins
+    CPU_ENERGY_PERF_POLICY_ON_BAT = "power";      # EPP: balance_power → powe
+    CPU_MAX_PERF_ON_BAT = 80;                      # cap at 60% max freq (~2.8GHz)                                                                                           
+    PLATFORM_PROFILE_ON_BAT = "quiet";
+
+    PCIE_ASPM_ON_BAT = "powersupersave";
+    WIFI_PWR_ON_BAT = "on";
+
+    CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
+    CPU_BOOST_ON_AC = 1;
+    CPU_MAX_PERF_ON_AC = 100;
+    PLATFORM_PROFILE_ON_AC = "balanced";
+  };
+
   services.flatpak.enable = true;
 
   virtualisation.waydroid.enable = true;
