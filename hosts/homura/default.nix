@@ -12,7 +12,7 @@
       #./modules/wyoming-parakeet.nix
       ./modules/wyoming-faster-whisper.nix
       ./modules/wyoming-piper.nix
-      ./modules/sunshine.nix
+      "${self}/modules/llama-cpp"
       ./modules/sleepless.nix
       ./modules/slugtan.nix
       "${self}/users/callie"
