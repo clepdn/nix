@@ -56,6 +56,10 @@ in
       port = 8123;
       target = "100.116.202.116";
     };
+    "lta.on-her.computer" = cloudflareDNS // {
+      port = 8283;
+      target = "100.116.202.116";
+    };
   };
 }
 
