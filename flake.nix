@@ -46,6 +46,10 @@
 			url = "git+ssh://git@codeberg.org/cowie/slugbot.git";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		llama-cpp-src = {
+			url = "github:ggml-org/llama.cpp";
+			flake = false;
+		};
 	};
 
 	outputs =

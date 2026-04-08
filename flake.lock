@@ -261,6 +261,22 @@
         "type": "github"
       }
     },
+    "llama-cpp-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775610351,
+        "narHash": "sha256-W7hm9ppYul7jGGvu1heoOyAkK2pq6BHNlUwQmQmKsnQ=",
+        "owner": "ggml-org",
+        "repo": "llama.cpp",
+        "rev": "c5ce4bc227592afb2ec87aa4efce2d0ac0482c51",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ggml-org",
+        "repo": "llama.cpp",
+        "type": "github"
+      }
+    },
     "nix-github-actions": {
       "inputs": {
         "nixpkgs": [
@@ -352,6 +368,7 @@
         "home-manager": "home-manager_2",
         "jovian": "jovian",
         "lanzaboote": "lanzaboote",
+        "llama-cpp-src": "llama-cpp-src",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
         "slugtan": "slugtan",
