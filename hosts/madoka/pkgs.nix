@@ -48,6 +48,7 @@ with pkgs; [
 	openssl
 	aseprite
 	pi-coding-agent
+	claude-code
 	gf
 	blender
 ]
