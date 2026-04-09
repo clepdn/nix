@@ -1,6 +1,5 @@
 {
   services.logind = {
-    lidSwitch = "ignore";          # ignore lid close
     settings.Login = {
       HandleSuspendKey = "ignore";
       HandleHibernateKey = "ignore";

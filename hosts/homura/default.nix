@@ -12,9 +12,10 @@
       #./modules/wyoming-parakeet.nix
       ./modules/wyoming-faster-whisper.nix
       ./modules/wyoming-piper.nix
-      ./modules/sunshine.nix
+      "${self}/modules/llama-cpp"
+      "${self}/modules/letta"
       ./modules/sleepless.nix
-      ./modules/slugtan.nix
+      #./modules/slugtan.nix
       "${self}/users/callie"
       "${self}/modules/comfymc"
       "${self}/modules/base"
@@ -24,6 +25,7 @@
     ];
 
   boot.initrd.network.enable = true;
+  boot.kernelParams = [ "ip=dhcp" ];
   boot.initrd.network.ssh = {
     enable = true;
     port = 2222;
@@ -54,7 +56,7 @@
     modesetting.enable = true;
     nvidiaSettings = true;
     open = false;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
   };
 
   # Bootloader.
