@@ -23,14 +23,38 @@
     ];
   };
 
-  home-manager.users.callie = { pkgs, ... }: {
+  home-manager.sharedModules = [ inputs.nixvim.homeManagerModules.nixvim ];
+
+  home-manager.users.callie = { pkgs, lib, ... }: {
+    imports = [
+      ../../modules/nvim
+      ../../modules/nmux
+    ];
     home = {
       homeDirectory = config.users.users.callie.home;
-      # packages =
-      packages = [
+      packages = with pkgs; [
+        pi-coding-agent
       ];
       stateVersion = "25.11";
-     };
+    };
+
+    home.activation.piSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      settings="$HOME/.pi/agent/settings.json"
+      mkdir -p "$(dirname "$settings")"
+      if [ ! -f "$settings" ]; then
+        echo '{}' > "$settings"
+      fi
+      current=$(cat "$settings")
+      echo "$current" \
+        | ${pkgs.jq}/bin/jq '
+          .defaultProvider = "anthropic"
+          | .defaultThinkingLevel = "medium"
+          | .packages = [
+              "https://github.com/nicobailon/pi-web-access",
+              "https://github.com/nicobailon/pi-subagents"
+            ]
+        ' > "$settings.tmp" && mv "$settings.tmp" "$settings"
+    '';
   };
 
   programs.fish.enable = true;

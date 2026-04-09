@@ -10,12 +10,12 @@
       ./hardware-configuration.nix
       ./modules/bluetooth.nix
       ./modules/nvidia.nix
-      "${self}/users/callie" 
-      "${self}/modules/base" 
-      "${self}/modules/pipewire" 
-      "${self}/modules/plymouth" 
-      "${self}/modules/altserver" 
-      "${self}/modules/tz/ny.nix" 
+      "${self}/users/callie"
+      "${self}/modules/base"
+      "${self}/modules/pipewire"
+      "${self}/modules/plymouth"
+      "${self}/modules/altserver"
+      "${self}/modules/tz/ny.nix"
     ];
 
   virtualisation.virtualbox.host.enable = true;
@@ -127,9 +127,10 @@
 	};
   };
 
-  systemd.sleep.extraConfig = ''
-    HibernateDelaySec=4h
-  '';
+
+  systemd.sleep.settings.Sleep = {
+    HibernateDelaySec = "4h";
+  };
 
   # services.avahi.nssmdns4.enable = true; # I don't particularly need this to be enabled on my (portable) laptop.
   services.tailscale.enable = true;
@@ -141,6 +142,25 @@
 
   services.power-profiles-daemon.enable = false;
   services.tlp.enable = true;
+
+services.tlp.settings={
+    # CPU - biggest wins
+    CPU_ENERGY_PERF_POLICY_ON_BAT = "power";      # EPP: balance_power → powe
+    CPU_MAX_PERF_ON_BAT = 80;                      # cap at 60% max freq (~2.8GHz)                                                                                           
+    PLATFORM_PROFILE_ON_BAT = "power";
+
+    PCIE_ASPM_ON_BAT = "powersupersave";
+    WIFI_PWR_ON_BAT = "on";
+
+    # Enable turbo.
+    CPU_BOOST_ON_AC= 1 ;
+    CPU_BOOST_ON_BAT = 1;
+    CPU_BOOST_ON_SAV = 1;
+
+    CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
+    CPU_MAX_PERF_ON_AC = 100;
+    PLATFORM_PROFILE_ON_AC = "balanced";
+  };
 
   services.flatpak.enable = true;
 

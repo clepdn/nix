@@ -32,11 +32,10 @@ with pkgs; [
 	gcc
 	clang
 	gdb
-	openai-whisper
 	opencode
 	obs-studio
 	ffmpeg-full
-	qemu_full
+	qemu
 	neovim-remote
 	llvmPackages_20.systemLibcxxClang
 	clang-tools
@@ -47,6 +46,9 @@ with pkgs; [
 	patchelf
 	bitwarden-desktop
 	openssl
-	claude-code
 	aseprite
+	pi-coding-agent
+	claude-code
+	gf
+	blender
 ]
