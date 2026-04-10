@@ -51,4 +51,6 @@ with pkgs; [
 	claude-code
 	gf
 	blender
+	nodejs_22
+	helium
 ]

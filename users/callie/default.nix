@@ -23,7 +23,7 @@
     ];
   };
 
-  home-manager.sharedModules = [ inputs.nixvim.homeManagerModules.nixvim ];
+  home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
 
   home-manager.users.callie = { pkgs, lib, ... }: {
     imports = [
