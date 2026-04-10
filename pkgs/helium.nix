@@ -74,6 +74,9 @@ stdenv.mkDerivation rec {
     cp -r locales "$out/share/lib/helium/"
     cp -r usr/share "$out/" 2>/dev/null || true
 
+    mkdir -p "$out/share/applications"
+    cp helium.desktop "$out/share/applications/"
+
     runHook postInstall
   '';
 
