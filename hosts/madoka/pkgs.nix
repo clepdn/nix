@@ -52,4 +52,5 @@ with pkgs; [
 	gf
 	blender
 	nodejs_22
+	helium
 ]

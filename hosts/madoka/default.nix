@@ -2,14 +2,11 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, inputs, system, self, ... }:
+{ config, pkgs, lib, inputs, system, self, clib, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
+  imports = clib.importFolder ./modules ++ [
       ./hardware-configuration.nix
-      ./modules/bluetooth.nix
-      ./modules/nvidia.nix
       "${self}/users/callie"
       "${self}/modules/base"
       "${self}/modules/pipewire"
