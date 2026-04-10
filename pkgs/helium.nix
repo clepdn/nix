@@ -77,6 +77,9 @@ stdenv.mkDerivation rec {
     mkdir -p "$out/share/applications"
     cp helium.desktop "$out/share/applications/"
 
+    mkdir -p "$out/share/icons/hicolor/256x256/apps"
+    cp product_logo_256.png "$out/share/icons/hicolor/256x256/apps/helium.png"
+
     runHook postInstall
   '';
 
