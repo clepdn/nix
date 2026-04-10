@@ -84,7 +84,7 @@ stdenv.mkDerivation rec {
     cp -r . "$out/share/lib/helium/"
     ln -s "$out/share/lib/helium/helium" "$out/bin/helium"
 
-    cp -r opt/helium/locales "$out/share/lib/helium/"
+    cp -r locales "$out/share/lib/helium/"
     cp -r usr/share "$out/" 2>/dev/null || true
 
     runHook postInstall
