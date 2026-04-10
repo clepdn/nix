@@ -6,7 +6,13 @@
 , mesa
 , nss
 , nspr
-, xorg
+, libx11
+, libxcomposite
+, libxdamage
+, libxext
+, libxfixes
+, libxrandr
+, libxcb
 , libdrm
 , libxkbcommon
 , expat
@@ -32,7 +38,7 @@ stdenv.mkDerivation rec {
       platform = platformMap.${stdenv.hostPlatform.system};
 
       hashes = {
-        "x86_64-linux" = lib.fakeHash;
+        "x86_64-linux" = "sha256-ob1iSE+4IrsHthEpEypgSkZs2LT4H2YXknjD1FKn3sc=";
         "aarch64-linux" = lib.fakeHash;
       };
 
@@ -50,13 +56,13 @@ stdenv.mkDerivation rec {
     mesa
     nss
     nspr
-    xorg.libX11
-    xorg.libXcomposite
-    xorg.libXdamage
-    xorg.libXext
-    xorg.libXfixes
-    xorg.libXrandr
-    xorg.libxcb
+    libx11
+    libxcomposite
+    libxdamage
+    libxext
+    libxfixes
+    libxrandr
+    libxcb
     libdrm
     libxkbcommon
     expat
