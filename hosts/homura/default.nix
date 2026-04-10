@@ -79,6 +79,7 @@
      rclone
      opencode
      pi-coding-agent
+     claude-code
   ];
 
   services.tailscale.enable = true;

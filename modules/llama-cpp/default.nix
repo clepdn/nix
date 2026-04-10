@@ -11,6 +11,7 @@ let
 in {
   age.secrets.llama-api-key = {
     file = ../../secrets/llama-api-key.age;
+    mode = "0444";
   };
 
   services.llama-cpp = {
