@@ -1,28 +1,10 @@
-{ lib
-, stdenv
-, fetchurl
-, autoPatchelfHook
-, alsa-lib
-, mesa
-, nss
-, nspr
-, libx11
-, libxcomposite
-, libxdamage
-, libxext
-, libxfixes
-, libxrandr
-, libxcb
-, libdrm
-, libxkbcommon
-, expat
-, cups
-, dbus
-, at-spi2-atk
-, pango
-, cairo
-, glib
-, gtk3
+{
+  lib, stdenv, fetchurl, autoPatchelfHook,
+  alsa-lib, mesa, nss, nspr,
+  libx11, libxcomposite, libxdamage, libxext, libxfixes, libxrandr, libxcb,
+  libdrm, libxkbcommon, expat, cups, dbus,
+  at-spi2-atk, pango, cairo, glib, gtk3,
+  qt6,
 }:
 stdenv.mkDerivation rec {
   pname = "helium";
@@ -49,7 +31,7 @@ stdenv.mkDerivation rec {
       inherit hash;
     };
 
-  nativeBuildInputs = [ autoPatchelfHook ];
+  nativeBuildInputs = [ autoPatchelfHook qt6.wrapQtAppsHook ];
 
   buildInputs = [
     alsa-lib
@@ -73,6 +55,11 @@ stdenv.mkDerivation rec {
     cairo
     glib
     gtk3
+    qt6.qtbase
+  ];
+
+  autoPatchelfIgnoreMissingDeps = [
+    "libQt5Core.so.5" "libQt5Gui.so.5" "libQt5Widgets.so.5"
   ];
 
   installPhase = ''
@@ -86,6 +73,12 @@ stdenv.mkDerivation rec {
 
     cp -r locales "$out/share/lib/helium/"
     cp -r usr/share "$out/" 2>/dev/null || true
+
+    mkdir -p "$out/share/applications"
+    cp helium.desktop "$out/share/applications/"
+
+    mkdir -p "$out/share/icons/hicolor/256x256/apps"
+    cp product_logo_256.png "$out/share/icons/hicolor/256x256/apps/helium.png"
 
     runHook postInstall
   '';
