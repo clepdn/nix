@@ -45,7 +45,10 @@
 		};
 		pi-mono = {
 			url = "git+https://codeberg.org/cowie/pi-fork.git";
-			inputs.nixpkgs.follows = "nixpkgs";
+			inputs = {
+				nixpkgs.follows = "nixpkgs";
+				flake-utils.follows = "flake-utils";
+			};
 		};
 		llama-cpp-src = {
 			url = "github:ggml-org/llama.cpp";
@@ -66,7 +69,7 @@
 				inputs.home-manager.nixosModules.home-manager
 				({ pkgs, ... }: {
 					nixpkgs.overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; } // {
-						pi = inputs.pi-mono.packages.${prev.system}.pi;
+						pi-coding-agent = inputs.pi-mono.packages.${prev.system}.pi;
 					}) ];
 				})
 			] ++ extraModules;
