@@ -67,7 +67,7 @@
 				./hosts/${host}
 				inputs.agenix.nixosModules.default
 				inputs.home-manager.nixosModules.home-manager
-				({ pkgs, ... }: {
+				({ pkgs, inputs, ... }: {
 					nixpkgs.overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; } // {
 						pi-coding-agent = inputs.pi-mono.packages.${prev.system}.pi;
 					}) ];
