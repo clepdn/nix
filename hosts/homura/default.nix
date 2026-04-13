@@ -66,7 +66,6 @@
      btrfs-progs
      rclone
      opencode
-     pi-coding-agent
      claude-code
   ];
 

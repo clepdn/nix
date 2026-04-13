@@ -47,7 +47,6 @@ with pkgs; [
 	bitwarden-desktop
 	openssl
 	aseprite
-	pi-coding-agent
 	claude-code
 	gf
 	blender
