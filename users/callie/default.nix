@@ -33,7 +33,7 @@
     home = {
       homeDirectory = config.users.users.callie.home;
       packages = with pkgs; [
-        pi-coding-agent
+        inputs.pi-mono.packages.${pkgs.system}.default
       ];
       stateVersion = "25.11";
     };

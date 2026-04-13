@@ -43,6 +43,13 @@
 			url = "git+ssh://git@codeberg.org/cowie/slugbot.git";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		pi-mono = {
+			url = "git+https://codeberg.org/cowie/pi-fork.git";
+			inputs = {
+				nixpkgs.follows = "nixpkgs";
+				flake-utils.follows = "flake-utils";
+			};
+		};
 		llama-cpp-src = {
 			url = "github:ggml-org/llama.cpp";
 			flake = false;
@@ -60,8 +67,10 @@
 				./hosts/${host}
 				inputs.agenix.nixosModules.default
 				inputs.home-manager.nixosModules.home-manager
-				({ ... }: {
-					nixpkgs.overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; }) ];
+				({ inputs, ... }: {
+					nixpkgs.overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; } // {
+						pi-coding-agent = inputs.pi-mono.packages.${prev.system}.pi;
+					}) ];
 				})
 			] ++ extraModules;
 		};
