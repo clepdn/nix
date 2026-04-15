@@ -31,7 +31,7 @@
     user = "runner";
   };
   # Use X11 for better NVIDIA capture compatibility
-  services.displayManager.defaultSession = "plasmax11";
+  services.displayManager.defaultSession = "plasma";
 
   # jovian.hardware.has.amd.gpu = false;
 
@@ -50,11 +50,10 @@
     enable = true;
     capSysAdmin = true;
     openFirewall = true;
+    package = pkgs.sunshine.override {
+      cudaSupport = true;
+      cudaPackages = pkgs.cudaPackages;
+    };
   };
 
-  # Ensure Sunshine can find CUDA/NVENC libraries and X11 display
-  systemd.user.services.sunshine.environment = {
-    LD_LIBRARY_PATH = "/run/opengl-driver/lib";
-    DISPLAY = ":0";
-  };
 }
