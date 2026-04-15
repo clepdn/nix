@@ -37,6 +37,9 @@
   }];
 
   hardware.graphics.enable = true;  # was hardware.opengl.enable before NixOS 24.11
+  hardware.graphics.extraPackages = with pkgs; [
+    nvidia-vaapi-driver
+  ];
 
   services.xserver.videoDrivers = [ "nvidia" ];
 

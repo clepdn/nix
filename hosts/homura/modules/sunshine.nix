@@ -1,4 +1,4 @@
-k{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 {
   users.users.runner = {
     isNormalUser = true;
@@ -24,7 +24,16 @@ k{ config, pkgs, lib, ... }:
   # Plasma as fallback DE when exiting Steam/gamescope
   services.desktopManager.plasma6.enable = true;
 
-  jovian.hardware.has.amd.gpu = false;
+  # SDDM autologin
+  services.displayManager.sddm.enable = true;
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "runner";
+  };
+  # Use X11 for better NVIDIA capture compatibility
+  services.displayManager.defaultSession = "plasmax11";
+
+  # jovian.hardware.has.amd.gpu = false;
 
   # steamosctl set-default-desktop-session hangs on non-Deck hardware because
   # steamos-manager can't configure its GPU interfaces. As a oneshot service it
@@ -36,10 +45,16 @@ k{ config, pkgs, lib, ... }:
   };
   */
 
-  # Sunshine game-streaming server — disabled until gamescope is stable
+  # Sunshine game-streaming server
   services.sunshine = {
-    enable = false;
-    capSysAdmin = false;
-    openFirewall = false;
+    enable = true;
+    capSysAdmin = true;
+    openFirewall = true;
+  };
+
+  # Ensure Sunshine can find CUDA/NVENC libraries and X11 display
+  systemd.user.services.sunshine.environment = {
+    LD_LIBRARY_PATH = "/run/opengl-driver/lib";
+    DISPLAY = ":0";
   };
 }
