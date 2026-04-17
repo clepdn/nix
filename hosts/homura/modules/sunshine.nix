@@ -14,28 +14,46 @@
   programs.steam.enable = true;
 
   # Jovian Steam — boots directly into Steam/gamescope on login
+  /*
   jovian.steam.enable = true;
   jovian.steam.autoStart = true;
   jovian.steam.user = "callie";
   jovian.steam.desktopSession = "plasma"; # fallback DE if Steam exits
+  */
 
   # Plasma as fallback DE when exiting Steam/gamescope
   services.desktopManager.plasma6.enable = true;
 
-  jovian.hardware.has.amd.gpu = false;
+  # SDDM autologin
+  services.displayManager.sddm.enable = true;
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "runner";
+  };
+  # Use X11 for better NVIDIA capture compatibility
+  services.displayManager.defaultSession = "plasma";
+
+  # jovian.hardware.has.amd.gpu = false;
 
   # steamosctl set-default-desktop-session hangs on non-Deck hardware because
   # steamos-manager can't configure its GPU interfaces. As a oneshot service it
   # blocks steam-launcher from ever starting. Give it 10 seconds then move on.
+  /*
   systemd.user.services.jovian-setup-desktop-session = {
     overrideStrategy = "asDropin";
     serviceConfig.TimeoutStartSec = "10";
   };
+  */
 
-  # Sunshine game-streaming server — disabled until gamescope is stable
+  # Sunshine game-streaming server
   services.sunshine = {
-    enable = false;
-    capSysAdmin = false;
-    openFirewall = false;
+    enable = true;
+    capSysAdmin = true;
+    openFirewall = true;
+    package = pkgs.sunshine.override {
+      cudaSupport = true;
+      cudaPackages = pkgs.cudaPackages;
+    };
   };
+
 }
