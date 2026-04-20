@@ -76,6 +76,12 @@
 		};
 	in
 	{
+		homeConfigurations.callie = home-manager.lib.homeManagerConfiguration {
+			pkgs = nixpkgs.legacyPackages.x86_64-linux;
+			extraSpecialArgs = { inherit inputs self; };
+			modules = [ ./users/callie/home.nix ];
+		};
+
 		nixosConfigurations = {
 			deck    = mkHost "deck"    [ inputs.jovian.nixosModules.jovian ];
 			sayaka  = mkHost "sayaka"  [ inputs.disko.nixosModules.disko ];

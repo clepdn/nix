@@ -1,5 +1,6 @@
 { pkgs, lib, inputs, ... }: {
   imports = [
+    inputs.nixvim.homeModules.nixvim
     ../../modules/nvim
     ../../modules/nmux
   ];
