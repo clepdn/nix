@@ -5,7 +5,7 @@
     description = "Stream Runner";
     extraGroups = [ "video" "input" "render" "audio" ];
     # Locked password — access is via autologin only
-    hashedPassword = "$6$D4tCP7GfjkJImwQC$vLV8ROZM3CLi17/m77fPtkrJzKmeXPUp0IFXfseOxIOEuOc5GQUTCe8VoOXHsF1up9NQ/VN/lQhm8diG8bdWo/";
+    hashedPassword = "$6$x0M6llmgS.5zsr0m$6.aL9lWqIq7o4S/oAHN4Fp5ValB5D.XngNPITuC37lGJgSyxOI1h5rjsF.HCmVwlzq6lDDgDYJtqnoHcYItC5.";
   };
 
   # inputplumber is a Steam Deck controller remapper — not needed on homura
