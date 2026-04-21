@@ -71,6 +71,7 @@
 					nixpkgs.overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; } // {
 						pi-coding-agent = inputs.pi-mono.packages.${prev.system}.pi;
 					}) ];
+					home-manager.extraSpecialArgs = { inherit inputs; };
 				})
 			] ++ extraModules;
 		};
