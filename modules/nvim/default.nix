@@ -14,6 +14,7 @@
       number = true;
       splitright = true;
       showtabline = 2;
+      termguicolors = true;
     };
 
     # OSC 52 clipboard + post-load setup
@@ -29,6 +30,8 @@
           ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
         },
       }
+
+      vim.opt.clipboard:append("unnamedplus")
 
       vim.lsp.inlay_hint.enable(true)
 
@@ -173,7 +176,7 @@
           owner = "everviolet";
           repo = "nvim";
           rev = "main";
-          hash = "sha256-UEnor+FziURTnBKtDyMJPu3GzkdjEZ7XQyePsCA5HIY=";
+          hash = "sha256-kYfNaAx0koqFBSXKC1IuVJaZeUQC+0rT9deEqgcRt8I=";
         };
       })
     ];

@@ -29,5 +29,8 @@ let hosts = [
 		"grafana-secret-key.age".publicKeys = keys;
 		"home-assistant-secrets.age".publicKeys = keys;
 		"pds.env.age".publicKeys = keys;
+		"slugtan.env.age".publicKeys = keys;
+		"llama-api-key.age".publicKeys = keys;
+		"letta-password.age".publicKeys = keys;
 	}
 

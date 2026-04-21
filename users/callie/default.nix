@@ -23,17 +23,7 @@
     ];
   };
 
-  home-manager.sharedModules = [ inputs.nixvim.homeManagerModules.nixvim ];
-
-  home-manager.users.callie = { pkgs, ... }: {
-    imports = [ ../../modules/nvim ];
-    home = {
-      homeDirectory = config.users.users.callie.home;
-      packages = [
-      ];
-      stateVersion = "25.11";
-     };
-  };
+  home-manager.users.callie = import ./home.nix;
 
   programs.fish.enable = true;
 
