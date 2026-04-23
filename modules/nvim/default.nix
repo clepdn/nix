@@ -69,6 +69,12 @@
         options.desc = "Exit terminal mode";
       }
       {
+        mode = "t";
+        key = "<C-Space>";
+        action = "<C-\\><C-n>";
+        options.desc = "Exit terminal mode";
+      }
+      {
         mode = "n";
         key = "<leader>i";
         action.__raw = "function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end";

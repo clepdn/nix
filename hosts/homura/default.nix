@@ -10,6 +10,7 @@
       "${self}/modules/pipewire"
       "${self}/modules/monitoring"
       "${self}/modules/tz/ny.nix"
+      "${self}/modules/happy"
     ];
 
   boot.initrd.network.enable = true;

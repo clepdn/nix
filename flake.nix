@@ -58,6 +58,10 @@
 			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=release";
 			flake = false;
 		};
+		happy-src = {
+			url = "github:slopus/happy";
+			flake = false;
+		};
 	};
 
 	outputs =
@@ -75,6 +79,7 @@
 					nixpkgs.overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; } // {
 						pi-coding-agent = inputs.pi-mono.packages.${prev.system}.pi;
 					}) ];
+					home-manager.useGlobalPkgs = true;
 					home-manager.extraSpecialArgs = { inherit inputs; };
 				})
 			] ++ extraModules;
@@ -82,7 +87,13 @@
 	in
 	{
 		homeConfigurations.callie = home-manager.lib.homeManagerConfiguration {
-			pkgs = nixpkgs.legacyPackages.x86_64-linux;
+			pkgs = import nixpkgs {
+				system = "x86_64-linux";
+				config.allowUnfree = true;
+				overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; } // {
+					pi-coding-agent = inputs.pi-mono.packages.${prev.system}.pi;
+				}) ];
+			};
 			extraSpecialArgs = { inherit inputs self; };
 			modules = [ ./users/callie/home.nix ];
 		};

@@ -65,8 +65,8 @@ in
       target = "100.116.202.116";
     };
     "happy.on-her.computer" = cloudflareDNS // {
-      port = 3000;
-      target = "127.0.0.1";
+      port = 3100;
+      target = "100.116.202.116";
     };
   };
 }

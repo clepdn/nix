@@ -7,11 +7,13 @@
 
   programs.home-manager.enable = true;
   #programs.fish.enable = true;
+  home.sessionVariables.HAPPY_SERVER_URL = "https://happy.on-her.computer";
 
   home = {
     username = "callie";
     homeDirectory = "/home/callie";
     packages = with pkgs; [
+      happyCli
       (symlinkJoin {
         name = "pi";
         paths = [ inputs.pi-mono.packages.${pkgs.system}.default ];

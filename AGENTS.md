@@ -1,15 +1,28 @@
 # Agent Instructions
 
+## Tailscale IPs
+
+| Host | IP |
+|------|----|
+| sayaka | 100.77.12.60 |
+| homura | 100.116.202.116 |
+| starscream | 100.102.158.29 |
+| ubuntu-2gb-ash-1 | 100.102.161.7 |
+
+These are private tailnet addresses and are safe to use in config files and commit to the repo.
+
 ## Generating secrets
 
-When asked to generate a new agenix secret, do not write plaintext to disk or include secret values in your responses. Instead, write a temporary script to `$XDG_RUNTIME_DIR` (in-memory tmpfs), run it, then delete it.
+When asked to generate a new agenix secret, run:
 
-The script should:
-1. `cd` to `/home/callie/code/nix/secrets`
-2. Generate any random values (e.g. `openssl rand -hex 24`)
-3. Write the plaintext to another tmpfile in `$XDG_RUNTIME_DIR`
-4. Set `EDITOR` to a script that copies that tmpfile into agenix's plaintext buffer
-5. Call `agenix -e <secret-name>.age`
-6. Clean up all tmpfiles on exit via `trap`
+```bash
+cd <absolute-path-to-repo>/secrets && echo "<CONTENT>" | agenix -e <secret-name>.age
+```
 
-agenix must be run from `/home/callie/code/nix/secrets/` so it can find `secrets.nix`.
+agenix must be run from the `secrets/` directory of this repo so it can find `secrets.nix`. Always resolve the absolute path to the repo root first (e.g. via `git rev-parse --show-toplevel`) rather than assuming a hardcoded path.
+
+### Secret values must never appear in agent context
+
+The agent's context window is not secure. If a secret value is visible in any tool output, response, or read file, it is compromised and must be regenerated.
+
+Secret values must be generated inline in the shell command itself (e.g. `$(openssl rand -hex 32)`), or sourced by `cat`-ing a file that the agent has **not** read. Never read a secret file, never echo a known value, never include a plaintext secret in a response.

@@ -1,4 +1,4 @@
-{ pkgs, lib, config, self, ... }:
+{ pkgs, lib, config, self, inputs, ... }:
 
 {
   age.secrets.happy = {
@@ -8,8 +8,7 @@
 
   systemd.tmpfiles.rules = [
     "d /var/lib/happy 0755 root root -"
-    "d /var/lib/happy/postgres 0755 root root -"
-    "d /var/lib/happy/redis 0755 root root -"
+    "d /var/lib/happy/pglite 0755 root root -"
   ];
 
   virtualisation.podman = {
@@ -20,43 +19,38 @@
 
   virtualisation.oci-containers.backend = "podman";
 
-  virtualisation.oci-containers.containers."happy-postgres" = {
-    image = "docker.io/library/postgres:16-alpine";
-    environmentFiles = [ config.age.secrets.happy.path ];
-    volumes = [ "/var/lib/happy/postgres:/var/lib/postgresql/data:rw" ];
-    log-driver = "journald";
-    extraOptions = [
-      "--network-alias=postgres"
-      "--network=happy_default"
-      "--health-cmd=pg_isready -U happy"
-      "--health-interval=30s"
-      "--health-retries=5"
-      "--health-start-period=60s"
-      "--health-timeout=20s"
-    ];
-  };
-
-  virtualisation.oci-containers.containers."happy-redis" = {
-    image = "docker.io/library/redis:7-alpine";
-    cmd = [ "redis-server" "--appendonly" "yes" "--maxmemory-policy" "noeviction" ];
-    volumes = [ "/var/lib/happy/redis:/data:rw" ];
-    log-driver = "journald";
-    extraOptions = [
-      "--network-alias=redis"
-      "--network=happy_default"
-    ];
-  };
-
   virtualisation.oci-containers.containers."happy-server" = {
-    image = "ghcr.io/slopus/happy-server:latest";
+    image = "localhost/happy-server:local";
+    cmd = [ "sh" "-c" "pnpm --filter happy-server standalone migrate && pnpm --filter happy-server standalone serve" ];
     environmentFiles = [ config.age.secrets.happy.path ];
-    ports = [ "3000:3005/tcp" ];
-    dependsOn = [ "happy-postgres" "happy-redis" ];
+    environment = {
+      DB_PROVIDER = "pglite";
+      PGLITE_DIR = "/data/pglite";
+      PORT = "3000";
+    };
+    ports = [ "3100:3000/tcp" ];
+    volumes = [ "/var/lib/happy/pglite:/data/pglite:rw" ];
     log-driver = "journald";
     extraOptions = [
       "--network-alias=happy"
       "--network=happy_default"
     ];
+  };
+
+  # Build the happy-server image from the pinned source
+  systemd.services."podman-build-happy-server" = {
+    path = [ pkgs.podman ];
+    script = ''
+      podman build \
+        -t localhost/happy-server:local \
+        -f ${inputs.happy-src}/Dockerfile.server \
+        ${inputs.happy-src}
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    wantedBy = [ "multi-user.target" ];
   };
 
   # Create the container network before any containers start
@@ -73,18 +67,11 @@
     wantedBy = [ "multi-user.target" ];
   };
 
-  systemd.services."podman-happy-postgres" = {
-    after    = [ "podman-network-happy_default.service" ];
-    requires = [ "podman-network-happy_default.service" ];
-  };
-  systemd.services."podman-happy-redis" = {
-    after    = [ "podman-network-happy_default.service" ];
-    requires = [ "podman-network-happy_default.service" ];
-  };
   systemd.services."podman-happy-server" = {
-    after    = [ "podman-network-happy_default.service" ];
-    requires = [ "podman-network-happy_default.service" ];
+    after    = [ "podman-network-happy_default.service" "podman-build-happy-server.service" ];
+    requires = [ "podman-network-happy_default.service" "podman-build-happy-server.service" ];
+    serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p /var/lib/happy/pglite";
   };
 
-  networking.firewall.allowedTCPPorts = [ 3000 ];
+  networking.firewall.allowedTCPPorts = [ 3100 ];
 }
