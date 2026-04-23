@@ -12,7 +12,15 @@
     username = "callie";
     homeDirectory = "/home/callie";
     packages = with pkgs; [
-      inputs.pi-mono.packages.${pkgs.system}.default
+      (symlinkJoin {
+        name = "pi";
+        paths = [ inputs.pi-mono.packages.${pkgs.system}.default ];
+        buildInputs = [ makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/pi \
+            --prefix PATH : ${lib.makeBinPath [ nodejs ]}
+        '';
+      })
     ];
     stateVersion = "25.11";
   };
