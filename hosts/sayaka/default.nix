@@ -7,7 +7,13 @@
 	      "${self}/modules/base" 
 	      "${self}/modules/tz/ny.nix" 
 	      "${self}/modules/nginx" 
+	      "${self}/modules/pavement"
 	];
+
+	myNixOS.pavement = {
+		enable = true;
+		port = 3400;
+	};
 
 	networking.hostName = "sayaka";
 	users.mutableUsers = false;
