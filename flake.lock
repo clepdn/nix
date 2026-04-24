@@ -340,11 +340,11 @@
     "pavement": {
       "flake": false,
       "locked": {
-        "lastModified": 1777038018,
-        "narHash": "sha256-DG1ADk4jy9rTndV/vslLfrsRPJkPKtcDkQJMFiaD2Zk=",
+        "lastModified": 1777057855,
+        "narHash": "sha256-muUN/+TuW+KcG4N/i2Rp+GCTMPvIrIn2/dko1ZPYA+k=",
         "ref": "release",
-        "rev": "9f5756575dada0f91dfb4a820d6a9f6497fbb142",
-        "revCount": 9,
+        "rev": "a721998730658a433013769e455e37fe228f4dfb",
+        "revCount": 13,
         "type": "git",
         "url": "ssh://git@codeberg.org/cowie/md-site.git"
       },
