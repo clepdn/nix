@@ -1,6 +1,7 @@
 {
   imports = [
     ./computer.nix
+    ./pavement.nix
     ./sluppy.nix
   ];
 
