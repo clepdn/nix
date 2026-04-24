@@ -58,7 +58,16 @@
     '';
   };
 
+  services.nginx.virtualHosts."_redirect" = {
+    listen = [
+      { addr = "0.0.0.0"; port = 80; }
+      { addr = "[::]"; port = 80; }
+    ];
+    default = true;
+    locations."/".return = "301 https://$host$request_uri";
+  };
+
   networking.firewall = {
-    allowedTCPPorts = [ 443 25565 ];
+    allowedTCPPorts = [ 80 443 25565 ];
   };
 }
