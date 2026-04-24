@@ -54,6 +54,10 @@
 			url = "github:ggml-org/llama.cpp";
 			flake = false;
 		};
+		pavement = {
+			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=release";
+			flake = false;
+		};
 	};
 
 	outputs =
@@ -71,11 +75,18 @@
 					nixpkgs.overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; } // {
 						pi-coding-agent = inputs.pi-mono.packages.${prev.system}.pi;
 					}) ];
+					home-manager.extraSpecialArgs = { inherit inputs; };
 				})
 			] ++ extraModules;
 		};
 	in
 	{
+		homeConfigurations.callie = home-manager.lib.homeManagerConfiguration {
+			pkgs = nixpkgs.legacyPackages.x86_64-linux;
+			extraSpecialArgs = { inherit inputs self; };
+			modules = [ ./users/callie/home.nix ];
+		};
+
 		nixosConfigurations = {
 			deck    = mkHost "deck"    [ inputs.jovian.nixosModules.jovian ];
 			sayaka  = mkHost "sayaka"  [ inputs.disko.nixosModules.disko ];

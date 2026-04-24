@@ -337,6 +337,23 @@
         "type": "github"
       }
     },
+    "pavement": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777038018,
+        "narHash": "sha256-DG1ADk4jy9rTndV/vslLfrsRPJkPKtcDkQJMFiaD2Zk=",
+        "ref": "release",
+        "rev": "9f5756575dada0f91dfb4a820d6a9f6497fbb142",
+        "revCount": 9,
+        "type": "git",
+        "url": "ssh://git@codeberg.org/cowie/md-site.git"
+      },
+      "original": {
+        "ref": "release",
+        "type": "git",
+        "url": "ssh://git@codeberg.org/cowie/md-site.git"
+      }
+    },
     "pi-mono": {
       "inputs": {
         "flake-utils": [
@@ -394,6 +411,7 @@
         "llama-cpp-src": "llama-cpp-src",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
+        "pavement": "pavement",
         "pi-mono": "pi-mono",
         "slugtan": "slugtan",
         "zen-browser": "zen-browser"
