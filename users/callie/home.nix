@@ -5,6 +5,9 @@
     ../../modules/nmux
   ];
 
+  programs.home-manager.enable = true;
+  #programs.fish.enable = true;
+
   home = {
     username = "callie";
     homeDirectory = "/home/callie";
