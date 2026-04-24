@@ -1,21 +1,9 @@
-{ config, pkgs, self, ... }:
+{ config, pkgs, self, clib, ... }:
 {
-  imports =
-    [
+  imports = clib.importFolder ./modules ++ [
       ./hardware-configuration.nix
-      ./modules/audiobookshelf.nix
-      ./modules/jellyfin.nix
-      ./modules/gluetun.nix
-      ./modules/minio.nix
-      ./modules/authelia.nix
-      ./modules/home-assistant.nix
-      #./modules/wyoming-parakeet.nix
-      ./modules/wyoming-faster-whisper.nix
-      ./modules/wyoming-piper.nix
       "${self}/modules/llama-cpp"
       "${self}/modules/letta"
-      ./modules/sleepless.nix
-      #./modules/slugtan.nix
       "${self}/users/callie"
       "${self}/modules/comfymc"
       "${self}/modules/base"
@@ -49,6 +37,9 @@
   }];
 
   hardware.graphics.enable = true;  # was hardware.opengl.enable before NixOS 24.11
+  hardware.graphics.extraPackages = with pkgs; [
+    nvidia-vaapi-driver
+  ];
 
   services.xserver.videoDrivers = [ "nvidia" ];
 
@@ -78,7 +69,7 @@
      btrfs-progs
      rclone
      opencode
-     pi-coding-agent
+     claude-code
   ];
 
   services.tailscale.enable = true;

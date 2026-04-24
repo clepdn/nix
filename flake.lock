@@ -337,6 +337,46 @@
         "type": "github"
       }
     },
+    "pavement": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777038018,
+        "narHash": "sha256-DG1ADk4jy9rTndV/vslLfrsRPJkPKtcDkQJMFiaD2Zk=",
+        "ref": "release",
+        "rev": "9f5756575dada0f91dfb4a820d6a9f6497fbb142",
+        "revCount": 9,
+        "type": "git",
+        "url": "ssh://git@codeberg.org/cowie/md-site.git"
+      },
+      "original": {
+        "ref": "release",
+        "type": "git",
+        "url": "ssh://git@codeberg.org/cowie/md-site.git"
+      }
+    },
+    "pi-mono": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1776469525,
+        "narHash": "sha256-k9/qQFl8JfeSAKJnhM+HQM5YW1ytyWXJ5qRM4r97Wys=",
+        "ref": "refs/heads/main",
+        "rev": "cfc8dc38e4f76c022563750df9c832ae8b316c98",
+        "revCount": 3667,
+        "type": "git",
+        "url": "https://codeberg.org/cowie/pi-fork.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/cowie/pi-fork.git"
+      }
+    },
     "pre-commit": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -371,6 +411,8 @@
         "llama-cpp-src": "llama-cpp-src",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
+        "pavement": "pavement",
+        "pi-mono": "pi-mono",
         "slugtan": "slugtan",
         "zen-browser": "zen-browser"
       }

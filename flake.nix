@@ -1,6 +1,5 @@
 {
 	inputs = {
-		#`nixpkgs.url = "github:NixOS/nixpkgs/d6c71932130818840fc8fe9509cf50be8c64634f";
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 		jovian = {
 			url = "github:Jovian-Experiments/Jovian-NixOS";
@@ -9,8 +8,6 @@
 		zen-browser = {
 			url = "github:0xc000022070/zen-browser-flake";
 			inputs = {
-				# IMPORTANT: we're using "libgbm" and is only available in unstable so ensure
-				# to have it up-to-date or simply don't specify the nixpkgs input
 				nixpkgs.follows = "nixpkgs";
 				home-manager.follows = "home-manager"; 
 			};
@@ -46,8 +43,19 @@
 			url = "git+ssh://git@codeberg.org/cowie/slugbot.git";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		pi-mono = {
+			url = "git+https://codeberg.org/cowie/pi-fork.git";
+			inputs = {
+				nixpkgs.follows = "nixpkgs";
+				flake-utils.follows = "flake-utils";
+			};
+		};
 		llama-cpp-src = {
 			url = "github:ggml-org/llama.cpp";
+			flake = false;
+		};
+		pavement = {
+			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=release";
 			flake = false;
 		};
 	};
@@ -56,34 +64,29 @@
 	inputs @ { self, nixpkgs, flake-utils, home-manager, ... }:
 
 	let
-		# Workaround: nix-prefetch-git binary is named "nix-prefetch-git-26.05pre-git"
-		# but fetchCargoVendor expects "nix-prefetch-git". Add a symlink.
-		fixNixPrefetchGit = { lib, ... }: {
-			nixpkgs.overlays = [
-				(final: prev: {
-					nix-prefetch-git = prev.nix-prefetch-git.overrideAttrs (old: {
-						postFixup = (old.postFixup or "") + ''
-							if [ ! -e "$out/bin/nix-prefetch-git" ]; then
-								ln -s "$out/bin/nix-prefetch-git-"* "$out/bin/nix-prefetch-git" 2>/dev/null || true
-							fi
-						'';
-					});
-				})
-			];
-		};
-
 		mkHost = host: extraModules: nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
-			specialArgs = { inherit inputs self; };
+			specialArgs = { inherit inputs self; clib = import ./lib nixpkgs.lib; };
 			modules = [
 				./hosts/${host}
 				inputs.agenix.nixosModules.default
 				inputs.home-manager.nixosModules.home-manager
-				fixNixPrefetchGit
+				({ inputs, ... }: {
+					nixpkgs.overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; } // {
+						pi-coding-agent = inputs.pi-mono.packages.${prev.system}.pi;
+					}) ];
+					home-manager.extraSpecialArgs = { inherit inputs; };
+				})
 			] ++ extraModules;
 		};
 	in
 	{
+		homeConfigurations.callie = home-manager.lib.homeManagerConfiguration {
+			pkgs = nixpkgs.legacyPackages.x86_64-linux;
+			extraSpecialArgs = { inherit inputs self; };
+			modules = [ ./users/callie/home.nix ];
+		};
+
 		nixosConfigurations = {
 			deck    = mkHost "deck"    [ inputs.jovian.nixosModules.jovian ];
 			sayaka  = mkHost "sayaka"  [ inputs.disko.nixosModules.disko ];
