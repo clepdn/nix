@@ -3,11 +3,12 @@
 	imports = [
 	      ./disko.nix
 	      ./hardware-configuration.nix
-	      "${self}/users/callie" 
-	      "${self}/modules/base" 
-	      "${self}/modules/tz/ny.nix" 
-	      "${self}/modules/nginx" 
+	      "${self}/users/callie"
+	      "${self}/modules/base"
+	      "${self}/modules/tz/ny.nix"
+	      "${self}/modules/nginx"
 	      "${self}/modules/pavement"
+	      "${self}/modules/happy"
 	];
 
 	myNixOS.pavement = {
