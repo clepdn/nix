@@ -380,11 +380,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777095837,
-        "narHash": "sha256-mnMvS6AwvAqR7tx/k8qku4kQfxT1nRi1QCmNXKfMLO8=",
+        "lastModified": 1777276308,
+        "narHash": "sha256-GOPnV7YPsVerlHgwNXT3rP3ovVuAS4SJthkZjPcfHDM=",
         "ref": "refs/heads/main",
-        "rev": "3242a5b81c7ec8468aac68122fecea481295ec88",
-        "revCount": 3677,
+        "rev": "68e77ba4108b9e8eda04a960fc60e955a1cc9cd1",
+        "revCount": 3842,
         "type": "git",
         "url": "https://codeberg.org/cowie/pi-fork.git"
       },
