@@ -54,6 +54,11 @@
 			url = "github:ggml-org/llama.cpp";
 			flake = false;
 		};
+		direct-vx = {
+			url = "git+https://codeberg.org/cowie/direct-vx.git";
+			inputs.nixpkgs.follows = "nixpkgs";
+			inputs.flake-utils.follows = "flake-utils";
+		};
 		pavement = {
 			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=release";
 			flake = false;
@@ -100,7 +105,8 @@
 
 		nixosConfigurations = {
 			deck    = mkHost "deck"    [ inputs.jovian.nixosModules.jovian ];
-			sayaka  = mkHost "sayaka"  [ inputs.disko.nixosModules.disko ];
+			sayaka  = mkHost "sayaka"  [ inputs.disko.nixosModules.disko
+						     inputs.direct-vx.nixosModules.default ];
 			madoka  = mkHost "madoka"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
 			homura  = mkHost "homura"  [ inputs.jovian.nixosModules.jovian 
 						     inputs.slugtan.nixosModules.default ];
