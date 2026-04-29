@@ -3,7 +3,7 @@
   users.users.callie = {
     isNormalUser = true;
     description = "Callie";
-    extraGroups = [ "networkmanager" "wheel" "input" "video" ];
+    extraGroups = [ "networkmanager" "wheel" "input" "video" "docker" "kvm" ];
     shell = pkgs.fish;
     hashedPassword = "$y$j9T$ZJuNNt8D4FZIqVGqytHP31$tE9z6v5nFb7XSUzFKcqEmKlidCjhhRyLDx.WJh9gD.6";
     openssh.authorizedKeys.keys = [

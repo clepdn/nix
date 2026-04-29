@@ -18,6 +18,20 @@
   virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "callie" ];
 
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;  # symlinks `docker` → `podman`, exposes compat socket
+    defaultNetwork.settings.dns_enabled = true;
+  };
+
+  # docker-osx: macOS VMs use MSRs that KVM doesn't recognise — ignore them
+  # instead of crashing, and enable nested virt for better compat.
+  boot.extraModprobeConfig = ''
+    options kvm_intel nested=1
+    options kvm_intel emulate_invalid_guest_state=0
+    options kvm ignore_msrs=1
+  '';
+
   users.users.meleeto = {
     isNormalUser = true;
     description = "Melee TO Account";
