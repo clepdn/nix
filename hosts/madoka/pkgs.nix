@@ -52,4 +52,6 @@ with pkgs; [
 	blender
 	nodejs_22
 	helium
+	podman-compose
+	tigervnc  # VNC viewer for docker-osx
 ]
