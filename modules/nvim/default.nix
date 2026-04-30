@@ -70,7 +70,7 @@
       }
       {
         mode = "t";
-        key = "<C-Space>";
+        key = "<C-n>";
         action = "<C-\\><C-n>";
         options.desc = "Exit terminal mode";
       }
