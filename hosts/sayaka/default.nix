@@ -8,7 +8,6 @@
 	      "${self}/modules/tz/ny.nix"
 	      "${self}/modules/nginx"
 	      "${self}/modules/pavement"
-	      "${self}/modules/happy"
 	];
 
 	myNixOS.pavement = {

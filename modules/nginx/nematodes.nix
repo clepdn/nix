@@ -73,10 +73,6 @@ in
   };
 
   myServices.acme = {
-    "cobalt.nematodes.net" = cloudflareDNS // {
-      port = 9000;
-      target = "127.0.0.1";
-    };
     "navi.nematodes.net" = cloudflareDNS // {
       port = 4533;
       target = "100.102.158.29";
@@ -87,11 +83,6 @@ in
     };
     "s3.nematodes.net" = cloudflareDNS // {
       port = 9000;
-      target = "100.116.202.116";
-      extraLocationConfig = "client_max_body_size 0;";
-    };
-    "s3-console.nematodes.net" = cloudflareDNS // {
-      port = 9001;
       target = "100.116.202.116";
       extraLocationConfig = "client_max_body_size 0;";
     };
