@@ -1,5 +1,9 @@
 # Agent Instructions
 
+## ⚠️ Pending TODOs
+
+- **homura only**: `services.dbus.implementation = "dbus"` is pinned in `hosts/homura/default.nix` to defer the dbus → dbus-broker transition until a reboot. Once homura has been rebooted, remove that line and redeploy. *(Remove this note when done.)*
+
 ## Tailscale IPs
 
 | Host | IP |

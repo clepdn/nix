@@ -14,7 +14,9 @@
     ];
 
   boot.initrd.network.enable = true;
-  boot.kernelParams = [ "ip=dhcp" ];
+  # Static IP for initrd SSH so LUKS password can be entered remotely.
+  # Connect to 192.168.1.10:2222 before the machine finishes booting.
+  boot.kernelParams = [ "ip=192.168.1.10::192.168.1.1:255.255.255.0:homura::none" ];
   boot.initrd.network.ssh = {
     enable = true;
     port = 2222;
@@ -83,6 +85,9 @@
   services.avahi.nssmdns4 = true;
 
   networking.firewall.enable = true;
+
+  # dbus-broker transition requires a reboot; keep old daemon until then
+  services.dbus.implementation = "dbus";
 
   system.stateVersion = "25.11"; # Don't touch me ]: )
 }
