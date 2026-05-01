@@ -3,7 +3,6 @@
     ./computer.nix
     ./nematodes.nix
     ./pavement.nix
-    ./sluppy.nix
   ];
 
   security.acme = {

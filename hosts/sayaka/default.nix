@@ -8,11 +8,19 @@
 	      "${self}/modules/tz/ny.nix"
 	      "${self}/modules/nginx"
 	      "${self}/modules/pavement"
+	      "${self}/modules/pds"
 	];
 
 	myNixOS.pavement = {
 		enable = true;
 		port = 3400;
+	};
+
+	myNixOS.pds = {
+		enable = true;
+		hostname = "pds2.on-her.computer";
+		port = 3084;
+		secretFile = "${self}/secrets/pds.env.age";
 	};
 
 	networking.hostName = "sayaka";

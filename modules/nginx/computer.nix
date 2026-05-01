@@ -18,6 +18,12 @@ in
   };
 
   myServices.acme = {
+    "pds2.on-her.computer" = cloudflareDNS // {
+      port = 3084;
+      target = "100.77.12.60";
+      wildcard = true;
+      extraLocationConfig = ''client_max_body_size 2G;'';
+    };
     "pds.on-her.computer" = cloudflareDNS // {
       port = 3000;
       target = "100.102.161.7";
