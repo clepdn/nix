@@ -76,6 +76,8 @@
   services.avahi.enable = true;
   services.avahi.nssmdns4 = true;
 
+  nix.settings.trusted-users = [ "root" "callie" ];
+
   networking.firewall.enable = true;
 
   system.stateVersion = "25.11"; # Don't touch me ]: )
