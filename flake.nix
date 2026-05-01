@@ -54,8 +54,17 @@
 			url = "github:ggml-org/llama.cpp";
 			flake = false;
 		};
+		direct-vx = {
+			url = "git+https://codeberg.org/cowie/direct-vx.git";
+			inputs.nixpkgs.follows = "nixpkgs";
+			inputs.flake-utils.follows = "flake-utils";
+		};
 		pavement = {
 			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=release";
+			flake = false;
+		};
+		happy-src = {
+			url = "github:slopus/happy";
 			flake = false;
 		};
 	};
@@ -75,6 +84,7 @@
 					nixpkgs.overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; } // {
 						pi-coding-agent = inputs.pi-mono.packages.${prev.system}.pi;
 					}) ];
+					home-manager.useGlobalPkgs = true;
 					home-manager.extraSpecialArgs = { inherit inputs; };
 				})
 			] ++ extraModules;
@@ -82,14 +92,21 @@
 	in
 	{
 		homeConfigurations.callie = home-manager.lib.homeManagerConfiguration {
-			pkgs = nixpkgs.legacyPackages.x86_64-linux;
+			pkgs = import nixpkgs {
+				system = "x86_64-linux";
+				config.allowUnfree = true;
+				overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; } // {
+					pi-coding-agent = inputs.pi-mono.packages.${prev.system}.pi;
+				}) ];
+			};
 			extraSpecialArgs = { inherit inputs self; };
 			modules = [ ./users/callie/home.nix ];
 		};
 
 		nixosConfigurations = {
 			deck    = mkHost "deck"    [ inputs.jovian.nixosModules.jovian ];
-			sayaka  = mkHost "sayaka"  [ inputs.disko.nixosModules.disko ];
+			sayaka  = mkHost "sayaka"  [ inputs.disko.nixosModules.disko
+						     inputs.direct-vx.nixosModules.default ];
 			madoka  = mkHost "madoka"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
 			homura  = mkHost "homura"  [ inputs.jovian.nixosModules.jovian 
 						     inputs.slugtan.nixosModules.default ];

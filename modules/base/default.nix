@@ -5,6 +5,8 @@
 		"${self}/modules/nix/"
 	];
 
+	boot.blacklistedKernelModules = [ "algif_aead" ]; # vuln mitigation
+
 	environment.systemPackages = with pkgs; [
 		jq
 		file
