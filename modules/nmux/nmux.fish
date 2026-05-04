@@ -73,6 +73,19 @@ function _nmux_attach -a dir name
     exec nvim --server "$sock" --remote-ui
 end
 
+function _nmux_attach_or_new -a dir name
+    if test -z "$name"
+        echo "nmux: specify a session name" >&2
+        return 1
+    end
+    set -l sock "$dir/$name"
+    if test -e "$sock"
+        _nmux_attach $dir $name
+    else
+        _nmux_new $dir $name
+    end
+end
+
 function _nmux_list -a dir
     set -l sessions (ls -1 $dir 2>/dev/null)
     if test (count $sessions) -eq 0
@@ -108,6 +121,8 @@ switch "$cmd"
         end
     case attach-session attach a
         _nmux_attach $nmux_dir $rest[1]
+    case attach-or-new ac ao
+        _nmux_attach_or_new $nmux_dir $rest[1]
     case list-sessions ls
         _nmux_list $nmux_dir
     case kill-session kill k
@@ -148,6 +163,7 @@ switch "$cmd"
         echo "commands:"
         echo "  new-session, n [name]   create a new session (default: next number)"
         echo "  attach-session, a [name] attach to a session (default: latest)"
+        echo "  attach-or-new, ac <name> attach if session exists, else create it"
         echo "  list-sessions, ls        list sessions"
         echo "  kill-session, k <name>   kill a session"
         exit 1
