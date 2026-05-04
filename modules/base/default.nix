@@ -18,6 +18,7 @@
 		mosh 
 		wl-clipboard
 		mosh
+		trzsz-ssh # `tssh`, client for tsshd (see modules/ssh)
 		openssl
 		psmisc # killall
 		inputs.agenix.packages.${pkgs.system}.default
