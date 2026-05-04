@@ -77,43 +77,39 @@ if test -z "$FLAKE_PATH" -o -z "$FLAKE_HOST"
     exit 0
 end
 
-set PROFILE "/nix/var/nix/profiles/system"
-
-set GEN_NUMBER (readlink $PROFILE | grep -oP 'system-\K[0-9]+(?=-link)')
-
-set GEN_NAME (nix eval "$FLAKE_PATH#nixosConfigurations.$FLAKE_HOST.config.system.nixos.codeName" --raw 2>/dev/null)
-
-if test -z "$GEN_NAME"
-    set GEN_NAME (nix-env --list-generations -p $PROFILE 2>/dev/null \
-        | awk -v gen="$GEN_NUMBER" '$1 == gen {print $NF}')
-end
-
-if test -z "$GEN_NAME"
-    set GEN_NAME "unknown"
-end
-
 set BRANCH "current-system-$HOSTNAME"
-set COMMIT_MSG "NixOS ($GEN_NAME) generation $GEN_NUMBER"
+set COMMIT_MSG "WIP: $HOSTNAME system snapshot"
 
 cd $NIXOS_CONFIG_DIR
+
+# Parent the snapshot on main so the branch retains main's real history
+# instead of forming an isolated parentless chain. main itself is never
+# moved by this script — we only update refs/heads/current-system-<host>.
+set MAIN_REF (git rev-parse --verify main 2>/dev/null)
+if test -z "$MAIN_REF"
+    set MAIN_REF (git rev-parse --verify origin/main 2>/dev/null)
+end
+if test -z "$MAIN_REF"
+    echo "[hook] error: could not resolve 'main' or 'origin/main'" >&2
+    exit 1
+end
 
 git add -u
 
 set TREE (git write-tree)
 
-if git show-ref --verify --quiet "refs/heads/$BRANCH"
-    set PARENT (git rev-parse $BRANCH)
-    set COMMIT (git commit-tree $TREE -p $PARENT -m $COMMIT_MSG)
-else
-    set COMMIT (git commit-tree $TREE -m $COMMIT_MSG)
-end
+# Always parent on main HEAD. The branch is always exactly
+# "main + 1 snapshot commit". A force-push is required because each
+# rebuild replaces the previous snapshot commit, but main's history
+# (and main itself) is never rewritten.
+set COMMIT (git commit-tree $TREE -p $MAIN_REF -m $COMMIT_MSG)
 
 git update-ref "refs/heads/$BRANCH" $COMMIT
 
 echo "[hook] Pushing to origin/$BRANCH"
 
-git push -u origin $BRANCH --force; or echo "[hook] Push to origin failed!" >&2
+git push -u origin $BRANCH --force-with-lease; or echo "[hook] Push to origin failed!" >&2
 
 git restore --staged . 2>/dev/null; or git reset HEAD . 2>/dev/null
 
-echo "[hook] Committed generation to branch '$BRANCH': $COMMIT_MSG"
+echo "[hook] Committed snapshot to branch '$BRANCH' (parent: main @ "(string sub -l 8 $MAIN_REF)")"
