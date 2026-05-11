@@ -27,7 +27,6 @@ in {
         --host 0.0.0.0 \
         --port ${toString servicePort} \
         -m /var/lib/llama/gemma4-e4b.gguf \
-        --mmproj "/var/lib/llama/mmproj-Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-f16.gguf"
         --api-key "$(< ${config.age.secrets.llama-api-key.path})"
     ''
   );
