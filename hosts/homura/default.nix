@@ -9,6 +9,7 @@
       "${self}/modules/base"
       "${self}/modules/pipewire"
       "${self}/modules/monitoring"
+      "${self}/modules/ttyd"
       "${self}/modules/tz/ny.nix"
     ];
 
@@ -72,11 +73,14 @@
      claude-code
   ];
 
+  myNixOS.ttyd = {
+    enable = true;
+    port = 7681;
+  };
+
   services.tailscale.enable = true;
   services.avahi.enable = true;
   services.avahi.nssmdns4 = true;
-
-  nix.settings.trusted-users = [ "root" "callie" ];
 
   networking.firewall.enable = true;
 

@@ -51,7 +51,7 @@
 			};
 		};
 		llama-cpp-src = {
-			url = "github:ggml-org/llama.cpp";
+			url = "github:AtomicBot-ai/atomic-llama-cpp-turboquant";
 			flake = false;
 		};
 		direct-vx = {
