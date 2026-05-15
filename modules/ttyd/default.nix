@@ -4,10 +4,6 @@ let
   ttydUser = "ttyd";
   ttydGroup = "ttyd";
   stateDir = "/var/lib/ttyd";
-  closureInfo = pkgs.closureInfo { rootPaths = [ pkgs.ttyd pkgs.ncurses ]; };
-  closureBinds = lib.filter (s: s != "")
-    (lib.splitString "\n"
-      (builtins.readFile "${closureInfo}/store-paths"));
 in {
   options.myNixOS.ttyd = {
     enable = lib.mkEnableOption "ttyd web terminal";
@@ -45,27 +41,20 @@ in {
         Group = ttydGroup;
         WorkingDirectory = stateDir;
 
-        # --- Filesystem: tmpfs root with only the ttyd closure visible ---
-        TemporaryFileSystem = "/:ro";
-        BindReadOnlyPaths = map (p: "${p}:${p}") closureBinds ++ [
-          "/etc/resolv.conf"
-          "/etc/nsswitch.conf"
-          "/etc/hosts"
-          "${pkgs.ncurses}/share/terminfo:/usr/share/terminfo"
-          "/proc"
-        ];
-        BindPaths = [
-          "${stateDir}:${stateDir}"
-          "/dev/ptmx:/dev/ptmx"
-          "/dev/pts:/dev/pts"
-          "/dev/null:/dev/null"
-          "/dev/zero:/dev/zero"
-          "/dev/urandom:/dev/urandom"
-          "/dev/tty:/dev/tty"
-        ];
+        # --- Filesystem ---
         PrivateTmp = true;
         ProtectHome = "yes";
         ProtectSystem = "strict";
+        ReadWritePaths = [ stateDir ];
+        InaccessiblePaths = [
+          "-/boot"
+          "-/root"
+          "-/srv"
+          "-/opt"
+          "-/mnt"
+          "-/media"
+          "-/var/log"
+        ];
 
         # --- Capabilities ---
         CapabilityBoundingSet = "";
