@@ -4,6 +4,10 @@ let
   ttydUser = "ttyd";
   ttydGroup = "ttyd";
   stateDir = "/var/lib/ttyd";
+  closureInfo = pkgs.closureInfo { rootPaths = [ pkgs.ttyd pkgs.ncurses ]; };
+  closureBinds = lib.filter (s: s != "")
+    (lib.splitString "\n"
+      (builtins.readFile "${closureInfo}/store-paths"));
 in {
   options.myNixOS.ttyd = {
     enable = lib.mkEnableOption "ttyd web terminal";
@@ -41,11 +45,22 @@ in {
         Group = ttydGroup;
         WorkingDirectory = stateDir;
 
-        # --- Filesystem ---
+        # --- Filesystem: tmpfs root, only closure + stateDir visible ---
+        TemporaryFileSystem = "/:ro";
+        BindReadOnlyPaths = map (p: "${p}:${p}") closureBinds ++ [
+          "/etc/resolv.conf"
+          "/etc/nsswitch.conf"
+          "/etc/hosts"
+          "${pkgs.ncurses}/share/terminfo:/usr/share/terminfo"
+        ];
+        BindPaths = [
+          "${stateDir}:${stateDir}"
+          "/dev/ptmx"
+          "/dev/pts"
+        ];
+        PrivateTmp = true;
         ProtectHome = "yes";
         ProtectSystem = "strict";
-        ReadWritePaths = [ stateDir ];
-        PrivateTmp = true;
 
         # --- Capabilities ---
         CapabilityBoundingSet = "";
@@ -53,7 +68,7 @@ in {
         NoNewPrivileges = true;
 
         # --- Namespace isolation ---
-        PrivateDevices = false; # need /dev/ptmx
+        PrivateDevices = false;
         PrivateIPC = true;
         ProtectHostname = true;
         ProtectClock = true;
@@ -78,6 +93,10 @@ in {
           "~@obsolete"
           "~@cpu-emulation"
           "~@debug"
+          "~@keyring"
+          "~@chown"
+          "~@setuid"
+          "~@timer"
         ];
         SystemCallErrorNumber = "EPERM";
 
@@ -87,6 +106,13 @@ in {
           "AF_INET6"
           "AF_UNIX"
         ];
+        IPAddressDeny = "any";
+        IPAddressAllow = [
+          "localhost"
+          "100.64.0.0/10"
+        ];
+        SocketBindDeny = "any";
+        SocketBindAllow = "tcp:${toString cfg.port}";
 
         # --- Memory / personality ---
         MemoryDenyWriteExecute = true;
@@ -97,10 +123,10 @@ in {
         RemoveIPC = true;
 
         # --- Resource limits ---
-        LimitNOFILE = 256;
-        LimitNPROC = 32;
-        LimitAS = "256M";
-        LimitFSIZE = "50M";
+        LimitNOFILE = 64;
+        LimitNPROC = 16;
+        LimitAS = "128M";
+        LimitFSIZE = "10M";
         LimitCORE = 0;
 
         # --- Misc ---
