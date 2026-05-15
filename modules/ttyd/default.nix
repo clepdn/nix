@@ -45,22 +45,23 @@ in {
         Group = ttydGroup;
         WorkingDirectory = stateDir;
 
-        # --- Filesystem: tmpfs root, only closure + stateDir visible ---
+        # --- Filesystem: tmpfs root with only the ttyd closure visible ---
         TemporaryFileSystem = "/:ro";
         BindReadOnlyPaths = map (p: "${p}:${p}") closureBinds ++ [
           "/etc/resolv.conf"
           "/etc/nsswitch.conf"
           "/etc/hosts"
           "${pkgs.ncurses}/share/terminfo:/usr/share/terminfo"
+          "/proc"
         ];
         BindPaths = [
           "${stateDir}:${stateDir}"
-          # forkpty() needs these for pty allocation
           "/dev/ptmx:/dev/ptmx"
           "/dev/pts:/dev/pts"
           "/dev/null:/dev/null"
           "/dev/zero:/dev/zero"
           "/dev/urandom:/dev/urandom"
+          "/dev/tty:/dev/tty"
         ];
         PrivateTmp = true;
         ProtectHome = "yes";
