@@ -1,5 +1,8 @@
 { config, pkgs, self, ... }:
 {
+  nixpkgs.config.permittedInsecurePackages = [
+    "minio-2025-10-15T17-29-55Z"
+  ];
   age.secrets.minio = {
 	file = "${self}/secrets/minio.age";
 	owner = "minio";
@@ -42,7 +45,7 @@
 	serviceConfig = {
 		Type = "simple";
 		ExecStart = "${pkgs.tailscale}/bin/tailscaled --tun=userspace-networking --socket /home/tscl-minio/tailscaled-minio.sock";
-		ExecStartPost = "${pkgs.tailscale}/bin/tailscale --socket /home/tscl-minio/tailscaled-minio.sock up --login-server=https://vpn.klbr.net --auth-key=file:${config.age.secrets.tail.path}";
+		ExecStartPost = "${pkgs.tailscale}/bin/tailscale --socket /home/tscl-minio/tailscaled-minio.sock up --login-server=https://vpn.klbr.net";
 		Restart = "on-failure";
 		RestartSec = "5s";
 		User = "tscl-minio";

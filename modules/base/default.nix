@@ -5,6 +5,9 @@
 		"${self}/modules/nix/"
 	];
 
+	# vuln mitigation
+	boot.blacklistedKernelModules = [ "algif_aead" "esp4" "esp6" "rxrpc" ];
+
 	environment.systemPackages = with pkgs; [
 		jq
 		file
@@ -20,10 +23,13 @@
 		inputs.agenix.packages.${pkgs.system}.default
 	];
 
-	programs.git.enable  = true;
-	programs.tmux.enable = true;
-	programs.fish.enable = true;
-	programs.neovim.enable  = true;
+	programs = {
+		git.enable  = true;
+		tmux.enable = true;
+		fish.enable = true;
+		neovim.enable  = true;
+	};
+	# These take ages to build
 	documentation.man.cache.enable = false;
 	documentation.man.man-db.enable = false;
 

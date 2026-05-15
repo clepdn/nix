@@ -32,5 +32,6 @@ let hosts = [
 		"slugtan.env.age".publicKeys = keys;
 		"llama-api-key.age".publicKeys = keys;
 		"letta-password.age".publicKeys = keys;
+		"happy.env.age".publicKeys = keys;
 	}
 

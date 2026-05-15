@@ -4,9 +4,9 @@ let
   pkg = (pkgs.llama-cpp.override { cudaSupport = true; }).overrideAttrs (old: {
     src = inputs.llama-cpp-src;
     version = "0";
-    npmDepsHash = "sha256-eeftjKt0FuS0Dybez+Iz9VTVMA4/oQVh+3VoIqvhVMw=";
+    npmDepsHash = "sha256-RAFtsbBGBjteCt5yXhrmHL39rIDJMCFBETgzId2eRRk=";
     postPatch = "rm -f tools/server/public/index.html.gz";
-    cmakeFlags = (old.cmakeFlags or []) ++ ["-DCMAKE_CUDA_ARCHITECTURES=61"];
+    cmakeFlags = (old.cmakeFlags or []) ++ ["-DCMAKE_CUDA_ARCHITECTURES=61" "-DGGML_CUDA_FA=OFF"];
   });
 in {
   age.secrets.llama-api-key = {
@@ -16,7 +16,7 @@ in {
 
   services.llama-cpp = {
     enable = true;
-    model = "/var/lib/llama/gemma4-e4b.gguf";
+    model = "/var/lib/llama/gemma4-e2b.gguf";
     port = servicePort;
     package = pkg;
   };
@@ -26,7 +26,8 @@ in {
       exec ${pkg}/bin/llama-server \
         --host 0.0.0.0 \
         --port ${toString servicePort} \
-        -m /var/lib/llama/gemma4-e4b.gguf \
+        -m ${config.services.llama-cpp.model} \
+        --mtp-head /var/lib/llama/gemma4-e2b-mtp.gguf
         --api-key "$(< ${config.age.secrets.llama-api-key.path})"
     ''
   );

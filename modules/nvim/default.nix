@@ -69,6 +69,12 @@
         options.desc = "Exit terminal mode";
       }
       {
+        mode = "t";
+        key = "<C-Space>";
+        action = "<C-\\><C-n>";
+        options.desc = "Exit terminal mode";
+      }
+      {
         mode = "n";
         key = "<leader>i";
         action.__raw = "function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end";
@@ -120,6 +126,12 @@
         action = "<cmd>MCstart<cr>";
         options.desc = "Multi-cursor on word/selection";
       }
+      {
+         mode = "n";
+         key = "<leader>e";
+         action = "<cmd>NvimTreeToggle<cr>";
+         options.desc = "Toggle file tree";
+     }
     ];
 
     plugins = {
@@ -156,10 +168,29 @@
           ts_ls.enable = true;
           pylsp.enable = true;
           clangd.enable = true;
+          svelte.enable = true;
         };
       };
 
+      treesitter = {
+        enable = true;
+        settings.highlight.enable = true;
+        grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+          svelte
+          javascript
+          typescript
+          css
+          html
+        ];
+      };
+
       sleuth.enable = true;
+      nvim-tree.enable = true;
+
+      auto-session = {
+        enable = true;
+        settings.suppressed_dirs = [ "~/" "~/Downloads" ];
+      };
     };
 
     extraPlugins = with pkgs.vimPlugins; [
@@ -176,7 +207,7 @@
           owner = "everviolet";
           repo = "nvim";
           rev = "main";
-          hash = "sha256-kYfNaAx0koqFBSXKC1IuVJaZeUQC+0rT9deEqgcRt8I=";
+          hash = "sha256-q8nQ+F2OKL7AV92hUhHgesXMDrJakBGkLI17YvkVRa0=";
         };
       })
     ];

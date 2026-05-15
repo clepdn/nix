@@ -9,6 +9,7 @@
       "${self}/modules/base"
       "${self}/modules/pipewire"
       "${self}/modules/monitoring"
+      "${self}/modules/ttyd"
       "${self}/modules/tz/ny.nix"
     ];
 
@@ -71,6 +72,11 @@
      opencode
      claude-code
   ];
+
+  myNixOS.ttyd = {
+    enable = true;
+    port = 7681;
+  };
 
   services.tailscale.enable = true;
   services.avahi.enable = true;
