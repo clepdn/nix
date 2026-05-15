@@ -55,8 +55,12 @@ in {
         ];
         BindPaths = [
           "${stateDir}:${stateDir}"
-          "/dev/ptmx"
-          "/dev/pts"
+          # forkpty() needs these for pty allocation
+          "/dev/ptmx:/dev/ptmx"
+          "/dev/pts:/dev/pts"
+          "/dev/null:/dev/null"
+          "/dev/zero:/dev/zero"
+          "/dev/urandom:/dev/urandom"
         ];
         PrivateTmp = true;
         ProtectHome = "yes";
