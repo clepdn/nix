@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.myNixOS.ttyd;
-  ttydUser = "ttyd";
-  ttydGroup = "ttyd";
   stateDir = "/var/lib/ttyd";
 in {
   options.myNixOS.ttyd = {
@@ -15,148 +13,88 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    users.users.${ttydUser} = {
-      isSystemUser = true;
-      group = ttydGroup;
-      home = stateDir;
-    };
-    users.groups.${ttydGroup} = {};
+    containers.ttyd = {
+      autoStart = true;
+      privateNetwork = false;
 
-    systemd.services.ttyd = {
-      description = "ttyd web terminal (hardened)";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network.target" ];
+      bindMounts."${stateDir}" = {
+        hostPath = stateDir;
+        isReadOnly = false;
+      };
+      config = { pkgs, ... }: {
+        users.users.ttyd = {
+          isSystemUser = true;
+          group = "ttyd";
+          home = stateDir;
+        };
+        users.groups.ttyd = {};
 
-      script = ''
-        exec ${pkgs.ttyd}/bin/ttyd \
-          --port ${toString cfg.port} \
-          --writable \
-          --check-origin \
-          --max-clients 3 \
-          ${stateDir}/my-bin
-      '';
+        systemd.services.ttyd = {
+          description = "ttyd web terminal";
+          wantedBy = [ "multi-user.target" ];
+          after = [ "network.target" ];
 
-      serviceConfig = {
-        User = ttydUser;
-        Group = ttydGroup;
-        WorkingDirectory = stateDir;
+          script = ''
+            exec ${pkgs.ttyd}/bin/ttyd \
+              --port ${toString cfg.port} \
+              --writable \
+              --check-origin \
+              --max-clients 3 \
+              ${stateDir}/my-bin
+          '';
 
-        # --- Filesystem ---
-        PrivateTmp = true;
-        ProtectHome = "yes";
-        ProtectSystem = "strict";
-        ReadWritePaths = [ stateDir ];
-        InaccessiblePaths = [
-          "-/boot"
-          "-/root"
-          "-/srv"
-          "-/opt"
-          "-/mnt"
-          "-/media"
-          "-/var/log"
-          "-/var/lib/systemd"
-          "-/var/lib/nixos"
-          "-/var/cache"
-          "-/var/db"
-          "-/var/spool"
-          "-/etc/shadow"
-          "-/etc/ssh"
-          "-/etc/sudoers"
-          "-/etc/sudoers.d"
-          "-/etc/nixos"
-          "-/etc/secrets"
-          "-/usr"
-          "-/run/secrets"
-          "-/run/agenix"
-        ];
+          serviceConfig = {
+            User = "ttyd";
+            Group = "ttyd";
+            WorkingDirectory = stateDir;
 
-        # --- Capabilities ---
-        CapabilityBoundingSet = "";
-        AmbientCapabilities = "";
-        NoNewPrivileges = true;
+            NoNewPrivileges = true;
+            CapabilityBoundingSet = "";
+            RestrictNamespaces = true;
+            LockPersonality = true;
+            MemoryDenyWriteExecute = true;
+            RestrictRealtime = true;
+            RestrictSUIDSGID = true;
+            RemoveIPC = true;
+            ProtectClock = true;
+            ProtectHostname = true;
+            ProtectKernelLogs = true;
+            ProtectKernelModules = true;
+            ProtectKernelTunables = true;
+            ProtectControlGroups = true;
+            SystemCallArchitectures = "native";
+            SystemCallFilter = [
+              "@system-service"
+              "~@privileged"
+              "~@mount"
+              "~@clock"
+              "~@module"
+              "~@raw-io"
+              "~@reboot"
+              "~@swap"
+              "~@obsolete"
+              "~@cpu-emulation"
+              "~@debug"
+            ];
+            SystemCallErrorNumber = "EPERM";
 
-        # --- Namespace isolation ---
-        PrivateDevices = false;
-        PrivateIPC = true;
-        ProtectHostname = true;
-        ProtectClock = true;
-        ProtectKernelTunables = true;
-        ProtectKernelModules = true;
-        ProtectKernelLogs = true;
-        ProtectControlGroups = true;
-        ProtectProc = "invisible";
-        ProcSubset = "pid";
+            LimitNOFILE = 64;
+            LimitNPROC = 16;
+            LimitCORE = 0;
 
-        # --- Syscall filter ---
-        SystemCallArchitectures = "native";
-        SystemCallFilter = [
-          "@system-service"
-          "~@privileged"
-          "~@mount"
-          "~@clock"
-          "~@module"
-          "~@raw-io"
-          "~@reboot"
-          "~@swap"
-          "~@obsolete"
-          "~@cpu-emulation"
-          "~@debug"
-          "~@keyring"
-          "~@chown"
-          "~@setuid"
-          "~@timer"
-        ];
-        SystemCallErrorNumber = "EPERM";
+            Restart = "on-failure";
+            RestartSec = 3;
+          };
+        };
 
-        # --- Network ---
-        RestrictAddressFamilies = [
-          "AF_INET"
-          "AF_INET6"
-          "AF_UNIX"
-        ];
-        IPAddressDeny = "any";
-        IPAddressAllow = [
-          "localhost"
-          "100.64.0.0/10"
-        ];
-        SocketBindDeny = "any";
-        SocketBindAllow = "tcp:${toString cfg.port}";
-
-        # --- Memory / personality ---
-        MemoryDenyWriteExecute = true;
-        LockPersonality = true;
-        RestrictRealtime = true;
-        RestrictSUIDSGID = true;
-        RestrictNamespaces = true;
-        RemoveIPC = true;
-
-        # --- Resource limits ---
-        LimitNOFILE = 64;
-        LimitNPROC = 16;
-        LimitAS = "128M";
-        LimitFSIZE = "10M";
-        LimitCORE = 0;
-
-        # --- Misc ---
-        UMask = "0077";
-        KeyringMode = "private";
-        DevicePolicy = "closed";
-        DeviceAllow = [
-          "/dev/ptmx rw"
-          "/dev/pts/[0-9]* rw"
-        ];
-
-        Restart = "on-failure";
-        RestartSec = 3;
-
-        StandardOutput = "journal";
-        StandardError = "journal";
-        SyslogIdentifier = "ttyd";
+        networking.firewall.allowedTCPPorts = [ cfg.port ];
+        system.stateVersion = "25.11";
       };
     };
 
+    # Ensure state dir exists on the host
     systemd.tmpfiles.rules = [
-      "d ${stateDir} 0750 ${ttydUser} ${ttydGroup} -"
+      "d ${stateDir} 0750 root root -"
     ];
 
     networking.firewall.allowedTCPPorts = [ cfg.port ];
