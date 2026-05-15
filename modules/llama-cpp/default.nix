@@ -27,9 +27,10 @@ in {
         --host 0.0.0.0 \
         --port ${toString servicePort} \
         -m ${config.services.llama-cpp.model} \
-        --mtp-head /var/lib/llama/gemma4-e2b-mtp.gguf
         --api-key "$(< ${config.age.secrets.llama-api-key.path})"
     ''
+
+    #--mtp-head /var/lib/llama/gemma4-e2b-mtp.gguf
   );
 
   networking.firewall.allowedTCPPorts = [ servicePort ];
