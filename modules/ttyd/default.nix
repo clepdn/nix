@@ -171,6 +171,9 @@ in {
           "/dev/pts/[0-9]* rw"
         ];
 
+        Restart = "on-failure";
+        RestartSec = 3;
+
         StandardOutput = "journal";
         StandardError = "journal";
         SyslogIdentifier = "ttyd";
@@ -178,8 +181,7 @@ in {
     };
 
     systemd.tmpfiles.rules = [
-      "d ${stateDir}       0750 ${ttydUser} ${ttydGroup} -"
-      "f ${stateDir}/my-bin 0750 ${ttydUser} ${ttydGroup} -"
+      "d ${stateDir} 0750 ${ttydUser} ${ttydGroup} -"
     ];
 
     networking.firewall.allowedTCPPorts = [ cfg.port ];
