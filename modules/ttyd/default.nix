@@ -4,18 +4,6 @@ let
   ttydUser = "ttyd";
   ttydGroup = "ttyd";
   stateDir = "/var/lib/ttyd";
-
-  # Minimal closure: only ttyd + the specific binary it launches.
-  # Nothing else from the store is visible inside the sandbox.
-  ttydStorePaths = lib.concatMapStringsSep "\n"
-    (p: "${p}")
-    (lib.attrValues (builtins.listToAttrs
-      (map (p: { name = baseNameOf p; value = p; })
-        (lib.splitString "\n" (builtins.readFile (
-          pkgs.runCommand "ttyd-closure" {} ''
-            ${pkgs.nix}/bin/nix-store --query --requisites ${pkgs.ttyd} > $out
-          ''
-        ))))));
 in {
   options.myNixOS.ttyd = {
     enable = lib.mkEnableOption "ttyd web terminal";
@@ -39,11 +27,7 @@ in {
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
 
-      # Build a whitelist of only the nix store paths ttyd needs at runtime.
-      # This prevents a shell escape from accessing the rest of /nix/store.
-      script = let
-        closurePaths = pkgs.closureInfo { rootPaths = [ pkgs.ttyd pkgs.ncurses ]; };
-      in ''
+      script = ''
         exec ${pkgs.ttyd}/bin/ttyd \
           --port ${toString cfg.port} \
           --writable \
@@ -57,52 +41,20 @@ in {
         Group = ttydGroup;
         WorkingDirectory = stateDir;
 
-        # --- Filesystem: tmpfs root with surgical bind mounts ---
-        TemporaryFileSystem = "/:ro";
-        BindReadOnlyPaths = let
-          closureInfo = pkgs.closureInfo { rootPaths = [ pkgs.ttyd pkgs.ncurses ]; };
-          # Each store path in the closure gets its own bind mount
-          closureBinds = map (p: "${p}:${p}")
-            (lib.filter (s: s != "")
-              (lib.splitString "\n"
-                (builtins.readFile "${closureInfo}/store-paths")));
-        in closureBinds ++ [
-          # minimal /etc for DNS
-          "/etc/resolv.conf"
-          "/etc/nsswitch.conf"
-          "/etc/hosts"
-          # terminfo so the pty works
-          "${pkgs.ncurses}/share/terminfo:/usr/share/terminfo"
-          # proc (filtered by ProcSubset)
-          "/proc"
-        ];
-        BindPaths = [
-          "${stateDir}"
-          # ttyd needs a pty — /dev/ptmx + /dev/pts
-          "/dev/ptmx"
-          "/dev/pts"
-        ];
-        PrivateTmp = true;
+        # --- Filesystem ---
         ProtectHome = "yes";
         ProtectSystem = "strict";
         ReadWritePaths = [ stateDir ];
-        InaccessiblePaths = [
-          # Even with tmpfs root, be explicit
-          "-/root"
-          "-/home"
-          "-/boot"
-        ];
+        PrivateTmp = true;
 
-        # --- Capabilities: none ---
+        # --- Capabilities ---
         CapabilityBoundingSet = "";
         AmbientCapabilities = "";
         NoNewPrivileges = true;
 
         # --- Namespace isolation ---
-        PrivateUsers = false; # incompatible with TemporaryFileSystem, redundant with User= + NoNewPrivileges
         PrivateDevices = false; # need /dev/ptmx
         PrivateIPC = true;
-        PrivateNetwork = false; # needs to listen
         ProtectHostname = true;
         ProtectClock = true;
         ProtectKernelTunables = true;
@@ -126,26 +78,15 @@ in {
           "~@obsolete"
           "~@cpu-emulation"
           "~@debug"
-          "~@keyring"
-          "~@chown"
-          "~@setuid"
-          "~@timer"
         ];
         SystemCallErrorNumber = "EPERM";
 
-        # --- Network: only tailscale + loopback ---
+        # --- Network ---
         RestrictAddressFamilies = [
           "AF_INET"
           "AF_INET6"
           "AF_UNIX"
         ];
-        IPAddressDeny = "any";
-        IPAddressAllow = [
-          "localhost"
-          "100.64.0.0/10"
-        ];
-        SocketBindDeny = "any";
-        SocketBindAllow = "tcp:${toString cfg.port}";
 
         # --- Memory / personality ---
         MemoryDenyWriteExecute = true;
@@ -156,11 +97,11 @@ in {
         RemoveIPC = true;
 
         # --- Resource limits ---
-        LimitNOFILE = 64;
-        LimitNPROC = 16;
-        LimitAS = "128M";
-        LimitFSIZE = "10M";
-        LimitCORE = 0; # no core dumps
+        LimitNOFILE = 256;
+        LimitNPROC = 32;
+        LimitAS = "256M";
+        LimitFSIZE = "50M";
+        LimitCORE = 0;
 
         # --- Misc ---
         UMask = "0077";
