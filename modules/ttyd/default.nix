@@ -54,6 +54,20 @@ in {
           "-/mnt"
           "-/media"
           "-/var/log"
+          "-/var/lib/systemd"
+          "-/var/lib/nixos"
+          "-/var/cache"
+          "-/var/db"
+          "-/var/spool"
+          "-/etc/shadow"
+          "-/etc/ssh"
+          "-/etc/sudoers"
+          "-/etc/sudoers.d"
+          "-/etc/nixos"
+          "-/etc/secrets"
+          "-/usr"
+          "-/run/secrets"
+          "-/run/agenix"
         ];
 
         # --- Capabilities ---
