@@ -303,16 +303,16 @@
     "llama-cpp-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1777489858,
-        "narHash": "sha256-2niGvjQLPanYBSejVM7NKnELpUbJd0B4T+UALTWR5uY=",
-        "owner": "ggml-org",
-        "repo": "llama.cpp",
-        "rev": "d77599234ea6e498775aeadbce665eece5bd98cd",
+        "lastModified": 1778693219,
+        "narHash": "sha256-II3BTqFUhvpBarVJi1Mwl06CACZzlry+ZLpMyROXf7s=",
+        "owner": "AtomicBot-ai",
+        "repo": "atomic-llama-cpp-turboquant",
+        "rev": "0a635dcd92ba66c75fccfef91c3e106f4668f367",
         "type": "github"
       },
       "original": {
-        "owner": "ggml-org",
-        "repo": "llama.cpp",
+        "owner": "AtomicBot-ai",
+        "repo": "atomic-llama-cpp-turboquant",
         "type": "github"
       }
     },

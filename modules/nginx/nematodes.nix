@@ -99,5 +99,9 @@ in
       port = 9091;
       target = "100.116.202.116";
     };
+    "em.nematodes.net" = cloudflareDNS // {
+      port = 7681;
+      target = "100.116.202.116";
+    };
   };
 }
