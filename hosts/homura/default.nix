@@ -86,8 +86,5 @@
 
   networking.firewall.enable = true;
 
-  # dbus-broker transition requires a reboot; keep old daemon until then
-  services.dbus.implementation = "dbus";
-
   system.stateVersion = "25.11"; # Don't touch me ]: )
 }
