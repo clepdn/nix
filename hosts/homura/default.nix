@@ -64,6 +64,7 @@
   users.users.nix-remote-builder = {
     isSystemUser = true;
     group = "nix-remote-builder";
+    shell = pkgs.bash;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB5jL+9rDxsmB6Kdj1nTykQ7wma71EsilUXWPTqHybi4 nix-remote-builder"
     ];
