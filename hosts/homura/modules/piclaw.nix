@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, self, ... }:
 
 let
   servicePort = 8180;
@@ -18,6 +18,12 @@ in
     "d ${dataDir}/home 0755 root root -"
     "d ${dataDir}/workspace 0755 root root -"
   ];
+
+  age.secrets.piclaw-keychain-key = {
+    file = "${self}/secrets/piclaw-keychain-key.env.age";
+    mode = "0400";
+    owner = "root";
+  };
 
   virtualisation.oci-containers.containers.piclaw = {
     image = "ghcr.io/rcarmo/piclaw:latest";
@@ -40,6 +46,7 @@ in
       "--init"
       "--shm-size=256m"
     ];
+    environmentFiles = [ config.age.secrets.piclaw-keychain-key.path ];
     log-driver = "journald";
   };
 

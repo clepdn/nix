@@ -43,5 +43,9 @@ let hosts = [
 		"letta-password.age".publicKeys = keys;
 		"happy.env.age".publicKeys = keys;
 		"nix-remote-builder-key.age".publicKeys = nixBuilderKeys;
+		"piclaw-keychain-key.env.age".publicKeys = [
+			(builtins.readFile ./publicKeys/root_homura-v.pub)
+			(builtins.readFile ./publicKeys/callie_homura-v.pub)
+		];
 	}
 
