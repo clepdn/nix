@@ -1,12 +1,8 @@
-{ config, self, ... }:
+{ config, ... }:
 let
-  cloudflareDNS = {
-    dnsProvider = "cloudflare";
-    environmentFile = config.age.secrets.cloudflare.path;
-  };
-  port8443 = [
-    { addr = "[::]";    port = 8443; ssl = true; extraParameters = [ "http2" ]; }
-    { addr = "0.0.0.0"; port = 8443; ssl = true; extraParameters = [ "http2" ]; }
+  port443 = [
+    { addr = "[::]";    port = 443; ssl = true; extraParameters = [ "http2" ]; }
+    { addr = "0.0.0.0"; port = 443; ssl = true; extraParameters = [ "http2" ]; }
   ];
   commonProxyHeaders = ''
     proxy_pass_request_headers on;
@@ -23,22 +19,15 @@ in
 {
   imports = [ ./vhost.nix ];
 
-  age.secrets.cloudflare = {
-    file = "${self}/secrets/cloudflare-dns.age";
-    owner = "nginx";
-    group = "nginx";
-    mode = "400";
-  };
-
   security.acme.certs."nematodes.net" = {
     domain = "nematodes.net";
     group = "nginx";
-    inherit (cloudflareDNS) dnsProvider environmentFile;
+    inherit (config.myNixOS.cloudflareDns) dnsProvider environmentFile;
   };
 
   services.nginx.virtualHosts."nematodes.net" = {
     forceSSL = true;
-    listen = port8443;
+    listen = port443;
     useACMEHost = "nematodes.net";
     locations = {
       "/booru" = {
@@ -72,34 +61,34 @@ in
     };
   };
 
-  myServices.acme = {
-    "navi.nematodes.net" = cloudflareDNS // {
+  myNixOS.acme = {
+    "navi.nematodes.net" = config.myNixOS.cloudflareDns // {
       port = 4533;
       target = "100.102.158.29";
     };
-    "x.nematodes.net" = cloudflareDNS // {
+    "x.nematodes.net" = config.myNixOS.cloudflareDns // {
       port = 8067;
       target = "127.0.0.1";
     };
-    "s3.nematodes.net" = cloudflareDNS // {
+    "s3.nematodes.net" = config.myNixOS.cloudflareDns // {
       port = 9000;
       target = "100.116.202.116";
       extraLocationConfig = "client_max_body_size 0;";
     };
-    "llama.nematodes.net" = cloudflareDNS // {
+    "llama.nematodes.net" = config.myNixOS.cloudflareDns // {
       port = 8023;
       target = "100.116.202.116";
     };
-    "book.nematodes.net" = cloudflareDNS // {
+    "book.nematodes.net" = config.myNixOS.cloudflareDns // {
       port = 6969;
       target = "100.116.202.116";
       extraLocationConfig = "client_max_body_size 0;";
     };
-    "auth.nematodes.net" = cloudflareDNS // {
+    "auth.nematodes.net" = config.myNixOS.cloudflareDns // {
       port = 9091;
       target = "100.116.202.116";
     };
-    "em.nematodes.net" = cloudflareDNS // {
+    "em.nematodes.net" = config.myNixOS.cloudflareDns // {
       port = 7681;
       target = "100.116.202.116";
     };

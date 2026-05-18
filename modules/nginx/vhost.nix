@@ -1,8 +1,14 @@
-{ config, lib, ... }:
-let cfg = config.myServices.acme;
-  port8443 = [
-    { addr = "[::]";   port = 8443; ssl = true;  extraParameters = [ "http2" ]; }
-    { addr = "0.0.0.0"; port = 8443; ssl = true; extraParameters = [ "http2" ]; }
+{ config, lib, self, ... }:
+let cfg = config.myNixOS.acme;
+  port443 = [
+    { addr = "[::]";    port = 443; ssl = true;  extraParameters = [ "http2" ]; }
+    { addr = "0.0.0.0"; port = 443; ssl = true; extraParameters = [ "http2" ]; }
+  ];
+
+  tailscaleSayaka = [
+    # sayaka's tailscale IPs
+    { addr = "100.77.12.60"; port = 443; ssl = true; extraParameters = [ "http2" ]; }
+    { addr = "fd7a:115c:a1e0::4f37:c3c"; port = 443; ssl = true; extraParameters = [ "http2" ]; }
   ];
   
   commonProxyHeaders = ''
@@ -37,27 +43,46 @@ let cfg = config.myServices.acme;
     error_page 401 =302 $redirection_url;
   '';
 in {
-  options.myServices.acme = lib.mkOption {
+  options.myNixOS.cloudflareDns = lib.mkOption {
+    type = lib.types.attrsOf lib.types.anything;
+    readOnly = true;
+    default = {
+      dnsProvider = "cloudflare";
+      environmentFile = config.age.secrets.cloudflare.path;
+    };
+  };
+
+  options.myNixOS.acme = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
-      options.port = lib.mkOption { type = lib.types.port; };
-      options.target = lib.mkOption { type = lib.types.str; };
-      options.dnsProvider = lib.mkOption { type = lib.types.str; };
-      options.environmentFile = lib.mkOption { type = lib.types.str; };
-      options.extraNginxOpts = lib.mkOption {
+      options.port            = lib.mkOption { type = lib.types.port; };
+      options.target          = lib.mkOption { type = lib.types.str;  };
+      options.dnsProvider     = lib.mkOption { type = lib.types.str;  };
+      options.environmentFile = lib.mkOption { type = lib.types.str;  };
+      options.extraNginxOpts  = lib.mkOption {
         type = lib.types.attrsOf lib.types.anything;
         default = {};
       };
+
       options.extraLocationConfig = lib.mkOption { 
         type = lib.types.str; 
         default = "";
       };
-      options.wildcard = lib.mkOption { type = lib.types.bool; default = false; };
-      options.forwardAuth = lib.mkOption { type = lib.types.bool; default = false; };
+
+      options.wildcard      = lib.mkOption { type = lib.types.bool; default = false; };
+      options.forwardAuth   = lib.mkOption { type = lib.types.bool; default = false; };
+      options.tailscaleOnly = lib.mkOption { type = lib.types.bool; default = false; };
     });
     default = {};
   };
 
   config = {
+    age.secrets.cloudflare = {
+      file = "${self}/secrets/cloudflare-dns.age";
+      owner = "nginx";
+      group = "nginx";
+      mode = "400";
+    };
+
     security.acme.certs = lib.mapAttrs (name: opts: {
       domain = if opts.wildcard then "*.${name}" else name;
       extraDomainNames = [ name ];
@@ -70,7 +95,7 @@ in {
     let
       baseVhost = {
         forceSSL = true;
-        listen = port8443;
+        listen = port443;
         useACMEHost = name;
         locations."/" = {
           proxyPass = "http://${opts.target}:${toString opts.port}";
@@ -92,8 +117,11 @@ in {
           '';
         };
       };
+      tailscaleVhost = lib.optionalAttrs opts.tailscaleOnly {
+        listen = tailscaleSayaka;
+      };
       mkVhost = n: lib.nameValuePair n
-        (lib.recursiveUpdate (lib.recursiveUpdate baseVhost autheliaVhost) opts.extraNginxOpts);
+        (lib.recursiveUpdate (lib.recursiveUpdate (lib.recursiveUpdate baseVhost autheliaVhost) tailscaleVhost) opts.extraNginxOpts);
     in 
       if opts.wildcard
       then [ (mkVhost name) (mkVhost "*.${name}") ]
