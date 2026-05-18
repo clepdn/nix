@@ -57,6 +57,20 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Homura is the build server — don't offload back to itself.
+  myNixOS.nix.homuraBuilder.enable = false;
+
+  # Accept remote build connections from other machines.
+  users.users.nix-remote-builder = {
+    isSystemUser = true;
+    group = "nix-remote-builder";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB5jL+9rDxsmB6Kdj1nTykQ7wma71EsilUXWPTqHybi4 nix-remote-builder"
+    ];
+  };
+  users.groups.nix-remote-builder = {};
+  nix.settings.trusted-users = [ "nix-remote-builder" ];
+
   networking.hostName = "homura"; # she graduated
 
   users.mutableUsers = false;

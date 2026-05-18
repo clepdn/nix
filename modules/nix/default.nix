@@ -1,5 +1,11 @@
-{ ... }:
+{ lib, ... }:
 {
+  imports = [ ./homura-builder.nix ];
+
+  # Enable homura as a remote builder on all machines by default.
+  # Opt out with: myNixOS.nix.homuraBuilder.enable = false;
+  myNixOS.nix.homuraBuilder.enable = lib.mkDefault true;
+
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     trusted-users = [ "root" ];

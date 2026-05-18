@@ -13,6 +13,16 @@ let hosts = [
 	systemKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
 	userKeys = map(user: builtins.readFile ./publicKeys/${user}.pub) users;
 	keys = systemKeys ++ userKeys;
+	# Keys for the nix remote builder secret — client machines + admin keys
+	# (homura is the server so its root key is not strictly needed, but included for admin)
+	nixBuilderKeys = [
+		(builtins.readFile ./publicKeys/root_sayaka.pub)
+		(builtins.readFile ./publicKeys/root_madoka.pub)
+		(builtins.readFile ./publicKeys/root_homura-v.pub)
+		(builtins.readFile ./publicKeys/callie_sayaka.pub)
+		(builtins.readFile ./publicKeys/callie_madoka.pub)
+		(builtins.readFile ./publicKeys/callie_homura-v.pub)
+	];
 	in {
 		"minio.age".publicKeys = keys;
 		"muliphein.age".publicKeys = keys;
@@ -32,5 +42,6 @@ let hosts = [
 		"llama-api-key.age".publicKeys = keys;
 		"letta-password.age".publicKeys = keys;
 		"happy.env.age".publicKeys = keys;
+		"nix-remote-builder-key.age".publicKeys = nixBuilderKeys;
 	}
 

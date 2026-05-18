@@ -40,7 +40,10 @@
 	})
   ];
 
-  services.tailscale.enable = true; 
+  # Deck has no agenix key enrolled yet — opt out until it does.
+  myNixOS.nix.homuraBuilder.enable = false;
+
+  services.tailscale.enable = true;
   services.avahi.nssmdns4.enable = true;
   #services.avahi.enable = true; # Don't remember if I need this one.
 
