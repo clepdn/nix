@@ -1,6 +1,5 @@
 { config, pkgs, self, ... }:
 let
-  tailscaleIp = "100.116.202.116";
   s3Port = 3900;
   webPort = 3902;
   adminPort = 3903;
@@ -37,9 +36,6 @@ in
     "d /mnt/hdd/garage/data 0750 garage garage -"
   ];
 
-  # Firewall: allow S3 and web API on tailscale interface
-  networking.firewall.interfaces."tailscale0".allowedTCPPorts = [ s3Port webPort ];
-
   environment.etc."garage.toml".text = ''
     replication_factor = 1
 
@@ -49,19 +45,24 @@ in
 
     rpc_secret_file = "${config.age.secrets.garage-rpc-secret.path}"
     rpc_bind_addr = "[::]:${toString rpcPort}"
+    rpc_public_addr = "192.168.1.10:${toString rpcPort}"
 
     [s3_api]
-    api_bind_addr = "${tailscaleIp}:${toString s3Port}"
+    api_bind_addr = "[::]:${toString s3Port}"
     s3_region = "garage"
+    root_domain = ".s3.garage"
 
     [s3_web]
-    bind_addr = "${tailscaleIp}:${toString webPort}"
+    bind_addr = "[::]:${toString webPort}"
+    root_domain = ".web.garage"
 
     [admin]
-    api_bind_addr = "127.0.0.1:${toString adminPort}"
+    api_bind_addr = "[::]:${toString adminPort}"
     admin_token_file = "${config.age.secrets.garage-admin-token.path}"
     metrics_token_file = "${config.age.secrets.garage-metrics-token.path}"
   '';
+
+  environment.systemPackages = [ pkgs.garage ];
 
   systemd.services.garage = {
     description = "Garage S3-compatible object store";
@@ -72,7 +73,7 @@ in
       GARAGE_LOG_TO_JOURNALD = "1";
     };
     serviceConfig = {
-      Type = "notify";
+      Type = "exec";
       ExecStart = "${pkgs.garage}/bin/garage server";
       Restart = "on-failure";
       RestartSec = "5s";
