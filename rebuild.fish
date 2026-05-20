@@ -3,6 +3,7 @@
 set NIXOS_CONFIG_DIR (test -n "$NIXOS_CONFIG_DIR" && echo $NIXOS_CONFIG_DIR || echo "/etc/nixos")
 
 set SUDO_ARGS --sudo --ask-sudo-password
+set BUILD_HOST --build-host homura
 
 # Hostname shorthand: ./rebuild.fish <hostname> [extra args]
 set NIXOS_SUBCOMMANDS switch boot test build dry-build dry-activate edit repl build-vm build-vm-with-bootloader list-generations
@@ -10,9 +11,9 @@ if test (count $argv) -gt 0 && not contains -- $argv[1] $NIXOS_SUBCOMMANDS
     set target $argv[1]
     set rest $argv[2..]
     if test "$target" = (hostname)
-        set argv switch --flake .#$target $SUDO_ARGS $rest
+        set argv switch --flake .#$target $SUDO_ARGS $BUILD_HOST $rest
     else
-        set argv switch --flake .#$target --target-host $target $SUDO_ARGS $rest
+        set argv switch --flake .#$target --target-host $target $SUDO_ARGS $BUILD_HOST $rest
     end
 end
 

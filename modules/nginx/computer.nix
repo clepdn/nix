@@ -58,7 +58,7 @@
       target = "100.116.202.116";
     };
     "flood.on-her.computer" = config.myNixOS.cloudflareDns // {
-      port = 3000;
+      port = 3001;
       target = "100.116.202.116";
     };
     "brr.on-her.computer" = config.myNixOS.cloudflareDns // {
