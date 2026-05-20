@@ -37,5 +37,6 @@ let hosts = [
 		"garage-rpc-secret.age".publicKeys = keys;
 		"garage-admin-token.age".publicKeys = keys;
 		"garage-metrics-token.age".publicKeys = keys;
+		"autobrr-session.age".publicKeys = keys;
 	}
 

@@ -10,8 +10,12 @@
 		owner = "systemd-network";
 	};
 
+	users.groups.library-extra = {};
+	users.users.qbit-container.extraGroups = [ "library-extra" ];
+
 	services.gluetun = {
 		enable = true;
 		envPath = config.age.secrets.gluetun.path;
+		qbittorrent2.enable = true;
 	};
 }
