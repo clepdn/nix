@@ -34,5 +34,8 @@ let hosts = [
 		"happy.env.age".publicKeys = keys;
 		"nix-remote-builder-key.age".publicKeys = keys;
 		"piclaw-keychain-key.env.age".publicKeys = keys;
+		"garage-rpc-secret.age".publicKeys = keys;
+		"garage-admin-token.age".publicKeys = keys;
+		"garage-metrics-token.age".publicKeys = keys;
 	}
 
