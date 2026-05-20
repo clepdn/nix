@@ -57,6 +57,14 @@
       port = 8020;
       target = "100.116.202.116";
     };
+    "flood.on-her.computer" = config.myNixOS.cloudflareDns // {
+      port = 3000;
+      target = "100.116.202.116";
+    };
+    "brr.on-her.computer" = config.myNixOS.cloudflareDns // {
+      port = 7474;
+      target = "100.116.202.116";
+    };
     "happy.on-her.computer" = config.myNixOS.cloudflareDns // {
       port = 3100;
       target = "100.116.202.116";
