@@ -33,6 +33,7 @@ with pkgs; [
 	clang
 	gdb
 	opencode
+	zed-editor
 	obs-studio
 	ffmpeg-full
 	qemu
