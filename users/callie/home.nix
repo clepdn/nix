@@ -14,7 +14,6 @@
     homeDirectory = "/home/callie";
     packages = with pkgs; [
       helium
-      happyCli
       (symlinkJoin {
         name = "pi";
         paths = [ inputs.pi-mono.packages.${pkgs.system}.default ];

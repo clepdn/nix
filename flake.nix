@@ -63,10 +63,6 @@
 			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=release";
 			flake = false;
 		};
-		happy-src = {
-			url = "github:slopus/happy";
-			flake = false;
-		};
 	};
 
 	outputs =
