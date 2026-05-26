@@ -140,6 +140,12 @@
   services.power-profiles-daemon.enable = false;
   services.tlp.enable = true;
 
+  # Keep the i2c_designware controller awake so the Synaptics touchpad
+  # (VEN_06CB on i2c_designware.2) can initialise without timing out.
+  services.udev.extraRules = ''
+    SUBSYSTEM=="platform", DRIVER=="i2c_designware", ATTR{power/control}="on"
+  '';
+
 services.tlp.settings={
     CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
     CPU_MAX_PERF_ON_BAT = 80;

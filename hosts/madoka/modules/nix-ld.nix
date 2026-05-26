@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  # xkbcommon looks for XKB data at the hardcoded /usr/share/X11/xkb path.
+  # Point it at the real location so unpatched binaries don't SIGSEGV on startup.
+  environment.sessionVariables.XKB_CONFIG_ROOT = "${pkgs.xkeyboard-config}/share/X11/xkb";
+
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
@@ -38,6 +42,7 @@
       gmp
       libgpg-error
       e2fsprogs
+      libxkbcommon
     ];
   };
 }
