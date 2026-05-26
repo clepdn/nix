@@ -13,6 +13,7 @@
     username = "callie";
     homeDirectory = "/home/callie";
     packages = with pkgs; [
+      helium
       happyCli
       (symlinkJoin {
         name = "pi";
