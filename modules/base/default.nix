@@ -1,8 +1,9 @@
-{ config, pkgs, lib, self, inputs, ... }:
+{ pkgs, self, inputs, ... }:
 {
 	imports = [
 		"${self}/modules/ssh/"
 		"${self}/modules/nix/"
+		"${self}/modules/age-pq/"
 	];
 
 	# vuln mitigation

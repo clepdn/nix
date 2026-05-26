@@ -10,33 +10,35 @@ let hosts = [
 		"callie_homura-v"
 		"callie_sayaka"
 	];
+	pq_pubkeys = [
+	];
 	systemKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
 	userKeys = map(user: builtins.readFile ./publicKeys/${user}.pub) users;
-	keys = systemKeys ++ userKeys;
+	DEPRECATED_sshKeys = systemKeys ++ userKeys;
 	in {
-		"minio.age".publicKeys = keys;
-		"muliphein.age".publicKeys = keys;
-		"muliphein-pskey.age".publicKeys = keys;
-		"gluetun.age".publicKeys = keys;
-		"authelia-jwt.age".publicKeys = keys;
-		"authelia-session.age".publicKeys = keys;
-		"authelia-storagekey.age".publicKeys = keys;
-		"authelia-users.yml.age".publicKeys = keys;
-		"authentik.env.age".publicKeys = keys;
-		"webhook.age".publicKeys = keys;
-		"cloudflare-dns.age".publicKeys = keys;
-		"grafana-secret-key.age".publicKeys = keys;
-		"home-assistant-secrets.age".publicKeys = keys;
-		"pds.env.age".publicKeys = keys;
-		"slugtan.env.age".publicKeys = keys;
-		"llama-api-key.age".publicKeys = keys;
-		"letta-password.age".publicKeys = keys;
-		"happy.env.age".publicKeys = keys;
-		"nix-remote-builder-key.age".publicKeys = keys;
-		"piclaw-keychain-key.env.age".publicKeys = keys;
-		"garage-rpc-secret.age".publicKeys = keys;
-		"garage-admin-token.age".publicKeys = keys;
-		"garage-metrics-token.age".publicKeys = keys;
-		"autobrr-session.age".publicKeys = keys;
+		"minio.age".publicKeys = DEPRECATED_sshKeys;
+		"muliphein.age".publicKeys = DEPRECATED_sshKeys;
+		"muliphein-pskey.age".publicKeys = DEPRECATED_sshKeys;
+		"gluetun.age".publicKeys = DEPRECATED_sshKeys;
+		"authelia-jwt.age".publicKeys = DEPRECATED_sshKeys;
+		"authelia-session.age".publicKeys = DEPRECATED_sshKeys;
+		"authelia-storagekey.age".publicKeys = DEPRECATED_sshKeys;
+		"authelia-users.yml.age".publicKeys = DEPRECATED_sshKeys;
+		"authentik.env.age".publicKeys = DEPRECATED_sshKeys;
+		"webhook.age".publicKeys = DEPRECATED_sshKeys;
+		"cloudflare-dns.age".publicKeys = DEPRECATED_sshKeys;
+		"grafana-secret-key.age".publicKeys = DEPRECATED_sshKeys;
+		"home-assistant-secrets.age".publicKeys = DEPRECATED_sshKeys;
+		"pds.env.age".publicKeys = DEPRECATED_sshKeys;
+		"slugtan.env.age".publicKeys = DEPRECATED_sshKeys;
+		"llama-api-key.age".publicKeys = DEPRECATED_sshKeys;
+		"letta-password.age".publicKeys = DEPRECATED_sshKeys;
+		"happy.env.age".publicKeys = DEPRECATED_sshKeys;
+		"nix-remote-builder-key.age".publicKeys = DEPRECATED_sshKeys;
+		"piclaw-keychain-key.env.age".publicKeys = DEPRECATED_sshKeys;
+		"garage-rpc-secret.age".publicKeys = DEPRECATED_sshKeys;
+		"garage-admin-token.age".publicKeys = DEPRECATED_sshKeys;
+		"garage-metrics-token.age".publicKeys = DEPRECATED_sshKeys;
+		"autobrr-session.age".publicKeys = DEPRECATED_sshKeys;
 	}
 
