@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  age.identityPaths = [ "/etc/age/identity" ];
+  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" "/etc/age/identity" ];
   systemd.services.generate-pq-agekey = {
     wantedBy = [ "multi-user.target" ];
     before = [ "agenix.service" ];

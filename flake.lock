@@ -198,22 +198,6 @@
         "type": "github"
       }
     },
-    "happy-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1779443698,
-        "narHash": "sha256-sjE8CQvR9p5RAgvXRAIDqtL7ELyvnTSRIq2ess7irVo=",
-        "owner": "slopus",
-        "repo": "happy",
-        "rev": "21c6ced018e79149eb12385b0714306d48893c82",
-        "type": "github"
-      },
-      "original": {
-        "owner": "slopus",
-        "repo": "happy",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -445,7 +429,6 @@
         "direct-vx": "direct-vx",
         "disko": "disko",
         "flake-utils": "flake-utils",
-        "happy-src": "happy-src",
         "home-manager": "home-manager_2",
         "jovian": "jovian",
         "lanzaboote": "lanzaboote",
