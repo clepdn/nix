@@ -1,7 +1,6 @@
 { config, ... }: {
   age.secrets.hermes-env = {
     file = ../../../secrets/hermes.env.age;
-    # hermes reads this as an env file; the hermes user needs read access
     owner = "hermes";
     group = "hermes";
     mode = "0400";
@@ -30,22 +29,39 @@
       };
     };
 
-    # API keys live in the agenix-managed secret (never in the Nix store).
-    # The file should contain lines like:
-    #   OPENROUTER_API_KEY=sk-or-...
     environmentFiles = [ config.age.secrets.hermes-env.path ];
 
-    # Container mode: lets the agent apt/pip/npm-install tools that persist
-    # across restarts and rebuilds — appropriate for a coding agent.
     container = {
       enable = true;
-      # Gives callie a ~/.hermes symlink into the service state dir so the
-      # host-side `hermes` CLI shares sessions, memory, and config with the
-      # gateway service.
+      backend = "podman";
       hostUsers = [ "callie" ];
     };
 
-    # Puts `hermes` on the system PATH and sets HERMES_HOME system-wide.
+    # Pull in fastapi/uvicorn (web) and ptyprocess (pty) so the dashboard
+    # service and embedded chat terminal work.
+    extraDependencyGroups = [ "web" "pty" ];
+
     addToSystemPackages = true;
   };
+
+  # Dashboard as a separate systemd service, bound to all interfaces.
+  systemd.services.hermes-dashboard = {
+    description = "Hermes Agent Web Dashboard";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "hermes-agent.service" ];
+    environment = {
+      HERMES_HOME = "/var/lib/hermes/.hermes";
+      HERMES_MANAGED = "true";
+      # Skip container routing — the dashboard runs natively on the host.
+      HERMES_DEV = "1";
+    };
+    serviceConfig = {
+      ExecStart = "${config.services.hermes-agent.package}/bin/hermes dashboard --host 0.0.0.0 --port 9119 --no-open --insecure";
+      User = "hermes";
+      Group = "hermes";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+  };
+
 }
