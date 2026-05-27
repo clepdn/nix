@@ -11,9 +11,10 @@ let hosts = [
 		"callie_sayaka"
 	];
 	pq_pubkeys = [
-		"homura"
 		"callie_megatron"
+		"homura"
 		"madoka"
+		"callie_madoka"
 	];
 	systemSSHKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
 	userSSHKeys   = map(user: builtins.readFile ./publicKeys/${user}.pub) users;
