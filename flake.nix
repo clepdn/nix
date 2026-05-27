@@ -101,7 +101,7 @@
 				}) ];
 			};
 			extraSpecialArgs = { inherit inputs self; };
-			modules = [ ./users/callie/home.nix ];
+			modules = [ inputs.agenix.homeManagerModules.default ./users/callie/home.nix ];
 		};
 
 		nixosConfigurations = {
