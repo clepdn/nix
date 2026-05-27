@@ -12,6 +12,7 @@ let hosts = [
 	];
 	pq_pubkeys = [
 		"homura"
+		"callie_megatron"
 	];
 	systemSSHKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
 	userSSHKeys   = map(user: builtins.readFile ./publicKeys/${user}.pub) users;
@@ -44,6 +45,6 @@ let hosts = [
 		"garage-metrics-token.age".publicKeys = DEPRECATED_sshKeys;
 		"autobrr-session.age".publicKeys = DEPRECATED_sshKeys;
 
-		"hermes.env.age".publicKeys = keys ++ userSSHKeys;
+		"hermes.env.age".publicKeys = keys;
 	}
 
