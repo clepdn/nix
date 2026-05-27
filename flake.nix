@@ -50,10 +50,7 @@
 				flake-utils.follows = "flake-utils";
 			};
 		};
-		hermes-agent = {
-			url = "github:NousResearch/hermes-agent";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
+
 		llama-cpp-src = {
 			url = "github:AtomicBot-ai/atomic-llama-cpp-turboquant";
 			flake = false;
@@ -110,8 +107,7 @@
 						     inputs.direct-vx.nixosModules.default ];
 			madoka  = mkHost "madoka"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
 			homura  = mkHost "homura"  [ inputs.jovian.nixosModules.jovian 
-						     inputs.slugtan.nixosModules.default
-						     inputs.hermes-agent.nixosModules.default ];
+						     inputs.slugtan.nixosModules.default ];
 		};
 	}
 

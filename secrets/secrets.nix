@@ -48,7 +48,5 @@ let hosts = [
 		"garage-admin-token.age".publicKeys = DEPRECATED_sshKeys;
 		"garage-metrics-token.age".publicKeys = DEPRECATED_sshKeys;
 		"autobrr-session.age".publicKeys = DEPRECATED_sshKeys;
-
-		"hermes.env.age".publicKeys = keys;
 	}
 
