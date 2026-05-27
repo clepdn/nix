@@ -13,12 +13,15 @@ let hosts = [
 	pq_pubkeys = [
 		"homura"
 		"callie_megatron"
+		"madoka"
 	];
 	systemSSHKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
 	userSSHKeys   = map(user: builtins.readFile ./publicKeys/${user}.pub) users;
 	pqKeys        = map(key:  builtins.readFile ./publicKeys/${key}_pq.pub) pq_pubkeys;
+
 	DEPRECATED_sshKeys = systemSSHKeys ++ userSSHKeys;
 	keys = pqKeys;
+
 	in {
 		"minio.age".publicKeys = DEPRECATED_sshKeys;
 		"muliphein.age".publicKeys = DEPRECATED_sshKeys;
