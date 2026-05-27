@@ -3,6 +3,7 @@
     inputs.nixvim.homeModules.nixvim
     ../../modules/nvim
     ../../modules/nmux
+    ../../modules/hm-age-pq
   ];
 
   programs.home-manager.enable = true;
@@ -44,4 +45,23 @@
             ]
         ' > "$settings.tmp" && mv "$settings.tmp" "$settings"
   '';
+
+  age.identityPaths = [ "/home/callie/.age/identity" ];
+
+  systemd.user.services.generate-pq-agekey = {
+    description = "Generate user PQ age identity key";
+    wantedBy = [ "default.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      if [ ! -f "$HOME/.age/identity" ]; then
+        mkdir -p "$HOME/.age"
+        ${pkgs.age}/bin/age-keygen -pq -o "$HOME/.age/identity"
+        chmod 600 "$HOME/.age/identity"
+        chown callie:users "$HOME/.age/identity"
+      fi
+    '';
+  };
 }

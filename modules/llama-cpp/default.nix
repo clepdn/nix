@@ -4,8 +4,16 @@ let
   pkg = (pkgs.llama-cpp.override { cudaSupport = true; }).overrideAttrs (old: {
     src = inputs.llama-cpp-src;
     version = "0";
+    # The web UI moved from tools/ui to tools/server/webui in newer upstream.
+    # nixpkgs' finalAttrs self-reference means overriding npmRoot cascades to
+    # npmDeps (preBuild = "pushd tools/server/webui") and preConfigure automatically.
+    npmRoot = "tools/server/webui";
     npmDepsHash = "sha256-RAFtsbBGBjteCt5yXhrmHL39rIDJMCFBETgzId2eRRk=";
-    postPatch = "rm -f tools/server/public/index.html.gz";
+    postPatch = ''
+      rm -f tools/server/public/index.html.gz
+      # Flake inputs lack the COMMIT file that nixpkgs' postFetch generates
+      echo "custom" > COMMIT
+    '';
     cmakeFlags = (old.cmakeFlags or []) ++ ["-DCMAKE_CUDA_ARCHITECTURES=61" "-DGGML_CUDA_FA=OFF"];
   });
 in {

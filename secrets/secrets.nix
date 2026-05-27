@@ -11,10 +11,13 @@ let hosts = [
 		"callie_sayaka"
 	];
 	pq_pubkeys = [
+		"homura"
 	];
-	systemKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
-	userKeys = map(user: builtins.readFile ./publicKeys/${user}.pub) users;
-	DEPRECATED_sshKeys = systemKeys ++ userKeys;
+	systemSSHKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
+	userSSHKeys   = map(user: builtins.readFile ./publicKeys/${user}.pub) users;
+	pqKeys        = map(key:  builtins.readFile ./publicKeys/${key}_pq.pub) pq_pubkeys;
+	DEPRECATED_sshKeys = systemSSHKeys ++ userSSHKeys;
+	keys = pqKeys;
 	in {
 		"minio.age".publicKeys = DEPRECATED_sshKeys;
 		"muliphein.age".publicKeys = DEPRECATED_sshKeys;
@@ -40,5 +43,7 @@ let hosts = [
 		"garage-admin-token.age".publicKeys = DEPRECATED_sshKeys;
 		"garage-metrics-token.age".publicKeys = DEPRECATED_sshKeys;
 		"autobrr-session.age".publicKeys = DEPRECATED_sshKeys;
+
+		"hermes.env.age".publicKeys = keys ++ userSSHKeys;
 	}
 
