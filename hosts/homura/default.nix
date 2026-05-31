@@ -101,5 +101,12 @@
 
   networking.firewall.enable = true;
 
+  # NAT for nixos-container instances (ve-* interfaces)
+  networking.nat = {
+    enable = true;
+    internalInterfaces = [ "ve-+" ];
+    externalInterface = "enp6s0";
+  };
+
   system.stateVersion = "25.11"; # Don't touch me ]: )
 }

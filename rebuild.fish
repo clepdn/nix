@@ -3,7 +3,11 @@
 set NIXOS_CONFIG_DIR (test -n "$NIXOS_CONFIG_DIR" && echo $NIXOS_CONFIG_DIR || echo "/etc/nixos")
 
 set SUDO_ARGS --sudo --ask-sudo-password
-set BUILD_HOST --build-host homura
+if test (hostname) = homura
+    set BUILD_HOST
+else
+    set BUILD_HOST --build-host homura
+end
 
 # Hostname shorthand: ./rebuild.fish <hostname> [extra args]
 set NIXOS_SUBCOMMANDS switch boot test build dry-build dry-activate edit repl build-vm build-vm-with-bootloader list-generations

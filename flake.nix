@@ -70,6 +70,11 @@
 	inputs @ { self, nixpkgs, flake-utils, home-manager, ... }:
 
 	let
+		mkContainer = host: nixpkgs.lib.nixosSystem {
+			system = "x86_64-linux";
+			specialArgs = { inherit inputs self; clib = import ./lib nixpkgs.lib; };
+			modules = [ ./hosts/${host} ];
+		};
 		mkHost = host: extraModules: nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
 			specialArgs = { inherit inputs self; clib = import ./lib nixpkgs.lib; };
@@ -109,13 +114,7 @@
 			homura  = mkHost "homura"  [ inputs.jovian.nixosModules.jovian 
 						     inputs.slugtan.nixosModules.default ];
 
-			reef = {
-				system = "x86_64-linux";
-				specialArgs = { inherit inputs self; clib = import ./lib nixpkgs.lib; };
-				modules = [
-					./hosts/reef
-				];
-			};
+			reef    = mkContainer "reef";
 		};
 	}
 
