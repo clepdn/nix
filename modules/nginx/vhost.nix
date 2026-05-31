@@ -62,6 +62,7 @@ in {
         type = lib.types.attrsOf lib.types.anything;
         default = {};
       };
+      options.extraServerConfig = lib.mkOption { type = lib.types.str; default = ""; };
 
       options.extraLocationConfig = lib.mkOption { 
         type = lib.types.str; 
@@ -102,6 +103,7 @@ in {
           extraConfig = commonProxyHeaders + "\n" + opts.extraLocationConfig
             + lib.optionalString opts.forwardAuth ("\n" + forwardAuthConfig);
         };
+        extraConfig = opts.extraServerConfig;
       };
       autheliaVhost = lib.optionalAttrs opts.forwardAuth {
         locations."/internal/authelia/authz" = {

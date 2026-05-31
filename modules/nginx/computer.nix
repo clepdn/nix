@@ -44,6 +44,7 @@
     "tv.on-her.computer" = config.myNixOS.cloudflareDns // {
       port = 8096;
       target = "100.116.202.116";
+      extraServerConfig = "ssl_protocols TLSv1.2 TLSv1.3";
     };
     "home.on-her.computer" = config.myNixOS.cloudflareDns // {
       port = 8123;
