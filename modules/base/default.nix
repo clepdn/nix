@@ -23,6 +23,7 @@
 		openssl
 		psmisc # killall
 		inputs.agenix.packages.${pkgs.system}.default
+		busybox
 	];
 
 	programs = {
