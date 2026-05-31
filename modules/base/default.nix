@@ -37,4 +37,5 @@
 	documentation.man.man-db.enable = false;
 
 	networking.networkmanager.enable = true;
+	users.mutableUsers = false;
 }
