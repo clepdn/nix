@@ -36,12 +36,21 @@
 			url = "github:nix-community/disko";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		slugtan = {
-			url = "git+ssh://git@codeberg.org/cowie/slugbot.git";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
 		pi-mono = {
 			url = "git+https://codeberg.org/cowie/pi-fork.git";
+			inputs = {
+				nixpkgs.follows = "nixpkgs";
+				flake-utils.follows = "flake-utils";
+			};
+		};
+
+		direct-vx = {
+			url = "git+https://codeberg.org/cowie/direct-vx.git";
+			inputs.nixpkgs.follows = "nixpkgs";
+			inputs.flake-utils.follows = "flake-utils";
+		};
+		coral = {
+			url = "git+https://tangled.org/callie.on-her.computer/coral";
 			inputs = {
 				nixpkgs.follows = "nixpkgs";
 				flake-utils.follows = "flake-utils";
@@ -51,11 +60,6 @@
 		llama-cpp-src = {
 			url = "github:AtomicBot-ai/atomic-llama-cpp-turboquant";
 			flake = false;
-		};
-		direct-vx = {
-			url = "git+https://codeberg.org/cowie/direct-vx.git";
-			inputs.nixpkgs.follows = "nixpkgs";
-			inputs.flake-utils.follows = "flake-utils";
 		};
 		pavement = {
 			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=release";
@@ -99,14 +103,13 @@
 		};
 
 		nixosConfigurations = {
-			deck    = mkHost "deck"    [ inputs.jovian.nixosModules.jovian ];
-			sayaka  = mkHost "sayaka"  [ inputs.disko.nixosModules.disko
+			deck    = mkHost "deck"   [ inputs.jovian.nixosModules.jovian ];
+			sayaka  = mkHost "sayaka" [ inputs.disko.nixosModules.disko
 						     inputs.direct-vx.nixosModules.default ];
-			madoka  = mkHost "madoka"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
-			homura  = mkHost "homura"  [ inputs.jovian.nixosModules.jovian 
-						     inputs.slugtan.nixosModules.default ];
+			madoka  = mkHost "madoka" [ inputs.lanzaboote.nixosModules.lanzaboote ];
+			homura  = mkHost "homura" [ inputs.jovian.nixosModules.jovian ];
 
-			reef    = mkHost "reef"   [];
+			reef    = mkHost "reef"   [ inputs.coral.nixosModules.default ];
 		};
 	}
 

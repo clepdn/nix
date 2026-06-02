@@ -100,6 +100,15 @@
   services.avahi.nssmdns4 = true;
 
   networking.firewall.enable = true;
+  networking.firewall.trustedInterfaces = [ "podman+" ];
+  networking.firewall.extraCommands = ''
+    iptables -A FORWARD -i podman+ -j ACCEPT
+    iptables -A FORWARD -o podman+ -j ACCEPT
+  '';
+  networking.firewall.extraStopCommands = ''
+    iptables -D FORWARD -i podman+ -j ACCEPT || true
+    iptables -D FORWARD -o podman+ -j ACCEPT || true
+  '';
 
   # NAT for nixos-container instances (ve-* interfaces)
   networking.nat = {

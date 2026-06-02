@@ -1,10 +1,5 @@
 { config, lib, self, ... }:
 {
-	boot.isContainer = true;
-	users.allowNoPasswordLogin = true;
-
-	users.users.root.openssh.authorizedKeys.keys =
-		config.users.users.callie.openssh.authorizedKeys.keys;
 	imports = [
 	      "${self}/modules/base"
 	      "${self}/modules/tz/ny.nix"
@@ -13,13 +8,24 @@
 
 	networking.hostName = "reef";
 
-	myNixOS.nix.homuraBuilder.enable = false;
+	services.coral = {
+		enable = true;
+		envFile = config.age.secrets.coral-env.path;
+	};
 
-	# Containers don't have wifi hardware or need NM
+	age.secrets.coral-env.file = "${self}/secrets/coral-env.age";
+
+	users.allowNoPasswordLogin = true;
+
+	users.users.root.openssh.authorizedKeys.keys =
+		config.users.users.callie.openssh.authorizedKeys.keys;
+	
+	boot.isContainer = true;
 	networking.networkmanager.enable = lib.mkForce false;
 	networking.wireless.enable = false;
-
 	networking.firewall.enable = true;
+
+	myNixOS.nix.homuraBuilder.enable = false;
 
 	system.stateVersion = "26.05";
 }

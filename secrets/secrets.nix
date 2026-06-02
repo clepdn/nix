@@ -15,6 +15,7 @@ let hosts = [
 		"homura"
 		"madoka"
 		"callie_madoka"
+		"reef"
 	];
 	systemSSHKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
 	userSSHKeys   = map(user: builtins.readFile ./publicKeys/${user}.pub) users;
@@ -48,5 +49,6 @@ let hosts = [
 		"garage-admin-token.age".publicKeys = DEPRECATED_sshKeys;
 		"garage-metrics-token.age".publicKeys = DEPRECATED_sshKeys;
 		"autobrr-session.age".publicKeys = DEPRECATED_sshKeys;
+		"coral-env.age".publicKeys = DEPRECATED_sshKeys;
 	}
 
