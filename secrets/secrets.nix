@@ -39,7 +39,6 @@ let hosts = [
 		"grafana-secret-key.age".publicKeys = DEPRECATED_sshKeys;
 		"home-assistant-secrets.age".publicKeys = DEPRECATED_sshKeys;
 		"pds.env.age".publicKeys = DEPRECATED_sshKeys;
-		"slugtan.env.age".publicKeys = DEPRECATED_sshKeys;
 		"llama-api-key.age".publicKeys = DEPRECATED_sshKeys;
 		"letta-password.age".publicKeys = DEPRECATED_sshKeys;
 		"happy.env.age".publicKeys = DEPRECATED_sshKeys;
@@ -49,6 +48,7 @@ let hosts = [
 		"garage-admin-token.age".publicKeys = DEPRECATED_sshKeys;
 		"garage-metrics-token.age".publicKeys = DEPRECATED_sshKeys;
 		"autobrr-session.age".publicKeys = DEPRECATED_sshKeys;
-		"coral-env.age".publicKeys = DEPRECATED_sshKeys;
+
+		"coral.env.age".publicKeys = keys;
 	}
 

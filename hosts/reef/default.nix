@@ -8,19 +8,22 @@
 
 	networking.hostName = "reef";
 
-	services.coral = {
-		enable = true;
-		envFile = config.age.secrets.coral-env.path;
+	age.secrets.coralEnv = {
+		file  = "${self}/secrets/coral.env.age";
+		mode  = "0400";
+		owner = config.services.coral.user;
 	};
 
-	age.secrets.coral-env.file = "${self}/secrets/coral-env.age";
+	services.coral = {
+		enable = true;
+		envFile = config.age.secrets.coralEnv.path;
+	};
 
 	users.allowNoPasswordLogin = true;
-
 	users.users.root.openssh.authorizedKeys.keys =
 		config.users.users.callie.openssh.authorizedKeys.keys;
 	
-	boot.isContainer = true;
+	boot.isNspawnContainer = true;
 	networking.networkmanager.enable = lib.mkForce false;
 	networking.wireless.enable = false;
 	networking.firewall.enable = true;
