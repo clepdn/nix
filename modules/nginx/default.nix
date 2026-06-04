@@ -3,6 +3,7 @@
     ./computer.nix
     ./nematodes.nix
     ./pavement.nix
+    ./mail-stream.nix
   ];
 
   security.acme = {

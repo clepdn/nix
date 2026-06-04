@@ -48,6 +48,8 @@ let hosts = [
 		"garage-admin-token.age".publicKeys = DEPRECATED_sshKeys;
 		"garage-metrics-token.age".publicKeys = DEPRECATED_sshKeys;
 		"autobrr-session.age".publicKeys = DEPRECATED_sshKeys;
+		"comail-sasl.age".publicKeys = DEPRECATED_sshKeys;
+		"mail-passwd-callie.age".publicKeys = DEPRECATED_sshKeys;
 
 		"coral.env.age".publicKeys = keys;
 	}
