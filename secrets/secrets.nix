@@ -52,5 +52,6 @@ let hosts = [
 		"mail-passwd-callie.age".publicKeys = DEPRECATED_sshKeys;
 
 		"coral.env.age".publicKeys = keys;
+		"coral-webhook-token.age".publicKeys = keys;
 	}
 
