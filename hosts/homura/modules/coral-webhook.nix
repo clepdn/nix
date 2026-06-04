@@ -2,7 +2,7 @@
 let
   rebuildScript = pkgs.writeShellApplication {
     name = "coral-rebuild";
-    runtimeInputs = [ pkgs.nixos-container ];
+    runtimeInputs = [ pkgs.nixos-container pkgs.nix ];
     text = builtins.readFile ./coral-webhook-handler.sh;
   };
 in
@@ -16,7 +16,7 @@ in
   systemd.sockets.coral-webhook = {
     description = "Coral rebuild webhook socket";
     wantedBy = [ "sockets.target" ];
-    listenStreams = [ "127.0.0.1:9123" ];
+    listenStreams = [ "9123" ];
     socketConfig = {
       Accept = true;
       MaxConnections = 5;
@@ -40,5 +40,5 @@ in
     };
   };
 
-  networking.firewall.interfaces.lo.allowedTCPPorts = [ 9123 ];
+  networking.firewall.allowedTCPPorts = [ 9123 ];
 }

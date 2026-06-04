@@ -17,4 +17,4 @@ if [ "$token" != "$expected_token" ] || [ -z "$token" ]; then
 fi
 
 printf "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nstarting rebuild...\n"
-exec nixos-container update reef --flake /var/lib/nixos-containers/coral/home/coral/nix#reef 2>&1
+exec nixos-container update coral --flake /var/lib/nixos-containers/coral/home/coral/nix#reef 2>&1
