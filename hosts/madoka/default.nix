@@ -144,7 +144,10 @@
   # (VEN_06CB on i2c_designware.2) can initialise without timing out.
   services.udev.extraRules = ''
     SUBSYSTEM=="platform", DRIVER=="i2c_designware", ATTR{power/control}="on"
+    SUBSYSTEM=="usb", ATTR{idVendor}=="0955", MODE="0664", GROUP="plugdev"
   '';
+
+  users.groups.plugdev = {};
 
 services.tlp.settings={
     CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
