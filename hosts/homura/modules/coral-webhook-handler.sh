@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-read -r method path version
+read -r _method path _version
 while IFS= read -r line && [ "${line%$'\r'}" != "" ]; do
   :
 done
