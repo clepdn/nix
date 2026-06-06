@@ -53,4 +53,6 @@ with pkgs; [
 	blender
 	nodejs_22
 	helium
+	distrobox
+	gnome-network-displays
 ]

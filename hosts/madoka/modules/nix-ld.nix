@@ -20,11 +20,9 @@
       vulkan-loader
       networkmanager
       libcap
-
-      # libcurl (also included in nix-ld defaults, kept explicit here)
       curl
 
-      # nix-alien candidates
+      # getting shit to work 
       glib
       alsa-lib
       libusb1
@@ -43,6 +41,9 @@
       libgpg-error
       e2fsprogs
       libxkbcommon
+      zlib           
+      expat
+      stdenv.cc.cc.lib
     ];
   };
 }
