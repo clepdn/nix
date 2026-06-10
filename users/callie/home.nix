@@ -1,13 +1,13 @@
 { pkgs, lib, inputs, ... }: {
   imports = [
     inputs.nixvim.homeModules.nixvim
+    ../../modules/fish
     ../../modules/nvim
     ../../modules/nmux
     ../../modules/hm-age-pq
   ];
 
   programs.home-manager.enable = true;
-  #programs.fish.enable = true;
   home.sessionVariables.HAPPY_SERVER_URL = "https://happy.on-her.computer";
 
   home = {
