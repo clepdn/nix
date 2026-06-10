@@ -31,6 +31,10 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		nixvim.url = "github:nix-community/nixvim";
+		niri = {
+			url = "github:sodiboo/niri-flake";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 		flake-utils.url = "github:numtide/flake-utils";
 		disko = {
 			url = "github:nix-community/disko";
@@ -63,6 +67,10 @@
 		};
 		pavement = {
 			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=release";
+			flake = false;
+		};
+		quickshell-config = {
+			url = "git+https://tangled.org/callie.on-her.computer/quickshell";
 			flake = false;
 		};
 	};
