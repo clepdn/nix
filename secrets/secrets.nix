@@ -15,11 +15,15 @@ let hosts = [
 		"homura"
 		"madoka"
 		"callie_madoka"
+	];
+	coral_keys = [
 		"reef"
+		"coral_reef"
 	];
 	systemSSHKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
-	userSSHKeys   = map(user: builtins.readFile ./publicKeys/${user}.pub) users;
-	pqKeys        = map(key:  builtins.readFile ./publicKeys/${key}_pq.pub) pq_pubkeys;
+	userSSHKeys   = map(user: builtins.readFile ./publicKeys/${user}.pub)      users;
+	coralKeys     = map(key:  builtins.readFile ./publicKeys/${key}_pq.pub)    coral_keys;
+	pqKeys        = map(key:  builtins.readFile ./publicKeys/${key}_pq.pub)    pq_pubkeys;
 
 	DEPRECATED_sshKeys = systemSSHKeys ++ userSSHKeys;
 	keys = pqKeys;
@@ -48,10 +52,17 @@ let hosts = [
 		"garage-admin-token.age".publicKeys = DEPRECATED_sshKeys;
 		"garage-metrics-token.age".publicKeys = DEPRECATED_sshKeys;
 		"autobrr-session.age".publicKeys = DEPRECATED_sshKeys;
-		"comail-sasl.age".publicKeys = DEPRECATED_sshKeys;
-		"mail-passwd-callie.age".publicKeys = DEPRECATED_sshKeys;
+		# When adding new secrets, do not use DEPRECATED_sshKeys. 
+		# We now have enough post-quantum keys for the keys object to be fully functional on every host that matters.
+		# Any host that doesn't have pq keys setup yet is a provisioning issue that will be dealt with later, since they're all mostly on ancient NixOS versions anyways.
+		# the DEPRECATED_sshKeys object mostly serves as a reminder that I need to rotate the secret while it's re-encrypted with a post-quantum key, as simply re-encrypting it defeats the entire purpose. The x25519 encrypted value is already in the git history and/or downloaded by the chinese/NSA
 
-		"coral.env.age".publicKeys = keys;
-		"coral-webhook-token.age".publicKeys = keys;
+		"comail-sasl.age".publicKeys = keys;
+		"mail-passwd-callie.age".publicKeys = keys;
+
+		# coral's secrets
+		"coral.env.age".publicKeys = keys ++ coralKeys;
+		"coral-webhook-token.age".publicKeys = keys ++ coralKeys;
+
 	}
 
