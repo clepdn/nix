@@ -8,6 +8,52 @@
   programs.fish = {
     enable = true;
 
+    functions = {
+      fish_prompt = ''
+        set -l cwd (prompt_pwd)
+
+        set -l cwd_color blue
+        if test "$PWD" != "$HOME"
+            set cwd_color ffb3c6
+        end
+
+        set -l git_branch (command git symbolic-ref --short HEAD 2>/dev/null)
+        if test -z "$git_branch"
+            set git_branch (command git rev-parse --short HEAD 2>/dev/null)
+        end
+
+        set_color ff6b9d
+        echo -n "୨୧"
+        set_color white
+        echo -n " $USER "
+        set_color red
+        echo -n "♡"
+        set_color white
+        echo -n " $hostname "
+        set_color ff6b9d
+        echo -n "୨୧"
+        set_color white
+        echo -n " ⋆ "
+        set_color $cwd_color
+        echo -n "$cwd"
+        set_color white
+        echo -n " ⋆"
+
+        if test -n "$git_branch"
+            set -l git_color yellow
+            if command git status --porcelain 2>/dev/null | string length -q
+                set git_color magenta
+            end
+            set_color $git_color
+            echo -n "  $git_branch"
+            set_color white
+            echo -n " ✧"
+        end
+
+        echo -n " "
+      '';
+    };
+
     shellAliases = {
       # editor
       vi = "nvim";
