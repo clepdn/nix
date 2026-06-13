@@ -12,6 +12,7 @@
       "${self}/modules/pipewire"
       "${self}/modules/plymouth"
       "${self}/modules/altserver"
+      "${self}/modules/doh"
       "${self}/modules/tz/ny.nix"
     ];
 
@@ -131,7 +132,6 @@
 
   # services.avahi.nssmdns4.enable = true; # I don't particularly need this to be enabled on my (portable) laptop.
   services.tailscale.enable = true;
-  services.resolved.enable = true;
 
   # no relation
   services.fprintd.enable  = true;
