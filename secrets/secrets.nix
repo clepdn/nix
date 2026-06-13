@@ -11,19 +11,24 @@ let hosts = [
 		"callie_sayaka"
 	];
 	pq_pubkeys = [
-		"callie_megatron"
-		"homura"
-		"madoka"
-		"callie_madoka"
+		"callie_megatron_pq"
+		"homura_pq"
+		"madoka_pq"
+		"callie_madoka_pq"
 	];
+
 	coral_keys = [
-		"reef"
-		"coral_reef"
+		"reef_pq"
+		"coral_reef_pq"
 	];
+
+	readKeys = files: map(key: builtins.readFile ./publicKeys/${key}.pub) files;
+
+	
 	systemSSHKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
-	userSSHKeys   = map(user: builtins.readFile ./publicKeys/${user}.pub)      users;
-	coralKeys     = map(key:  builtins.readFile ./publicKeys/${key}_pq.pub)    coral_keys;
-	pqKeys        = map(key:  builtins.readFile ./publicKeys/${key}_pq.pub)    pq_pubkeys;
+	userSSHKeys   = readKeys users;
+	coralKeys     = readKeys coral_keys;
+	pqKeys        = readKeys pq_pubkeys;
 
 	DEPRECATED_sshKeys = systemSSHKeys ++ userSSHKeys;
 	keys = pqKeys;
@@ -61,7 +66,7 @@ let hosts = [
 		"mail-passwd-callie.age".publicKeys = keys;
 
 		# coral's secrets
-		"coral.env.age".publicKeys = keys ++ coralKeys;
+		"coral.env.age".publicKeys = keys ++ readKeys [ "coral_reef_pq" ]; # she can't get this one. this has real api keys
 		"coral-webhook-token.age".publicKeys = keys ++ coralKeys;
 
 	}
