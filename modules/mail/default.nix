@@ -196,7 +196,7 @@ in
         group = "acme";
         dnsProvider = cfg.acme.dnsProvider;
         environmentFile = cfg.acme.environmentFile;
-        reloadServices = [ "postfix.service" "dovecot2.service" ];
+        reloadServices = [ "postfix.service" "dovecot.service" ];
       };
     };
     users.users.postfix.extraGroups  = [ "acme" ];
@@ -340,11 +340,14 @@ in
     # Format: "user@domain:{BLF-CRYPT}$2y$.....:5000:5000::/var/vmail/domain/user::"
     systemd.services.dovecot-passwd = {
       description = "Assemble dovecot virtual-user passwd file";
-      wantedBy = [ "dovecot2.service" ];
-      before   = [ "dovecot2.service" ];
+      wantedBy = [ "dovecot.service" ];
+      before   = [ "dovecot.service" ];
       serviceConfig = { Type = "oneshot"; RemainAfterExit = true; };
+      # /run/dovecot2 is also dovecot's RuntimeDirectory (systemd creates it as
+      # root:root 0755), so don't fight it on the dir perms. Just make sure
+      # the passwd file is readable by the dovecot2 group.
       script = ''
-        install -d -m 0750 -o root -g dovecot2 /run/dovecot2
+        mkdir -p /run/dovecot2
         tmp="$(mktemp)"
         ${lib.concatMapStringsSep "\n" (uname:
           let u = cfg.users.${uname}; in ''
@@ -355,8 +358,9 @@ in
               >> "$tmp"
           ''
         ) (lib.attrNames cfg.users)}
-        install -m 0640 -o root -g dovecot2 "$tmp" ${dovecotPasswdFile}
-        rm -f "$tmp"
+        mv "$tmp" ${dovecotPasswdFile}
+        chown root:dovecot2 ${dovecotPasswdFile}
+        chmod 0640 ${dovecotPasswdFile}
       '';
     };
 
