@@ -1,5 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, self, ... }:
 {
+  imports = [
+    "${self}/modules/nix-ld/steam-run.nix"
+    "${self}/modules/nix-ld/slippi.nix"
+  ];
   # xkbcommon looks for XKB data at the hardcoded /usr/share/X11/xkb path.
   # Point it at the real location so unpatched binaries don't SIGSEGV on startup.
   environment.sessionVariables.XKB_CONFIG_ROOT = "${pkgs.xkeyboard-config}/share/X11/xkb";
@@ -7,22 +11,7 @@
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
-      # steam-run multiPkgs — mirrors the FHS env steam-run provides
-      # https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/st/steam/package.nix
-      glibc
-      libxcrypt
-      libGL
-      libdrm
-      libgbm
-      udev
-      libudev0-shim
-      libva
-      vulkan-loader
-      networkmanager
-      libcap
-      curl
-
-      # getting shit to work 
+      # i do not remember why i needed these 
       glib
       alsa-lib
       libusb1

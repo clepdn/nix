@@ -24,6 +24,7 @@
 		psmisc # killall
 		inputs.agenix.packages.${pkgs.system}.default
 		busybox
+		nix-search
 	];
 
 	programs = {

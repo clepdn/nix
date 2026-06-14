@@ -55,4 +55,5 @@ with pkgs; [
 	helium
 	distrobox
 	gnome-network-displays
+	spotify
 ]
