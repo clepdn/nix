@@ -13,7 +13,8 @@
   };
 
   # Comail SASL credentials. File format (one line, no trailing context):
-  #     [smtp.atmos.email]:587 on-her.computer:atmos_XXXXXXXXXXXXXXXXXXXX
+  #     [smtp.atmos.email]:587 did:plc:XXXXXXXXXXXXXXXX:atmos_YYYYYYYYYYYY
+  # Username is your atproto DID (NOT the domain); password is the API key.
   age.secrets.comail-sasl = {
     file = "${self}/secrets/comail-sasl.age";
     owner = "root";

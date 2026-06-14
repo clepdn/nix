@@ -17,11 +17,26 @@ let
       map (a: { address = a; user = name; }) addrs
   ) cfg.users);
 
-  # postfix virtual map: "user@domain    localuser"
-  virtualMap = lib.concatStringsSep "\n" (
-    map (e: "${e.address}\t${e.user}") allAddresses
-    ++ map (d: "postmaster@${d}\t${cfg.postmaster}") allDomains
-    ++ map (d: "abuse@${d}\t${cfg.postmaster}") allDomains
+  # Canonical address each user reads mail at: <login>@<their domain>.
+  canonicalOf = uname: "${uname}@${(cfg.users.${uname}).domain}";
+
+  # virtual_mailbox_maps: existence-check map. RHS is a maildir-style hint;
+  # postfix doesn't use it (LMTP handles delivery), it just needs a non-empty
+  # value so the key is "found".
+  vmailboxMap = lib.concatStringsSep "\n" (
+    map (e: "${e.address}\tOK") allAddresses
+  );
+
+  # virtual_alias_maps: aliases that rewrite to a canonical address. Used for
+  # postmaster@/abuse@ on every domain, and for any extra aliases declared on
+  # a user. The canonical addresses themselves stay out of this map so the
+  # cleanup pass terminates.
+  virtualAliasMap = lib.concatStringsSep "\n" (
+    map (d: "postmaster@${d}\t${canonicalOf cfg.postmaster}") allDomains
+    ++ map (d: "abuse@${d}\t${canonicalOf cfg.postmaster}") allDomains
+    ++ lib.concatMap (uname:
+         map (a: "${a}\t${canonicalOf uname}") (cfg.users.${uname}).aliases
+       ) (lib.attrNames cfg.users)
   );
 
   # smtpd_sender_login_maps: which login may use which From address.
@@ -114,9 +129,13 @@ in
       saslPasswdFile = lib.mkOption {
         type = lib.types.path;
         description = ''
-          agenix path containing a postfix-format sasl_passwd line, e.g.:
+          agenix path containing a postfix-format sasl_passwd line. For
+          comail/atmos.email the username is your atproto DID (NOT the
+          domain) and the password is your API key:
 
-              [smtp.atmos.email]:587 on-her.computer:atmos_XXXXXXXXXXXXXXXXXXXX
+              [smtp.atmos.email]:587 did:plc:XXXXXXXXXXXXXXXX:atmos_YYYYYYYYYYYY
+
+          (or did:web:<your-domain>:atmos_… if you went the did:web route)
         '';
       };
     };
@@ -205,19 +224,26 @@ in
     # =========================================================================
     # Comail SASL credentials
     # =========================================================================
+    # Lives at /var/lib/postfix-sasl/ rather than /var/lib/postfix/conf/
+    # because the NixOS postfix module owns the conf/ dir exclusively and
+    # wipes anything that isn't in services.postfix.mapFiles on activation.
+    # We can't put the secret in mapFiles (it'd land in /nix/store), so it
+    # has its own dir. No RemainAfterExit, so the unit re-runs every time
+    # postfix is restarted — covering both rebuilds and secret rotations.
     systemd.services.postfix-sasl-passwd = {
       description = "Install comail SASL credentials for postfix";
       wantedBy = [ "postfix.service" ];
       before   = [ "postfix.service" ];
-      serviceConfig = { Type = "oneshot"; RemainAfterExit = true; };
+      after    = [ "agenix.service" ];
+      serviceConfig.Type = "oneshot";
       script = ''
-        install -d -m 0750 -o root -g postfix /var/lib/postfix/conf
+        install -d -m 0750 -o root -g postfix /var/lib/postfix-sasl
         install -m 0640 -o root -g postfix \
           ${cfg.relay.saslPasswdFile} \
-          /var/lib/postfix/conf/sasl_passwd
-        ${pkgs.postfix}/bin/postmap hash:/var/lib/postfix/conf/sasl_passwd
-        chmod 0640 /var/lib/postfix/conf/sasl_passwd.db
-        chown root:postfix /var/lib/postfix/conf/sasl_passwd.db
+          /var/lib/postfix-sasl/sasl_passwd
+        ${pkgs.postfix}/bin/postmap hash:/var/lib/postfix-sasl/sasl_passwd
+        chmod 0640 /var/lib/postfix-sasl/sasl_passwd.db
+        chown root:postfix /var/lib/postfix-sasl/sasl_passwd.db
       '';
     };
 
@@ -230,9 +256,10 @@ in
     # /etc/postfix/<name> and postmap'd at build time). smtp_header_checks is
     # a regexp map — can't be postmap'd — so it lives outside /etc/postfix.
     services.postfix.mapFiles = {
-      virtual      = pkgs.writeText "postfix-virtual"      (virtualMap + "\n");
-      sender_login = pkgs.writeText "postfix-sender_login" (senderLoginMap + "\n");
-      generic      = pkgs.writeText "postfix-generic" (lib.concatStringsSep "\n" [
+      vmailbox      = pkgs.writeText "postfix-vmailbox"      (vmailboxMap     + "\n");
+      virtual_alias = pkgs.writeText "postfix-virtual_alias" (virtualAliasMap + "\n");
+      sender_login  = pkgs.writeText "postfix-sender_login"  (senderLoginMap  + "\n");
+      generic       = pkgs.writeText "postfix-generic" (lib.concatStringsSep "\n" [
         "@${config.networking.hostName} ${cfg.postmaster}@${cfg.primaryDomain}"
         "@${cfg.host}                   ${cfg.postmaster}@${cfg.primaryDomain}"
       ] + "\n");
@@ -286,12 +313,13 @@ in
         mydestination = [ "localhost" ];      # virtual handles real mail
 
         # ---- Virtual delivery via dovecot LMTP ----
-        virtual_alias_domains  = allDomains;
-        virtual_alias_maps     = [ "hash:/etc/postfix/virtual" ];
-        virtual_transport      = "lmtp:unix:private/dovecot-lmtp";
-        mailbox_transport      = "lmtp:unix:private/dovecot-lmtp";
-        # local_transport for the rare case anything tries `mydestination`
-        local_transport        = "error:local delivery is disabled";
+        # vmailbox: "does this address exist?" lookup; LMTP handles routing
+        # virtual_alias: postmaster@/abuse@/user-aliases → canonical address
+        virtual_mailbox_domains = allDomains;
+        virtual_mailbox_maps    = [ "hash:/etc/postfix/vmailbox" ];
+        virtual_alias_maps      = [ "hash:/etc/postfix/virtual_alias" ];
+        virtual_transport       = "lmtp:unix:private/dovecot-lmtp";
+        local_transport         = "error:local delivery is disabled";
 
         # ---- TLS ----
         smtpd_tls_chain_files    = [ "${certDir}/full.pem" ];
@@ -317,7 +345,7 @@ in
         # ---- Outbound to comail ----
         relayhost                      = [ "[${cfg.relay.host}]:${toString cfg.relay.port}" ];
         smtp_sasl_auth_enable          = true;
-        smtp_sasl_password_maps        = "hash:/var/lib/postfix/conf/sasl_passwd";
+        smtp_sasl_password_maps        = "hash:/var/lib/postfix-sasl/sasl_passwd";
         smtp_sasl_security_options     = "noanonymous";
         smtp_sasl_tls_security_options = "noanonymous";
         smtp_tls_note_starttls_offer   = true;

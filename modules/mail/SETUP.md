@@ -76,9 +76,12 @@ never sees. Run these in your own shell.
 ```bash
 cd "$(git rev-parse --show-toplevel)/secrets"
 
-# Replace atmos_XXXX with your real API key. Type it directly into the shell.
-# The file is a single line in postfix sasl_passwd format.
-printf '[smtp.atmos.email]:587 on-her.computer:atmos_XXXXXXXXXXXXXXXXXXXX\n' \
+# Single line in postfix sasl_passwd format. Per comail's docs the SASL
+# username is your atproto DID (not the domain) and the password is your
+# API key. Find your DID with:
+#     curl -s https://<your-handle>/.well-known/atproto-did
+# Then:
+printf '[smtp.atmos.email]:587 did:plc:XXXXXXXXXXXXXXXX:atmos_YYYYYYYYYYYY\n' \
   | agenix -e comail-sasl.age
 ```
 
@@ -126,10 +129,10 @@ sudo ls /var/lib/acme/mail.on-her.computer/
 # Both services up
 systemctl status postfix dovecot2 postfix-sasl-passwd dovecot-passwd
 
-# The two map files exist and are readable
-sudo postconf -n | grep -E '(virtual_alias_maps|sasl_password_maps|sender_login)'
-ls -la /etc/postfix/{virtual,virtual.db,generic,generic.db,sender_login,sender_login.db}
-ls -la /var/lib/postfix/conf/sasl_passwd{,.db}
+# The map files exist and are readable
+sudo postconf -n | grep -E '(virtual_mailbox_maps|virtual_alias_maps|sasl_password_maps|sender_login)'
+ls -la /etc/postfix/{vmailbox,vmailbox.db,virtual_alias,virtual_alias.db,generic,generic.db,sender_login,sender_login.db}
+ls -la /var/lib/postfix-sasl/sasl_passwd{,.db}
 
 # dovecot's virtual-user passwd file populated correctly
 sudo cat /run/dovecot2/passwd
