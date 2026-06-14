@@ -226,24 +226,23 @@ in
     # User-submitted mail already has a valid From; smtpd_sender_login_maps
     # enforces that they can only send what they own.
     # =========================================================================
-    environment.etc."postfix/generic".text = lib.concatStringsSep "\n" ([
-      "@${config.networking.hostName}        ${cfg.postmaster}@${cfg.primaryDomain}"
-      "@${cfg.host}                          ${cfg.postmaster}@${cfg.primaryDomain}"
-    ]);
+    # Hash maps go through services.postfix.mapFiles (placed at
+    # /etc/postfix/<name> and postmap'd at build time). smtp_header_checks is
+    # a regexp map — can't be postmap'd — so it lives outside /etc/postfix.
+    services.postfix.mapFiles = {
+      virtual      = pkgs.writeText "postfix-virtual"      (virtualMap + "\n");
+      sender_login = pkgs.writeText "postfix-sender_login" (senderLoginMap + "\n");
+      generic      = pkgs.writeText "postfix-generic" (lib.concatStringsSep "\n" [
+        "@${config.networking.hostName} ${cfg.postmaster}@${cfg.primaryDomain}"
+        "@${cfg.host}                   ${cfg.postmaster}@${cfg.primaryDomain}"
+      ] + "\n");
+    };
 
-    environment.etc."postfix/virtual".text = virtualMap + "\n";
-    environment.etc."postfix/sender_login".text = senderLoginMap + "\n";
-    environment.etc."postfix/smtp_header_checks".text = ''
+    environment.etc."postfix-extra/smtp_header_checks".text = ''
       /^Received:.*/                IGNORE
       /^User-Agent:.*/              IGNORE
       /^X-Mailer:.*/                IGNORE
       /^X-Originating-IP:.*/        IGNORE
-    '';
-
-    system.activationScripts.postfix-mail-maps = lib.stringAfter [ "etc" ] ''
-      ${pkgs.postfix}/bin/postmap hash:/etc/postfix/generic
-      ${pkgs.postfix}/bin/postmap hash:/etc/postfix/virtual
-      ${pkgs.postfix}/bin/postmap hash:/etc/postfix/sender_login
     '';
 
     # =========================================================================
@@ -325,7 +324,7 @@ in
 
         # ---- Rewrite system mail; strip identifying headers ----
         smtp_generic_maps   = "hash:/etc/postfix/generic";
-        smtp_header_checks  = "regexp:/etc/postfix/smtp_header_checks";
+        smtp_header_checks  = "regexp:/etc/postfix-extra/smtp_header_checks";
 
         # ---- Hygiene ----
         message_size_limit   = 52428800;
@@ -364,17 +363,27 @@ in
     services.dovecot2 = {
       enable    = true;
       enablePAM = false;   # we authenticate against the passwd-file above
+      # Pin 2.4 regardless of stateVersion — the settings.* tree below uses
+      # the 2.4 config layout (protocols { imap = yes }, etc.).
+      package   = pkgs.dovecot;
 
       settings = {
+        # Fresh install, so pin both to whatever the package ships. Bump on
+        # upgrade after reviewing the 2.x-to-N migration notes.
+        dovecot_config_version  = pkgs.dovecot.version;
+        dovecot_storage_version = pkgs.dovecot.version;
+
         protocols.imap = true;
         protocols.lmtp = true;
         protocols.pop3 = false;
 
-        ssl_cert = "<${certDir}/fullchain.pem";
-        ssl_key  = "<${certDir}/key.pem";
+        ssl_server_cert_file = "${certDir}/fullchain.pem";
+        ssl_server_key_file  = "${certDir}/key.pem";
 
-        # Virtual-user mail location. %d = domain, %n = local part.
-        mail_location = "maildir:${cfg.mailRoot}/%d/%n";
+        # Virtual-user mail location (2.4 layout: driver + path, new template
+        # vars). Resolves to ${cfg.mailRoot}/<domain>/<local-part>.
+        mail_driver = "maildir";
+        mail_path   = "${cfg.mailRoot}/%{user | domain}/%{user | username}";
         mail_uid = "vmail";
         mail_gid = "vmail";
         first_valid_uid = vmailUid;
@@ -394,13 +403,26 @@ in
           "mailbox Junk"   = { auto = "subscribe"; special_use = "\\Junk";   };
         };
 
-        passdb = {
-          driver = "passwd-file";
-          args = "scheme=BLF-CRYPT username_format=%u ${dovecotPasswdFile}";
+        "passdb passwd-file" = {
+          passwd_file_path        = dovecotPasswdFile;
+          default_password_scheme = "BLF-CRYPT";
         };
-        userdb = {
-          driver = "passwd-file";
-          args = "username_format=%u ${dovecotPasswdFile}";
+        "userdb passwd-file" = {
+          passwd_file_path = dovecotPasswdFile;
+        };
+
+        # Trust PROXY headers from the public fronter only. The :9930
+        # listener below requires PROXY; the default :993 doesn't.
+        haproxy_trusted_networks = lib.concatStringsSep " " cfg.proxyProtocolFrom;
+
+        # Public IMAPS arrives PROXY-wrapped on a dedicated port; the
+        # default :993 listener stays plain for tailnet clients.
+        "service imap-login" = {
+          "inet_listener imaps_proxy" = {
+            port    = 9930;
+            ssl     = true;
+            haproxy = true;
+          };
         };
 
         # LMTP socket inside postfix's chroot ($queue_directory/private/).
@@ -427,11 +449,12 @@ in
     # =========================================================================
     # Firewall
     # =========================================================================
-    # :25 and :587 only from the public fronter (PROXY-wrapped).
-    # :993 / :143 (IMAP) only from tailscale interface.
+    # :25 / :587 / :9930 only from the public fronter (PROXY-wrapped).
+    # :9930 is the dovecot listener that expects PROXY-wrapped IMAPS; the
+    # fronter proxies public :993 to it. Plain :993 / :143 stay tailnet-only.
     networking.firewall.interfaces."tailscale0".allowedTCPPorts = [ 993 143 ];
     networking.firewall.extraInputRules = lib.concatMapStringsSep "\n" (ip: ''
-      ip saddr ${ip} tcp dport { 25, 587 } accept
+      ip saddr ${ip} tcp dport { 25, 587, 9930 } accept
     '') cfg.proxyProtocolFrom;
   };
 }
