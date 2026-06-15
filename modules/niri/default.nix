@@ -23,7 +23,7 @@ in
     papirus-icon-theme
   ];
 
-  environment.systemPackages = with pkgs; [ quickshell awww ];
+  environment.systemPackages = with pkgs; [ quickshell awww xwayland-satellite ];
 
   systemd.packages = with pkgs.kdePackages; [
     kded

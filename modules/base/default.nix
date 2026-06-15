@@ -25,6 +25,7 @@
 		inputs.agenix.packages.${pkgs.system}.default
 		busybox
 		nix-search
+		nmap
 	];
 
 	programs = {
