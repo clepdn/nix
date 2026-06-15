@@ -14,6 +14,8 @@ in
 
   programs.niri.enable = true;
 
+  home-manager.users.callie.imports = [ ./settings.nix ./binds.nix ];
+
   # Fonts + icon theme the bar's shell.qml hardcodes.
   fonts.packages = with pkgs; [
     inter
@@ -21,7 +23,23 @@ in
     papirus-icon-theme
   ];
 
-  environment.systemPackages = with pkgs; [ quickshell ];
+  environment.systemPackages = with pkgs; [ quickshell awww ];
+
+  systemd.packages = with pkgs.kdePackages; [
+    kded
+    powerdevil
+    kwallet-pam
+    polkit-kde-agent-1
+  ];
+
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+  };
+
+  # Capture the login password so plasma-kwallet-pam can unlock the wallet
+  # when niri starts from SDDM.
+  security.pam.services.sddm.kwallet.enable = true;
 
   # Expose the bar config at a stable path so it can be launched manually too:
   #   qs -c /etc/quickshell/eww
@@ -41,4 +59,22 @@ in
       RestartSec = 2;
     };
   };
+
+  systemd.user.services.awww-daemon = {
+    description = "awww wallpaper daemon";
+    wantedBy = [ "niri.service" ];
+    after = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.awww}/bin/awww-daemon";
+      Restart = "on-failure";
+      RestartSec = 2;
+    };
+  };
+
+  systemd.user.services.plasma-kded6.wantedBy = [ "niri.service" ];
+  systemd.user.services.plasma-powerdevil.wantedBy = [ "niri.service" ];
+  systemd.user.services.plasma-kwallet-pam.wantedBy = [ "niri.service" ];
+  systemd.user.services.plasma-polkit-agent.wantedBy = [ "niri.service" ];
 }
