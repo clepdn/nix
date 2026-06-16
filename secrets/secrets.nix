@@ -67,6 +67,7 @@ let hosts = [
 
 		# coral's secrets
 		"coral.env.age".publicKeys = keys ++ readKeys [ "coral_reef_pq" ]; # she can't get this one. this has real api keys
+		"coral-secrets.toml.age".publicKeys = keys ++ readKeys [ "coral_reef_pq" ];
 		"coral-webhook-token.age".publicKeys = keys ++ coralKeys;
 
 	}

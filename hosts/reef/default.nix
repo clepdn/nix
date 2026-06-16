@@ -8,15 +8,28 @@
 
 	networking.hostName = "reef";
 
-	age.secrets.coralEnv = {
+	age.secrets.coralSecrets = {
 		file  = "${self}/secrets/coral.env.age";
 		mode  = "0400";
 		owner = config.services.coral.user;
 	};
 
 	services.coral = {
-		enable = true;
-		envFile = config.age.secrets.coralEnv.path;
+		enable      = true;
+		secretsFile = config.age.secrets.coralSecrets.path;
+		settings = {
+			server.port = 4220;
+			agent = {
+				name = "coral";
+				env  = "default";
+			};
+			model = {
+				provider        = "deepseek";
+				name            = "deepseek-v4-pro";
+				enable_thinking = true;
+				thinking_effort = "xhigh";
+			};
+		};
 	};
 
 	users.allowNoPasswordLogin = true;
