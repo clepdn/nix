@@ -34,6 +34,9 @@
     libnotify
     libuuid
     systemd           # libudev
+    librsvg
+    p11-kit
+    libgpg-error
 
     # X libs Chromium pokes at
     libx11
