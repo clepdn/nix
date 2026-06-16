@@ -9,7 +9,7 @@
 	networking.hostName = "reef";
 
 	age.secrets.coralSecrets = {
-		file  = "${self}/secrets/coral.env.age";
+		file  = "${self}/secrets/coral-secrets.toml.age";
 		mode  = "0400";
 		owner = config.services.coral.user;
 	};
