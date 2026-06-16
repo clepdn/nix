@@ -15,7 +15,7 @@
       hotkey-overlay.title = "Run an Application: rofi";
     };
     "Mod+B" = {
-      action = spawn "~/AppImages/helium.appimage";
+      action = spawn "helium";
       hotkey-overlay.title = "Open the browser";
     };
     "Mod+E" = {
