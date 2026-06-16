@@ -2,7 +2,7 @@
 {
   programs.niri.settings = {
     input = {
-      keyboard.xkb = { };
+      keyboard.xkb.options = "ctrl:nocaps";
       touchpad = {
         tap = true;
         natural-scroll = false;
@@ -27,7 +27,6 @@
       SSH_ASKPASS = "ksshaskpass";
       SSH_ASKPASS_REQUIRE = "prefer";
     */
-      QT_QPA_PLATFORMTHEME = "qt6ct";
     };
 
     layout = {

@@ -20,7 +20,7 @@ with pkgs; [
 	btop
 	gnome-software
 	rofimoji
-	fuzzel
+	rofi
 	hyfetch
 	fastfetch
 	gnome-font-viewer

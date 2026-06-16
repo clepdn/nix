@@ -11,8 +11,8 @@
       hotkey-overlay.title = "Open a Terminal: kitty";
     };
     "Mod+R" = {
-      action = spawn "fuzzel";
-      hotkey-overlay.title = "Run an Application: fuzzel";
+      action = spawn "rofi" "-show" "drun";
+      hotkey-overlay.title = "Run an Application: rofi";
     };
     "Mod+B" = {
       action = spawn "~/AppImages/helium.appimage";
@@ -23,7 +23,7 @@
       hotkey-overlay.title = "Open the file manager";
     };
     "Mod+Space" = {
-      action = spawn "rofimoji" "--selector" "fuzzel";
+      action = spawn "rofimoji" "--selector" "rofi";
       hotkey-overlay.title = "Open the emoji picker";
     };
 
