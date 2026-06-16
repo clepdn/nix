@@ -9,6 +9,11 @@ else
     set BUILD_HOST --build-host homura
 end
 
+# Default to switching the current host when invoked with no args.
+if test (count $argv) -eq 0
+    set argv (hostname)
+end
+
 # Hostname shorthand: ./rebuild.fish <hostname> [extra args]
 set NIXOS_SUBCOMMANDS switch boot test build dry-build dry-activate edit repl build-vm build-vm-with-bootloader list-generations
 if test (count $argv) -gt 0 && not contains -- $argv[1] $NIXOS_SUBCOMMANDS
