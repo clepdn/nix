@@ -29,6 +29,7 @@
 				enable_thinking = true;
 				thinking_effort = "xhigh";
 			};
+			context.compact_trigger_tokens = 800000;
 		};
 	};
 
