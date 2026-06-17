@@ -45,6 +45,12 @@ in
   xdg.portal = {
     enable = true;
     wlr.enable = true;
+    extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
+    config.niri = {
+      default = [ "kde" ];
+      "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+      "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+    };
   };
 
   qt = {
