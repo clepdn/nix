@@ -7,6 +7,13 @@
 		group = "users";
 	};
 
+	systemd.tmpfiles.rules = [
+		"d /var/lib/slskd 0770 slskd slskd"
+		"d /var/lib/slskd/music 0770 slskd slskd"
+		"d /var/lib/slskd/downloads 0770 slskd slskd"
+		"d /var/lib/slskd/incomplete 0770 slskd slskd"
+	];
+
 	services.slskd = {
 		enable = true;
 		environmentFile = config.age.secrets.slskdEnv.path;
@@ -17,4 +24,6 @@
 			directories.incomplete = "/var/lib/slskd/incomplete";
 		};
 	};
+
+	networking.firewall.allowedTCPPorts = [ 5030 ];
 }
