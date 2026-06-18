@@ -1,4 +1,4 @@
-{ config, lib, self, ... }:
+{ config, lib, self, pkgs, ... }:
 {
 	imports = [
 	      "${self}/modules/base"
@@ -12,6 +12,13 @@
 		file  = "${self}/secrets/coral-secrets.toml.age";
 		mode  = "0400";
 		owner = config.services.coral.user;
+	};
+
+	age.secrets.slskdEnv = {
+		file  = "${self}/secrets/slskd.env.age";
+		mode  = "0440";
+		owner = "slskd";
+		group = "users";
 	};
 
 	services.coral = {
@@ -32,6 +39,25 @@
 			context.compact_trigger_tokens = 800000;
 		};
 	};
+
+	services.slskd = {
+		enable = true;
+		environmentFile = config.age.secrets.slskdEnv.path;
+		openFirewall = true;
+		settings = {
+			shares.directories = [ "/var/lib/slskd/music" ];
+			directories.downloads = "/var/lib/slskd/downloads";
+			directories.incomplete = "/var/lib/slskd/incomplete";
+		};
+	};
+
+	environment.systemPackages = with pkgs; [
+		nodejs_22
+		python3
+		gcc
+		gnumake
+		pkg-config
+	];
 
 	users.allowNoPasswordLogin = true;
 	users.users.root.openssh.authorizedKeys.keys =
