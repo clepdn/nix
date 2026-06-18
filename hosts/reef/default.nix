@@ -14,13 +14,6 @@
 		owner = config.services.coral.user;
 	};
 
-	age.secrets.slskdEnv = {
-		file  = "${self}/secrets/slskd.env.age";
-		mode  = "0440";
-		owner = "slskd";
-		group = "users";
-	};
-
 	services.coral = {
 		enable      = true;
 		secretsFile = config.age.secrets.coralSecrets.path;
@@ -37,17 +30,6 @@
 				thinking_effort = "xhigh";
 			};
 			context.compact_trigger_tokens = 800000;
-		};
-	};
-
-	services.slskd = {
-		enable = true;
-		environmentFile = config.age.secrets.slskdEnv.path;
-		openFirewall = true;
-		settings = {
-			shares.directories = [ "/var/lib/slskd/music" ];
-			directories.downloads = "/var/lib/slskd/downloads";
-			directories.incomplete = "/var/lib/slskd/incomplete";
 		};
 	};
 
