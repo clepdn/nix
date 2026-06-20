@@ -31,8 +31,6 @@
   };
   networking.hostName = "madoka"; # Define your hostname.
 
-  users.mutableUsers = false;
-
   security.tpm2.enable = true;
 
   # Bootloader.
