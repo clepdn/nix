@@ -111,13 +111,14 @@
 		};
 
 		nixosConfigurations = {
-			deck    = mkHost "deck"   [ inputs.jovian.nixosModules.jovian ];
-			sayaka  = mkHost "sayaka" [ inputs.disko.nixosModules.disko
-						     inputs.direct-vx.nixosModules.default ];
-			madoka  = mkHost "madoka" [ inputs.lanzaboote.nixosModules.lanzaboote ];
-			homura  = mkHost "homura" [ inputs.jovian.nixosModules.jovian ];
+			deck     = mkHost "deck"     [ inputs.jovian.nixosModules.jovian ];
+			sayaka   = mkHost "sayaka"   [ inputs.disko.nixosModules.disko
+						       inputs.direct-vx.nixosModules.default ];
+			madoka   = mkHost "madoka"   [ inputs.lanzaboote.nixosModules.lanzaboote ];
+			megatron = mkHost "megatron" [ inputs.lanzaboote.nixosModules.lanzaboote ];
+			homura   = mkHost "homura"   [ inputs.jovian.nixosModules.jovian ];
 
-			reef    = mkHost "reef"   [ inputs.coral.nixosModules.default ];
+			reef     = mkHost "reef"     [ inputs.coral.nixosModules.default ];
 		};
 	}
 
