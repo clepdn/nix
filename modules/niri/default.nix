@@ -21,6 +21,7 @@ in
   home-manager.users.callie.imports = [
     ./settings.nix
     ./binds.nix
+    ./plasma.nix
     {
       services.gnome-keyring.enable = lib.mkForce false;
 
@@ -119,5 +120,25 @@ in
   systemd.user.services.plasma-polkit-agent = {
     overrideStrategy = "asDropin";
     wantedBy = [ "niri.service" ];
+  };
+
+  # ksecretd is Plasma 6's freedesktop Secret Service implementation
+  # (claims org.freedesktop.secrets on the session bus). kwallet ships no
+  # systemd unit and no D-Bus activation file for that well-known name, so on
+  # niri it never starts and libsecret clients (e.g. ente-auth) fail with
+  # "Failed to unlock the keyring".
+  systemd.user.services.plasma-ksecretd = {
+    description = "KDE Wallet Secret Service (org.freedesktop.secrets)";
+    wantedBy = [ "niri.service" ];
+    after = [ "graphical-session.target" "plasma-kwallet-pam.service" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "dbus";
+      BusName = "org.freedesktop.secrets";
+      ExecStart = "${pkgs.kdePackages.kwallet}/bin/ksecretd";
+      Restart = "on-failure";
+      RestartSec = 2;
+      Slice = "background.slice";
+    };
   };
 }

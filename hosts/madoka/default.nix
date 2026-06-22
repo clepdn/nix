@@ -14,6 +14,8 @@
       "${self}/modules/altserver"
       "${self}/modules/doh"
       "${self}/modules/tz/ny.nix"
+      "${self}/modules/nix-ld/steam-run.nix"
+      "${self}/modules/nix-ld/slippi.nix"
     ];
 
   virtualisation.virtualbox.host.enable = true;

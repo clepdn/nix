@@ -7,6 +7,8 @@
 	      "${self}/modules/pipewire"
 	      "${self}/modules/plymouth"
 	      "${self}/modules/tz/ny.nix"
+	      "${self}/modules/nix-ld/steam-run.nix"
+              "${self}/modules/nix-ld/slippi.nix"
 	];
 
 	myNixOS.nix.homuraBuilder.enable = false;

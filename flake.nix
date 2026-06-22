@@ -30,6 +30,13 @@
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		plasma-manager = {
+			url = "github:nix-community/plasma-manager";
+			inputs = {
+				nixpkgs.follows = "nixpkgs";
+				home-manager.follows = "home-manager";
+			};
+		};
 		nixvim.url = "github:nix-community/nixvim";
 		niri = {
 			url = "github:sodiboo/niri-flake";
@@ -92,7 +99,10 @@
 					}) ];
 					home-manager.useGlobalPkgs = true;
 					home-manager.extraSpecialArgs = { inherit inputs; };
-					home-manager.sharedModules = [ inputs.agenix.homeManagerModules.default ];
+					home-manager.sharedModules = [
+						inputs.agenix.homeManagerModules.default
+						inputs.plasma-manager.homeManagerModules.plasma-manager
+					];
 				})
 			] ++ extraModules;
 		};

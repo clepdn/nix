@@ -3,7 +3,7 @@
 set NIXOS_CONFIG_DIR (test -n "$NIXOS_CONFIG_DIR" && echo $NIXOS_CONFIG_DIR || echo "/etc/nixos")
 
 set SUDO_ARGS --sudo --ask-sudo-password
-if test (hostname) = homura
+if test (hostname) = homura -o (hostname) = megatron
     set BUILD_HOST
 else
     set BUILD_HOST --build-host homura

@@ -13,5 +13,6 @@
     qdirstat
     kdePackages.kate
     ente-auth
+    (discord.override { withMoonlight = true; })
   ];
 }

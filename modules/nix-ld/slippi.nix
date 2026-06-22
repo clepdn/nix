@@ -57,5 +57,8 @@
     # Slippi-specific: it bundles Dolphin which wants these
     curl
     openssl
+    libusb1
+    libSM
+    gmp
   ];
 }
