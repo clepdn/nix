@@ -129,8 +129,6 @@
   };
 
   # services.avahi.nssmdns4.enable = true; # I don't particularly need this to be enabled on my (portable) laptop.
-  services.tailscale.enable = true;
-
   # no relation
   services.fprintd.enable  = true;
   services.printing.enable = true; # CUPS

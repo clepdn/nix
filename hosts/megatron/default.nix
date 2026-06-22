@@ -9,6 +9,7 @@
 	      "${self}/modules/tz/ny.nix"
 	];
 
+	myNixOS.nix.homuraBuilder.enable = false;
 
 	networking.hostName = "megatron";
 

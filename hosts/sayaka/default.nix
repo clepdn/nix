@@ -41,7 +41,6 @@
 		enable = true;
 	};
 	
-	services.tailscale.enable  = true;
 	networking.firewall.enable = true;
 
 	system.stateVersion = "25.11";

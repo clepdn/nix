@@ -34,6 +34,9 @@
 		fish.enable = true;
 		neovim.enable  = true;
 	};
+
+	services.tailscale.enable = true; # Eventually we can probably do auth-keys as an agenix secret? 
+	
 	# These take ages to build
 	documentation.man.cache.enable = false;
 	documentation.man.man-db.enable = false;

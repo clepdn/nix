@@ -12,5 +12,6 @@
     thunderbird
     qdirstat
     kdePackages.kate
+    ente-auth
   ];
 }
