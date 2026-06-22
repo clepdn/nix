@@ -14,13 +14,7 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICfb1KhR8p1qNp33GLdVOm2kgah/O8/fn6Lg1RW1BVpL"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFexR51gVO+v5+mW6roktsex5Im2vxVPlD82Cgd0PxMv"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBlfBe3A8xrCcmnSTl9cGx/GUqS7b8Oe4q2wHnZLwcVW"
-    ];
-    packages = with pkgs; [
-      kdePackages.kate
-      inputs.zen-browser.packages."${pkgs.system}".default
-      qdirstat
-      feishin
-      thunderbird
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINoTlsLWhVAEjhEVfMvlM+yaE2mTDme6SLVsJvM0OsMs" # callie@megatron
     ];
   };
 

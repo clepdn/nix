@@ -207,7 +207,7 @@
           owner = "everviolet";
           repo = "nvim";
           rev = "main";
-          hash = "sha256-g79UaNy1UzgubLpriuNOH4UFhbhw5d+0sX90KWln2/E=";
+	  hash = "sha256-2+Vys23a+iEenb9O6rHdh3OGfEVwcXSwAJMQty+4P0k=";
         };
       })
     ];

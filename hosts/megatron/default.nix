@@ -2,7 +2,7 @@
 {
 	imports = clib.importFolder ./modules ++ [
 	      ./hardware-configuration.nix
-	      "${self}/users/callie"
+	      "${self}/users/callie/userSession.nix"
 	      "${self}/modules/base"
 	      "${self}/modules/pipewire"
 	      "${self}/modules/plymouth"
