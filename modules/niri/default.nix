@@ -18,6 +18,11 @@ in
 
   services.gnome.gnome-keyring.enable = lib.mkForce false;
 
+  # Tell the nixpkgs Chromium/Electron wrappers to run under native Wayland
+  # via Ozone. Without this, apps like Discord/Spotify/VS Code fall back to
+  # XWayland, where Chromium disables GPU compositing and the UI stutters.
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
   home-manager.users.callie.imports = [
     ./settings.nix
     ./binds.nix
@@ -113,32 +118,16 @@ in
     overrideStrategy = "asDropin";
     wantedBy = [ "niri.service" ];
   };
+  # pam_kwallet_init must run after niri has imported WAYLAND_DISPLAY into
+  # the user systemd env, otherwise the PAM-launched ksecretd aborts on
+  # QApplication and the wallet stays locked.
   systemd.user.services.plasma-kwallet-pam = {
     overrideStrategy = "asDropin";
     wantedBy = [ "niri.service" ];
+    after = [ "niri.service" ];
   };
   systemd.user.services.plasma-polkit-agent = {
     overrideStrategy = "asDropin";
     wantedBy = [ "niri.service" ];
-  };
-
-  # ksecretd is Plasma 6's freedesktop Secret Service implementation
-  # (claims org.freedesktop.secrets on the session bus). kwallet ships no
-  # systemd unit and no D-Bus activation file for that well-known name, so on
-  # niri it never starts and libsecret clients (e.g. ente-auth) fail with
-  # "Failed to unlock the keyring".
-  systemd.user.services.plasma-ksecretd = {
-    description = "KDE Wallet Secret Service (org.freedesktop.secrets)";
-    wantedBy = [ "niri.service" ];
-    after = [ "graphical-session.target" "plasma-kwallet-pam.service" ];
-    partOf = [ "graphical-session.target" ];
-    serviceConfig = {
-      Type = "dbus";
-      BusName = "org.freedesktop.secrets";
-      ExecStart = "${pkgs.kdePackages.kwallet}/bin/ksecretd";
-      Restart = "on-failure";
-      RestartSec = 2;
-      Slice = "background.slice";
-    };
   };
 }
