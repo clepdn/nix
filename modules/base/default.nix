@@ -26,7 +26,18 @@
 		busybox
 		nix-search
 		nmap
+
+		# Manpage stuff
+		man-pages
+		man-pages-posix
 	];
+
+	# These take ages to build
+	documentation = {
+		man.cache.enable  = true;
+		man.man-db.enable = true;
+		dev.enable = true;
+	};
 
 	programs = {
 		git.enable  = true;
@@ -37,9 +48,6 @@
 
 	services.tailscale.enable = true; # Eventually we can probably do auth-keys as an agenix secret? 
 	
-	# These take ages to build
-	documentation.man.cache.enable = false;
-	documentation.man.man-db.enable = false;
 
 	networking.networkmanager.enable = true;
 	users.mutableUsers = false;

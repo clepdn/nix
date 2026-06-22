@@ -1,0 +1,52 @@
+{ pkgs, config, self, ... }:
+let mountLocation = "/home/coral/s3-music/";
+in
+{
+  age.secrets.geesefs = {
+    file = "${self}/secrets/";
+    mode = "0400";
+  };
+
+  systemd.services.music-callie-mnt = {
+    description = "geesefs mount for music";
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+
+    wantedBy = [ "coral.service" ];
+    before = [ "coral.service" ];
+    
+    serviceConfig = {
+      Type = "forking";
+      ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mountLocation}";
+      ExecStart = ''
+        ${pkgs.geesefs}/bin/geesefs \
+          --endpoint http://homura:9000 \
+          --region us-east-1 \
+          --shared-config ${config.age.secrets.callieMusic.path} \
+          --cache %C/geesefs-coral \
+          --stat-cache-ttl 1h \
+          --http-timeout 5m \
+          --read-retry-interval 2s \
+          --read-retry-max-interval 30s \
+          --read-retry-attempts 5 \
+          --read-ahead 10240 \
+          --read-ahead-small 512 \
+          --read-ahead-large 51200 \
+          --read-ahead-parallel 10240 \
+          --small-read-count 8 \
+          --read-merge 2048 \
+          --max-flushers 4 \
+          --max-parallel-parts 3 \
+          --max-parallel-copy 3 \
+          -o allow_other \
+          -o ro \
+          musica ${mountLocation}
+      '';
+      ExecStop = "${pkgs.fuse}/bin/fusermount -uz ${mountLocation}";
+      Restart = "on-failure";
+      RestartSec = "10s";
+      RuntimeDirectory = "geesefs-coral";
+      CacheDirectory = "geesefs-coral";
+    };
+  };
+}
