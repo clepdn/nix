@@ -31,7 +31,13 @@ in
     }
   ];
 
-  environment.systemPackages = with pkgs; [ quickshell awww brightnessctl ];
+  environment.systemPackages = with pkgs; [ 
+    quickshell 
+    awww 
+    brightnessctl 
+    rofi 
+    rofimoji
+   ];
 
   services.udev.packages = [ pkgs.brightnessctl ];
 
