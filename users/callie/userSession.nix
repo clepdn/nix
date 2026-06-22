@@ -1,4 +1,4 @@
-{ pkgs, ... }
+{ pkgs, ... }:
 {
   # The correct name for this file would be graphicalSession.nix
   # Maybe I will bother changing it another day. Today? Absolutely not!
