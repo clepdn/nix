@@ -1,7 +1,5 @@
 { pkgs, lib, ... }:
 {
-  # The correct name for this file would be graphicalSession.nix
-  # Maybe I will bother changing it another day. Today? Absolutely not!
   imports = [
     ./default.nix
   ];
@@ -13,6 +11,8 @@
     qdirstat
     kdePackages.kate
     ente-auth
+    signal-desktop
+
     # niri throttles wl_surface.frame callbacks to 1 Hz for non-visible
     # surfaces, which trips Chromium's renderer-backgrounding heuristics and
     # freezes Discord's window once it loses focus / gets occluded. There is

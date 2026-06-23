@@ -4,7 +4,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./modules/jovian.nix
-      "${self}/users/callie/userSession.nix"
+      "${self}/users/callie/graphicalSession.nix"
       "${self}/modules/tz/ny.nix"
       "${self}/modules/pipewire"
       "${self}/modules/base"

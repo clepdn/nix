@@ -4,7 +4,7 @@
       ./hardware-configuration.nix
       "${self}/modules/llama-cpp"
       "${self}/modules/letta"
-      "${self}/users/callie/userSession.nix"
+      "${self}/users/callie/graphicalSession.nix"
       "${self}/modules/comfymc"
       "${self}/modules/base"
       "${self}/modules/pipewire"
