@@ -37,13 +37,16 @@ in
     }
   ];
 
-  environment.systemPackages = with pkgs; [ 
-    quickshell 
-    awww 
-    brightnessctl 
-    rofi 
+  environment.systemPackages = with pkgs; [
+    quickshell
+    awww
+    brightnessctl
+    rofi
     rofimoji
-   ];
+    lxmenu-data
+  ];
+
+  environment.pathsToLink = [ "/etc/xdg/menus" ];
 
   services.udev.packages = [ pkgs.brightnessctl ];
 

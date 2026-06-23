@@ -12,6 +12,9 @@
     kdePackages.kate
     ente-auth
     signal-desktop
+    mpv
+    pwvucontrol
+    pavucontrol
 
     # niri throttles wl_surface.frame callbacks to 1 Hz for non-visible
     # surfaces, which trips Chromium's renderer-backgrounding heuristics and
