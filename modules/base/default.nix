@@ -19,13 +19,14 @@
 		mosh 
 		wl-clipboard
 		mosh
-		trzsz-ssh # `tssh`, client for tsshd (see modules/ssh)
+		trzsz-ssh
 		openssl
 		psmisc # killall
 		inputs.agenix.packages.${pkgs.system}.default
 		busybox
 		nix-search
 		nmap
+		libarchive # bsdtar
 
 		# Manpage stuff
 		man-pages
