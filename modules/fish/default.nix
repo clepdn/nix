@@ -52,6 +52,8 @@
 
         echo -n " "
       '';
+
+      net.body = "nix run nixpkgs#$argv[1] -- $argv[2..-1]";
     };
 
     shellAliases = {

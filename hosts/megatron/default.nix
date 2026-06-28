@@ -13,6 +13,14 @@
 
 	myNixOS.nix.homuraBuilder.enable = false;
 
+	# Nouveau is more CPU-bound than the proprietary driver; let the 7800X3D
+	# actually clock up instead of sitting in powersave.
+	powerManagement.cpuFreqGovernor = "performance";
+
+	# Multithreaded GL — moves command processing off the render thread.
+	# Helps the Zink→NVK path where GL apps pay extra CPU overhead.
+	environment.sessionVariables.mesa_glthread = "true";
+
 	networking.hostName = "megatron";
 
 	boot = {
