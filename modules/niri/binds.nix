@@ -7,23 +7,23 @@
     "Mod+Shift+Slash".action = show-hotkey-overlay;
 
     "Mod+Q" = {
-      action = spawn "kitty";
+      action = spawn "uwsm" "app" "--" "kitty";
       hotkey-overlay.title = "Open a Terminal: kitty";
     };
     "Mod+R" = {
-      action = spawn "rofi" "-show" "drun";
+      action = spawn "uwsm" "app" "--" "rofi" "-show" "drun";
       hotkey-overlay.title = "Run an Application: rofi";
     };
     "Mod+B" = {
-      action = spawn "helium";
+      action = spawn "uwsm" "app" "--" "helium";
       hotkey-overlay.title = "Open the browser";
     };
     "Mod+E" = {
-      action = spawn "dolphin";
+      action = spawn "uwsm" "app" "--" "dolphin";
       hotkey-overlay.title = "Open the file manager";
     };
     "Mod+Space" = {
-      action = spawn "rofimoji" "--selector" "rofi";
+      action = spawn "uwsm" "app" "--" "rofimoji" "--selector" "rofi";
       hotkey-overlay.title = "Open the emoji picker";
     };
 
@@ -43,15 +43,6 @@
       allow-when-locked = true;
     };
 
-    "Mod+XF86AudioRaiseVolume" = {
-      action = spawn "~/bin/spotictl.sh" "vol+";
-      allow-when-locked = true;
-    };
-    "Mod+XF86AudioLowerVolume" = {
-      action = spawn "~/bin/spotictl.sh" "vol-";
-      allow-when-locked = true;
-    };
-
     "XF86AudioMute" = {
       action = spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle";
       allow-when-locked = true;
@@ -61,25 +52,34 @@
       allow-when-locked = true;
     };
 
-    "XF86AudioNext" = {
-      action = spawn "~/bin/spotictl.sh" "next";
+    "XF86MonBrightnessUp".action = spawn "brightnessctl" "s" "5%+";
+    "XF86MonBrightnessDown".action = spawn "brightnessctl" "s" "5%-";
+
+    "Mod+XF86AudioRaiseVolume" = {
+      action = spawn "playerctl" "volume" "0.05+";
       allow-when-locked = true;
     };
-    "XF86AudioPause" = {
-      action = spawn "~/bin/spotictl.sh" "pause";
-      allow-when-locked = true;
-    };
-    "XF86AudioPlay" = {
-      action = spawn "~/bin/spotictl.sh" "pause";
-      allow-when-locked = true;
-    };
-    "XF86AudioPrev" = {
-      action = spawn "~/bin/spotictl.sh" "back";
+    "Mod+XF86AudioLowerVolume" = {
+      action = spawn "playerctl" "volume" "0.05-";
       allow-when-locked = true;
     };
 
-    "XF86MonBrightnessUp".action = spawn "brightnessctl" "s" "5%+";
-    "XF86MonBrightnessDown".action = spawn "brightnessctl" "s" "5%-";
+    "XF86AudioNext" = {
+      action = spawn "playerctl" "next";
+      allow-when-locked = true;
+    };
+    "XF86AudioPause" = {
+      action = spawn "playerctl" "play-pause";
+      allow-when-locked = true;
+    };
+    "XF86AudioPlay" = {
+      action = spawn "playerctl" "play-pause";
+      allow-when-locked = true;
+    };
+    "XF86AudioPrev" = {
+      action = spawn "playerctl" "previous";
+      allow-when-locked = true;
+    };
 
     "Mod+O" = {
       action = toggle-overview;
@@ -87,6 +87,7 @@
     };
 
     "Mod+C".action = close-window;
+    "Mod+Shift+C".action = spawn "niri-kill-focused";
 
     "Mod+Left".action = focus-column-left;
     "Mod+Down".action = focus-window-down;
@@ -165,23 +166,23 @@
     "Mod+Ctrl+Shift+WheelScrollUp".action = move-column-left;
 
     "Mod+1" = {
-      action = spawn "~/bin/spotictl" "back";
+      action = spawn "playerctl" "previous";
       allow-when-locked = true;
     };
     "Mod+2" = {
-      action = spawn "~/bin/spotictl" "pause";
+      action = spawn "playerctl" "play-pause";
       allow-when-locked = true;
     };
     "Mod+3" = {
-      action = spawn "~/bin/spotictl" "next";
+      action = spawn "playerctl" "next";
       allow-when-locked = true;
     };
     "Mod+Shift+9" = {
-      action = spawn "~/bin/spotictl" "vol-";
+      action = spawn "playerctl" "volume" "0.05-";
       allow-when-locked = true;
     };
     "Mod+Shift+0" = {
-      action = spawn "~/bin/spotictl" "vol+";
+      action = spawn "playerctl" "volume" "0.05+";
       allow-when-locked = true;
     };
 
