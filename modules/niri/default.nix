@@ -5,48 +5,8 @@ let
     cp -r ${inputs.quickshell-config}/. $out/
   '';
   niriPkgs = inputs.niri.packages.${pkgs.system};
-  niri-kill-focused = pkgs.writeShellApplication {
-    name = "niri-kill-focused";
-    runtimeInputs = [
-      niriPkgs.niri-unstable
-      pkgs.jq
-      pkgs.gawk
-      pkgs.coreutils
-      pkgs.systemd
-    ];
-    text = ''
-      pid=$(niri msg --json focused-window | jq -r '.pid // empty')
-      if [[ -z "$pid" ]]; then
-        exit 1
-      fi
-
-      # /proc/<pid>/cgroup's first line ends in the leaf cgroup path; the
-      # final path component is the systemd unit the process belongs to.
-      unit=$(basename "$(awk -F: 'NR==1{print $3}' /proc/"$pid"/cgroup)")
-
-      # Only ever target app scopes (i.e. things launched via `uwsm app --`
-      # or `systemd-run --user --scope`). Resolving to niri.service, the
-      # user slice, or graphical-session.target would tear down the whole
-      # session.
-      case "$unit" in
-        app-*.scope) ;;
-        *)
-          echo "niri-kill-focused: refusing to kill '$unit' (not an app-*.scope)" >&2
-          exit 1
-          ;;
-      esac
-
-      # SIGTERM first so the app can flush state; escalate to SIGKILL if
-      # the scope is still alive after a short grace period.
-      systemctl --user kill --signal=SIGTERM "$unit"
-      for _ in 1 2 3 4 5 6 7 8 9 10; do
-        if ! systemctl --user is-active --quiet "$unit"; then
-          exit 0
-        fi
-        sleep 0.2
-      done
-      systemctl --user kill --signal=SIGKILL "$unit"
-    '';
+  niri-kill-focused = pkgs.callPackage ./niri-kill-focused.nix {
+    inherit (niriPkgs) niri-unstable;
   };
 in
 {
@@ -69,9 +29,6 @@ in
 
   services.gnome.gnome-keyring.enable = lib.mkForce false;
 
-  # Tell the nixpkgs Chromium/Electron wrappers to run under native Wayland
-  # via Ozone. Without this, apps like Discord/Spotify/VS Code fall back to
-  # XWayland, where Chromium disables GPU compositing and the UI stutters.
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   home-manager.users.callie.imports = [
@@ -86,6 +43,33 @@ in
         path = lib.getExe niriPkgs.xwayland-satellite-unstable;
       };
 
+      services.mako = {
+        enable = true;
+        settings = {
+          font = "Inter 11";
+          background-color = "#1e1e2eee";
+          text-color = "#cdd6f4";
+          border-color = "#7fc8ff";
+          border-size = 2;
+          border-radius = 8;
+          default-timeout = 5000;
+          ignore-timeout = false;
+          margin = 12;
+          padding = "10";
+          max-icon-size = 48;
+          icons = true;
+          markup = true;
+          layer = "overlay";
+          anchor = "top-right";
+
+          "urgency=low".border-color = "#505050";
+          "urgency=high" = {
+            border-color = "#9b0000";
+            default-timeout = 0;
+          };
+        };
+      };
+
       home.packages = [ niri-kill-focused pkgs.playerctl ];
     }
   ];
@@ -97,18 +81,19 @@ in
     rofi
     rofimoji
     lxmenu-data
+    wlogout
   ];
 
   environment.pathsToLink = [ "/etc/xdg/menus" ];
 
   services.udev.packages = [ pkgs.brightnessctl ];
 
-  systemd.packages = with pkgs.kdePackages; [
+  systemd.packages = [ pkgs.mako ] ++ (with pkgs.kdePackages; [
     kded
     powerdevil
     kwallet-pam
     polkit-kde-agent-1
-  ];
+  ]);
 
   xdg.portal = {
     enable = true;
@@ -166,6 +151,11 @@ in
   # systemd.user.services.<name>.wantedBy renders a full stub unit into
   # /etc/systemd/user/ that shadows the package-shipped one (no ExecStart).
   # asDropin emits only [Install] as a .d/overrides.conf overlay instead.
+  systemd.user.services.mako = {
+    overrideStrategy = "asDropin";
+    wantedBy = [ "niri.service" ];
+  };
+
   systemd.user.services.plasma-kded6 = {
     overrideStrategy = "asDropin";
     wantedBy = [ "niri.service" ];

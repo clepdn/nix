@@ -60,6 +60,10 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 			inputs.flake-utils.follows = "flake-utils";
 		};
+		plymouth-signalis = {
+			url = "git+https://codeberg.org/cowie/plymouth-signalis.git";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 		coral = {
 			url = "git+https://tangled.org/callie.on-her.computer/coral";
 			inputs = {

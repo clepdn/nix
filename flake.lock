@@ -533,6 +533,26 @@
         "type": "github"
       }
     },
+    "plymouth-signalis": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1782750060,
+        "narHash": "sha256-Z4M9qFb85SHy1DB0AJCe/2xJE3TP7SmrTACHLt3bfz4=",
+        "ref": "refs/heads/main",
+        "rev": "53de61073f2ef4f5cd22881601104512fa13c7b5",
+        "revCount": 1,
+        "type": "git",
+        "url": "https://codeberg.org/cowie/plymouth-signalis.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/cowie/plymouth-signalis.git"
+      }
+    },
     "pre-commit": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -589,6 +609,7 @@
         "pavement": "pavement",
         "pi-mono": "pi-mono",
         "plasma-manager": "plasma-manager",
+        "plymouth-signalis": "plymouth-signalis",
         "quickshell-config": "quickshell-config",
         "zen-browser": "zen-browser"
       }
