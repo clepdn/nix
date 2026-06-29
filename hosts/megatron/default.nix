@@ -5,7 +5,6 @@
 	      "${self}/users/callie/graphicalSession.nix"
 	      "${self}/modules/base"
 	      "${self}/modules/pipewire"
-	      "${self}/modules/plymouth"
 	      "${self}/modules/tz/ny.nix"
 	      "${self}/modules/nix-ld/steam-run.nix"
               "${self}/modules/nix-ld/slippi.nix"
