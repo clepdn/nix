@@ -579,11 +579,11 @@
     "quickshell-config": {
       "flake": false,
       "locked": {
-        "lastModified": 1779846573,
-        "narHash": "sha256-TXf95sYtlUfM34p6j7Tzw+zW99/GZjPcOyzd/SSy2Ts=",
+        "lastModified": 1782783102,
+        "narHash": "sha256-lJ1PW5gZSiMrWldRuOoDM0GlsH0b7va+Yv6R9sLAueY=",
         "ref": "refs/heads/main",
-        "rev": "147899c9805d73b03fd26dca5ce9f27cb102a323",
-        "revCount": 4,
+        "rev": "ae78f048cd59cf482fd299dcbca0765730f7f4ab",
+        "revCount": 7,
         "type": "git",
         "url": "https://tangled.org/callie.on-her.computer/quickshell"
       },
