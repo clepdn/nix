@@ -13,25 +13,18 @@
       "${self}/modules/tz/ny.nix"
     ];
 
-  boot.initrd.network.enable = true;
-  # Static IP for initrd SSH so LUKS password can be entered remotely.
-  # Connect to 192.168.1.10:2222 before the machine finishes booting.
-  boot.kernelParams = [ "ip=192.168.1.10::192.168.1.1:255.255.255.0:homura::none" ];
-  boot.initrd.network.ssh = {
-    enable = true;
-    port = 2222;
-    hostKeys = [ "/etc/secrets/initrd/ssh_host_initrd_key" ];
-    authorizedKeys = config.users.users.callie.openssh.authorizedKeys.keys;
-  };
+  boot.initrd.systemd.enable = true;
 
   boot.initrd.luks.devices."hdd" = {
     device = "/dev/disk/by-uuid/f43fb5e6-2a5e-42a8-b0d0-fe43f495ad33";
+    tpm2Device = "auto";
+    tpm2ToCLU = true;
   };
 
   fileSystems."/mnt/hdd" = {
     device = "/dev/mapper/hdd";
     fsType = "btrfs";
-    options = [ "compress=zstd" ];
+    options = [ "compress=zstd" "nofail" ];
   };
 
   swapDevices = [{
