@@ -29,7 +29,8 @@ in
 
   services.gnome.gnome-keyring.enable = lib.mkForce false;
 
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+  # This was applied in err chasing down a discord fix (I didn't have mako.) I don't know if it actually does anything useful but the name sounds promising.
+  environment.sessionVariables.NIXOS_OZONE_WL = "1"; 
 
   home-manager.users.callie.imports = [
     ./settings.nix
@@ -47,11 +48,11 @@ in
         enable = true;
         settings = {
           font = "Inter 11";
-          background-color = "#1e1e2eee";
-          text-color = "#cdd6f4";
-          border-color = "#7fc8ff";
+          background-color = "#000000ff";
+          text-color = "#ffffffff";
+          border-color = "#bdbdbdff";
           border-size = 2;
-          border-radius = 8;
+          border-radius = 0;
           default-timeout = 5000;
           ignore-timeout = false;
           margin = 12;
@@ -62,11 +63,7 @@ in
           layer = "overlay";
           anchor = "top-right";
 
-          "urgency=low".border-color = "#505050";
-          "urgency=high" = {
-            border-color = "#9b0000";
-            default-timeout = 0;
-          };
+          "urgency=high".default-timeout = 0;
         };
       };
 
