@@ -9,7 +9,9 @@
 	      "${self}/modules/nginx"
 	      "${self}/modules/pavement"
 	      "${self}/modules/pds"
-		];
+	];
+
+	myNixOS.nix.homuraBuilder.enable = false;
 
 	myNixOS.pavement = {
 		enable = true;
