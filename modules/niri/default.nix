@@ -29,6 +29,9 @@ in
 
   services.gnome.gnome-keyring.enable = lib.mkForce false;
 
+  services.blueman.enable = true;
+  hardware.bluetooth.enable = true;
+
   # This was applied in err chasing down a discord fix (I didn't have mako.) I don't know if it actually does anything useful but the name sounds promising.
   environment.sessionVariables.NIXOS_OZONE_WL = "1"; 
 
@@ -85,7 +88,7 @@ in
 
   services.udev.packages = [ pkgs.brightnessctl ];
 
-  systemd.packages = [ pkgs.mako ] ++ (with pkgs.kdePackages; [
+  systemd.packages = [ pkgs.mako pkgs.blueman ] ++ (with pkgs.kdePackages; [
     kded
     powerdevil
     kwallet-pam
@@ -170,6 +173,11 @@ in
     after = [ "niri.service" ];
   };
   systemd.user.services.plasma-polkit-agent = {
+    overrideStrategy = "asDropin";
+    wantedBy = [ "niri.service" ];
+  };
+
+  systemd.user.services.blueman-applet = {
     overrideStrategy = "asDropin";
     wantedBy = [ "niri.service" ];
   };
