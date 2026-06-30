@@ -65,6 +65,43 @@ else
     set HOSTNAME (hostname)
 end
 
+# If the user passes `--build-host localhost` (or `--build-host=localhost`),
+# strip ALL `--build-host` flags from argv — including the auto-injected
+# `--build-host homura` above — so nixos-rebuild builds locally without
+# any --build-host argument at all.
+set BUILD_LOCAL 0
+for i in (seq 1 (count $argv))
+    if test "$argv[$i]" = "--build-host"
+        set next (math $i + 1)
+        if test $next -le (count $argv); and test "$argv[$next]" = "localhost"
+            set BUILD_LOCAL 1
+            break
+        end
+    else if test "$argv[$i]" = "--build-host=localhost"
+        set BUILD_LOCAL 1
+        break
+    end
+end
+
+if test $BUILD_LOCAL -eq 1
+    set FILTERED_ARGS
+    set skip_next 0
+    for i in (seq 1 (count $argv))
+        if test $skip_next -eq 1
+            set skip_next 0
+            continue
+        end
+        if test "$argv[$i]" = "--build-host"
+            set skip_next 1
+            continue
+        else if string match -q -- "--build-host=*" $argv[$i]
+            continue
+        end
+        set FILTERED_ARGS $FILTERED_ARGS $argv[$i]
+    end
+    set argv $FILTERED_ARGS
+end
+
 # Pass all arguments through to nixos-rebuild
 echo "nixos-rebuild $argv"
 nixos-rebuild $argv

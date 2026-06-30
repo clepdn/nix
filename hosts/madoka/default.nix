@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, inputs, system, self, clib, ... }:
+{ config, pkgs, lib, inputs, self, clib, ... }:
 
 {
   imports = clib.importFolder ./modules ++ [
@@ -21,16 +21,6 @@
   virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "callie" ];
 
-  users.users.meleeto = {
-    isNormalUser = true;
-    description = "Melee TO Account";
-    extraGroups = [ "networkmanager" "input" "video" ];
-    shell = pkgs.fish;
-    hashedPassword = "$y$j9T$thtLWbD83433DrQvv0uPX0$AWbc3P/COW1XKM0ZI5oo915PL3kajwngPa45mCy3D38";
-    packages = [
-      inputs.zen-browser.packages."${pkgs.system}".default
-    ];
-  };
   networking.hostName = "madoka"; # Define your hostname.
 
   security.tpm2.enable = true;
@@ -71,11 +61,7 @@
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-  # Enable the X11 windowing system.
-  # You can disable this if you're only using the Wayland session.
   services.xserver.enable = true;
-
-  # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
   
@@ -99,9 +85,6 @@
 
   programs.firefox.enable = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-
   fonts.packages = with pkgs; [
 	noto-fonts-cjk-sans
 	maple-mono.variable
@@ -116,8 +99,6 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
-  # List services that you want to enable:
 
   services.logind = {
   	settings.Login = {
@@ -167,7 +148,10 @@ services.tlp.settings={
 
   services.flatpak.enable = true;
 
-  virtualisation.waydroid.enable = true;
+  virtualisation.waydroid = {
+    enable = true;
+    package = pkgs.waydroid-nftables;
+  };
 
   virtualisation.podman = {
     enable = true;
