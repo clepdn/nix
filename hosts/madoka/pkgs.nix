@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, mypkgs, ... }:
 with pkgs; [
 	vim 
 	wget
@@ -52,7 +52,7 @@ with pkgs; [
 	gf
 	blender
 	nodejs_22
-	helium
+	mypkgs.helium
 	distrobox
 	gnome-network-displays
 	spotify

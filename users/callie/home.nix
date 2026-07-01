@@ -1,4 +1,4 @@
-{ pkgs, lib, inputs, ... }: {
+{ pkgs, lib, inputs, mypkgs, ... }: {
   imports = [
     inputs.nixvim.homeModules.nixvim
     ../../modules/fish
@@ -14,7 +14,7 @@
     username = "callie";
     homeDirectory = "/home/callie";
     packages = with pkgs; [
-      helium
+      mypkgs.helium
       claude-code
       (symlinkJoin {
         name = "pi";

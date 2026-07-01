@@ -90,19 +90,17 @@
 	inputs @ { self, nixpkgs, flake-utils, home-manager, ... }:
 
 	let
+		mypkgs = import ./pkgs { pkgs = nixpkgs.legacyPackages.x86_64-linux; lib = nixpkgs.lib; };
 		mkHost = host: extraModules: nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
-			specialArgs = { inherit inputs self; clib = import ./lib nixpkgs.lib; };
+			specialArgs = { inherit inputs self mypkgs; clib = import ./lib nixpkgs.lib; };
 			modules = [
 				./hosts/${host}
 				inputs.agenix.nixosModules.default
 				inputs.home-manager.nixosModules.home-manager
 				({ inputs, ... }: {
-					nixpkgs.overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; } // {
-						pi-coding-agent = inputs.pi-mono.packages.${prev.system}.pi;
-					}) ];
 					home-manager.useGlobalPkgs = true;
-					home-manager.extraSpecialArgs = { inherit inputs; };
+					home-manager.extraSpecialArgs = { inherit inputs mypkgs; };
 					home-manager.sharedModules = [
 						inputs.agenix.homeManagerModules.default
 						inputs.plasma-manager.homeManagerModules.plasma-manager
@@ -116,11 +114,8 @@
 			pkgs = import nixpkgs {
 				system = "x86_64-linux";
 				config.allowUnfree = true;
-				overlays = [ (final: prev: import ./pkgs { pkgs = prev; lib = prev.lib; } // {
-					pi-coding-agent = inputs.pi-mono.packages.${prev.system}.pi;
-				}) ];
 			};
-			extraSpecialArgs = { inherit inputs self; };
+			extraSpecialArgs = { inherit inputs self mypkgs; };
 			modules = [ inputs.agenix.homeManagerModules.default ./users/callie/home.nix ];
 		};
 

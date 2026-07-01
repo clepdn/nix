@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, inputs, self, clib, ... }:
+{ config, pkgs, lib, inputs, self, clib, mypkgs, ... }:
 
 {
   imports = clib.importFolder ./modules ++ [
@@ -78,7 +78,7 @@
 
   # This is a hack. Just convert pkgs.nix to a normal file sob. And then agenix can just... go in there like normal. lol.
   environment.systemPackages = with pkgs;
-  	import ./pkgs.nix { inherit pkgs; }
+  	import ./pkgs.nix { inherit pkgs mypkgs; }
 	++ [ inputs.agenix.packages.${pkgs.system}.default ];
   	/*(with pkgs; import ./pkgs.nix { inherit pkgs; })
   	++ [ inputs.agenix.packages.${system}.default ];*/
