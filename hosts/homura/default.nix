@@ -17,8 +17,6 @@
 
   boot.initrd.luks.devices."hdd" = {
     device = "/dev/disk/by-uuid/f43fb5e6-2a5e-42a8-b0d0-fe43f495ad33";
-    tpm2Device = "auto";
-    tpm2ToCLU = true;
   };
 
   fileSystems."/mnt/hdd" = {

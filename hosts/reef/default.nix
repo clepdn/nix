@@ -24,12 +24,12 @@
 				env  = "default";
 			};
 			model = {
-				provider        = "deepseek";
-				name            = "deepseek-v4-pro";
+				name            = "umans-glm-5.2";
+				base_url        = "https://api.code.umans.ai/v1";
 				enable_thinking = true;
 				thinking_effort = "xhigh";
 			};
-			context.compact_trigger_tokens = 800000;
+			context.compact_trigger_tokens = 400000;
 			context.idle_compaction_minutes = 45;
 		};
 	};
@@ -50,6 +50,7 @@
 	networking.networkmanager.enable = lib.mkForce false;
 	networking.wireless.enable = false;
 	networking.firewall.enable = true;
+	services.tailscale.enable = lib.mkForce false;
 
 	myNixOS.nix.homuraBuilder.enable = false;
 
