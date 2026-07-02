@@ -21,6 +21,4 @@
   home-manager.users.callie = import ./home.nix;
 
   programs.fish.enable = true;
-
-  nix.settings.trusted-users = [ "callie" ];
 }

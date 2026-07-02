@@ -55,7 +55,9 @@
   users.users.nix-remote-builder = {
     isSystemUser = true;
     group = "nix-remote-builder";
-    shell = pkgs.bash;
+    # nologin — this account exists only for `nix-daemon --stdio` over SSH,
+    # invoked by the remote-builder machinery. It should never be interactive.
+    shell = pkgs.shadow;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB5jL+9rDxsmB6Kdj1nTykQ7wma71EsilUXWPTqHybi4 nix-remote-builder"
     ];
