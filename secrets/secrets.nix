@@ -12,6 +12,7 @@ let hosts = [
 	];
 	pq_pubkeys = [
 		"callie_megatron_pq"
+		"callie_homura_pq"
 		"homura_pq"
 		"madoka_pq"
 		"callie_madoka_pq"
