@@ -14,6 +14,12 @@
 		owner = config.services.coral.user;
 	};
 
+	age.secrets.coralWebhookToken = {
+		file  = "${self}/secrets/coral-webhook-token.age";
+		mode  = "0400";
+		owner = config.services.coral.user;
+	};
+
 	services.coral = {
 		enable      = true;
 		secretsFile = config.age.secrets.coralSecrets.path;
