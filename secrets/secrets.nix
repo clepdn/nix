@@ -67,9 +67,9 @@ let hosts = [
 		"mail-passwd-callie.age".publicKeys = keys;
 
 		# coral's secrets
-		"coral.env.age".publicKeys = keys ++ readKeys [ "coral_reef_pq" ]; # she can't get this one. this has real api keys
+		"coral.env.age".publicKeys = keys ++ readKeys [ "reef_pq" ]; # she can't get this one. this has real api keys
 		"slskd.env.age".publicKeys = keys ++ readKeys [ "coral_reef_pq" ];
-		"coral-secrets.toml.age".publicKeys = keys ++ readKeys [ "coral_reef_pq" ];
+		"coral-secrets.toml.age".publicKeys = keys ++ readKeys [ "coral_reef_pq" ] ++ readKeys [ "reef_pq" ];
 		"coral-webhook-token.age".publicKeys = keys ++ coralKeys;
 
 	}
