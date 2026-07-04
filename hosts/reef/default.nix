@@ -29,14 +29,33 @@
 				name = "coral";
 				env  = "default";
 			};
+
 			model = {
 				name            = "umans-glm-5.2";
 				base_url        = "https://api.code.umans.ai/v1";
 				enable_thinking = true;
 				thinking_effort = "xhigh";
 			};
-			context.compact_trigger_tokens = 400000;
-			context.idle_compaction_minutes = 45;
+
+			context = {
+				compact_trigger_tokens = 400000;
+				idle_compaction_minutes = 0;
+				respect_cache = false;
+			};
+
+			subagents = [
+				{
+					name = "explore";
+					system_prompt = "You are an exploratory agent. Your goal is to investigate thoroughly to achieve the task assigned to you by your calling agent.";
+					enabled_tools = [ "shell" "read_file" ];
+
+				}
+				{
+					name = "coder";	
+					system_prompt = "You are a focused coding agent. Write, edit, and test code. Verify your work compiles.";
+					enabled_tools = [ "shell" "read_file" "edit_file" "write_file" ];
+				}
+			];
 		};
 	};
 
