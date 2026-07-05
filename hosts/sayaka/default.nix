@@ -1,4 +1,4 @@
-{ config, pkgs, self, ... }:
+{ self, ... }:
 {
 	imports = [
 	      ./disko.nix
@@ -7,8 +7,9 @@
 	      "${self}/modules/base"
 	      "${self}/modules/tz/ny.nix"
 	      "${self}/modules/nginx"
-	      "${self}/modules/pavement"
 	      "${self}/modules/pds"
+	      "${self}/modules/pavement"
+	      "${self}/modules/computers.sex"
 	];
 
 	myNixOS.nix.homuraBuilder.enable = false;
