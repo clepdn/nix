@@ -4,23 +4,28 @@
 
   myNixOS.nix.homuraBuilder.enable = lib.mkDefault false;
 
-  nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
-    trusted-users = [ "root" ];
-  };
+  nix = {
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = [ "root" ];
 
-  nix.gc = {
-    automatic = true;
-    dates = "weekly"; # or "daily", "monthly", a systemd calendar string like "Mon *-*-* 03:00:00", etc.
-    options = "--delete-older-than 14d";
-  };
+      max-jobs = "auto";
+      cores = 0;
 
-  nix.optimise = {
-    automatic = true;
-    dates = [ "weekly" ];
-  };
+      auto-optimise-store = true;
+    };
 
-  nix.settings.auto-optimise-store = true;
+    gc = {
+      automatic = true;
+      dates = "weekly"; # or "daily", "monthly", a systemd calendar string like "Mon *-*-* 03:00:00", etc.
+      options = "--delete-older-than 14d";
+    };
+
+    optimise = {
+      automatic = true;
+      dates = [ "weekly" ];
+    };
+  };
 
   nixpkgs.config.allowUnfree = true;
 }

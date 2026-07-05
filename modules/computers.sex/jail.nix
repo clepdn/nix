@@ -5,8 +5,10 @@ let
       isNormalUser = true;
       group = "jailed";
       shell = "${pkgs.shadow}/bin/nologin";
-      openssh.authorized.keys = sshKeys;
+      openssh.authorizedKeys.keys = sshKeys;
       home = "/var/www/computers.sex/";
+      createHome = false;
+      homeMode = "755";
     };
 
     systemd.tmpfiles.rules = [
@@ -16,24 +18,19 @@ let
   };
   userConfigs = 
     map mkJailedUser [ 
-      { 
-        name = "emelia"; 
+      {
+        name = "jailtest";
         sshKeys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM2sZUUtg/y3FKQsBUmNqH6SyJrvHKYLNCVlJdaJvH7t emelia@compilemaxxer" 
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDQpK/dgOaRgax/GP5D/NvuIGWUy7ul6XRw9TQ4+WoT4 callie@madoka"
+	  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDQpK/dgOaRgax/GP5D/NvuIGWUy7ul6XRw9TQ4+WoT4 callie@madoka"
         ];
-      } 
+      }
   ];
   extraConfig = {
-    imports = [ 
-      ./nginx.nix
-    ];
-
     services.openssh = {
       enable = true;
       extraConfig = ''
         Match group jailed
-          ChrootDirectory /srv/sftp/%u
+          ChrootDirectory /var/www/computers.sex
           ForceCommand internal-sftp
           AllowTcpForwarding no
           X11Forwarding no
@@ -42,10 +39,6 @@ let
     };
 
     users.groups.jailed = {};
-
-    systemd.tmpfiles.rules = [
-      "d /var/www/computers.sex 0755 root root - "
-    ];
   };
 
 in {

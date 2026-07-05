@@ -8,7 +8,6 @@
   ];
 
   programs.home-manager.enable = true;
-  home.sessionVariables.HAPPY_SERVER_URL = "https://happy.on-her.computer";
 
   home = {
     username = "callie";

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ pkgs, ... }:
 {
   users.users.callie = {
     isNormalUser = true;

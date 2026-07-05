@@ -1,9 +1,10 @@
-{ self, ... }:
+{ config, pkgs, self, ... }:
 {
 	imports = [
 	      ./disko.nix
 	      ./hardware-configuration.nix
 	      "${self}/users/callie"
+	      "${self}/users/emelia"
 	      "${self}/modules/base"
 	      "${self}/modules/tz/ny.nix"
 	      "${self}/modules/nginx"
@@ -40,11 +41,11 @@
 		interface = "enp1s0";
 	};
 
-	boot.loader.grub = {
-		enable = true;
-	};
+	boot.loader.grub.enable = true;
 	
 	networking.firewall.enable = true;
+	networking.firewall.allowedTCPPorts = [ 2200 ];
+	services.openssh.ports = [ 22 2200 ];
 
 	system.stateVersion = "25.11";
 }

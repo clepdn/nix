@@ -1,4 +1,4 @@
-{ config, lib, self, ... }:
+{ config, lib, ... }:
 
 let
   cfg = config.myNixOS.pds;
@@ -109,6 +109,15 @@ in
       group = "pds";
       mode = "400";
     };
+
+    # bluesky-pds's build pins pnpm_9, which nixpkgs marks insecure via
+    # meta.knownVulnerabilities. All the flagged CVEs are pnpm runtime
+    # issues that don't apply to our usage: pnpm only runs sandboxed inside
+    # fetchPnpmDeps (a fixed-output derivation), in frozen-lockfile mode,
+    # against upstream's pinned lockfile. Nix's FOD hash acts as the real
+    # integrity check regardless of what pnpm does. Accepting the flag here
+    # rather than scrubbing meta so audits still see the truth.
+    nixpkgs.config.permittedInsecurePackages = [ "pnpm-9.15.9" ];
 
     services.bluesky-pds = {
       enable = true;
