@@ -12,8 +12,8 @@ let
     };
 
     systemd.tmpfiles.rules = [
-      # Each home readable by group jailed? So that everyone can just,,, write shit? IDK mane
-      "d /var/www/computers.sex/${name} 0775 ${name} jailed -"
+      # Each home readable by group computer-sex so that everyone can just write shit everywhere. If it's a bad idea, then... we can just change mode to 0755
+      "d /var/www/computers.sex/${name} 0775 ${name} computer-sex -"
     ];
   };
   userConfigs = 
