@@ -46,6 +46,7 @@ let hosts = [
 		"authentik.env.age".publicKeys = DEPRECATED_sshKeys;
 		"webhook.age".publicKeys = DEPRECATED_sshKeys;
 		"cloudflare-dns.age".publicKeys = DEPRECATED_sshKeys;
+		"porkbun-dns.age".publicKeys = DEPRECATED_sshKeys;
 		"grafana-secret-key.age".publicKeys = DEPRECATED_sshKeys;
 		"home-assistant-secrets.age".publicKeys = DEPRECATED_sshKeys;
 		"pds.env.age".publicKeys = DEPRECATED_sshKeys;

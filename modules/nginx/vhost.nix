@@ -33,6 +33,15 @@ in {
     };
   };
 
+  options.myNixOS.porkbunDns = lib.mkOption {
+    type = lib.types.attrsOf lib.types.anything;
+    readOnly = true;
+    default = {
+      dnsProvider = "porkbun";
+      environmentFile = config.age.secrets.porkbun.path;
+    };
+  };
+
   options.myNixOS.acme = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
       options.port            = lib.mkOption { type = lib.types.port; };
@@ -59,6 +68,13 @@ in {
   config = {
     age.secrets.cloudflare = {
       file = "${self}/secrets/cloudflare-dns.age";
+      owner = "nginx";
+      group = "nginx";
+      mode = "400";
+    };
+
+    age.secrets.porkbun = {
+      file = "${self}/secrets/porkbun-dns.age";
       owner = "nginx";
       group = "nginx";
       mode = "400";
