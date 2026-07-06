@@ -11,6 +11,7 @@
 	];
 
 	myNixOS.nix.homuraBuilder.enable = false;
+	myNixOS.nix.signing.enable = true;
 
 	# Nouveau is more CPU-bound than the proprietary driver; let the 7800X3D
 	# actually clock up instead of sitting in powersave.

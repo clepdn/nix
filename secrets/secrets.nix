@@ -72,5 +72,12 @@ let hosts = [
 		"coral-secrets.toml.age".publicKeys = keys ++ readKeys [ "coral_reef_pq" ] ++ readKeys [ "reef_pq" ];
 		"coral-webhook-token.age".publicKeys = keys ++ coralKeys;
 
+		# Per-host nix binary-cache signing keys.
+		# Only the owning host needs to decrypt (used at activation to sign
+		# store paths locally so nix-copy-closure works without trusted-users).
+		"nix-signing-madoka.age".publicKeys   = readKeys [ "madoka_pq"   "callie_madoka_pq"   ];
+		"nix-signing-homura.age".publicKeys   = readKeys [ "homura_pq"   "callie_homura_pq"   ];
+		"nix-signing-megatron.age".publicKeys = readKeys [ "megatron_pq" "callie_megatron_pq" ];
+		"nix-signing-reef.age".publicKeys     = readKeys [ "reef_pq" ];
 	}
 

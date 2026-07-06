@@ -50,6 +50,7 @@
 
   # Homura is the build server — don't offload back to itself.
   myNixOS.nix.homuraBuilder.enable = false;
+  myNixOS.nix.signing.enable = true;
 
   # Accept remote build connections from other machines.
   users.users.nix-remote-builder = {

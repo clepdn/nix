@@ -78,6 +78,7 @@
 	services.tailscale.enable = lib.mkForce false;
 
 	myNixOS.nix.homuraBuilder.enable = false;
+	myNixOS.nix.signing.enable = true;
 
 	system.stateVersion = "26.05";
 }

@@ -22,6 +22,7 @@
   users.extraGroups.vboxusers.members = [ "callie" ];
 
   networking.hostName = "madoka"; # Define your hostname.
+  myNixOS.nix.signing.enable = true;
 
   security.tpm2.enable = true;
 
