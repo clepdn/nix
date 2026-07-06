@@ -5,6 +5,11 @@ Most queries will be related to the NixOS config here. If the user wants you to 
 ## Debugging
 When debugging we can ssh into other machines to get their journal output or run benign commands for more information.
 Only use ssh if we actually need it. If the machine we are debugging is the current one (check via `hostname`), then just run the commands normally.
+`journalctl` and `systemctl status` can and should be run without sudo.
+
+## Shell
+Your shell is not a real tty. `sudo` will fail. you do not have a path to root. You will be able to accomplish every task I set out for you without sudo. Be creative.
+The user is to set off rebuilds.
 
 ## Tailscale IPs
 
