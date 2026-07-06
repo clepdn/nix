@@ -1,5 +1,6 @@
 { self, lib, ... }:
-let groupUsers = [ "callie" "emelia" "jailtest" ];
+let
+  inherit (import ./shared.nix) groupUsers domain root;
 in {
   imports = [
     ./nginx.nix
@@ -10,9 +11,10 @@ in {
 
   users.groups.computer-sex = {};
 
-  users.users = lib.genAttrs groupUsers { extraGroups = [ "computer-sex" ]; };
+  users.users = lib.genAttrs groupUsers (_: { extraGroups = [ "computer-sex" ]; });
 
   systemd.tmpfiles.rules = [
-    "d /var/www/computers.sex 0755 root root -"
-  ] ++ map (user: "d /var/www/computers.sex/${user} 0755 ${user} computer-sex -") groupUsers;
+    "d ${root}                       0755 root    root         -"
+    "d ${root}/index                 0775 root    computer-sex -"
+  ] ++ map (user: "d ${root}/${user} 0775 ${user} computer-sex -") groupUsers;
 }
