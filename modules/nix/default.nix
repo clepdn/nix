@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  imports = [ ./homura-builder.nix ];
+  imports = [ ./homura-builder.nix ./signing.nix ];
 
   myNixOS.nix.homuraBuilder.enable = lib.mkDefault false;
 
