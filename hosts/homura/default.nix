@@ -2,14 +2,11 @@
 {
   imports = clib.importFolder ./modules ++ [
       ./hardware-configuration.nix
-      "${self}/modules/llama-cpp"
-      "${self}/modules/letta"
       "${self}/users/callie/graphicalSession.nix"
       "${self}/modules/comfymc"
       "${self}/modules/base"
       "${self}/modules/pipewire"
       "${self}/modules/monitoring"
-      "${self}/modules/ttyd"
       "${self}/modules/tz/ny.nix"
     ];
 
@@ -83,11 +80,6 @@
      opencode
      claude-code
   ];
-
-  myNixOS.ttyd = {
-    enable = true;
-    port = 7681;
-  };
 
   services.avahi.enable = true;
   services.avahi.nssmdns4 = true;
