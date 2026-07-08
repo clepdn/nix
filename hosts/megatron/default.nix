@@ -1,4 +1,4 @@
-{ self, clib, ... }:
+{ self, pkgs, clib, ... }:
 {
 	imports = clib.importFolder ./modules ++ [
 	      ./hardware-configuration.nix
@@ -13,12 +13,7 @@
 	myNixOS.nix.homuraBuilder.enable = false;
 	myNixOS.nix.signing.enable = true;
 
-	# Nouveau is more CPU-bound than the proprietary driver; let the 7800X3D
-	# actually clock up instead of sitting in powersave.
 	powerManagement.cpuFreqGovernor = "performance";
-
-	# Multithreaded GL — moves command processing off the render thread.
-	# Helps the Zink→NVK path where GL apps pay extra CPU overhead.
 	environment.sessionVariables.mesa_glthread = "true";
 
 	networking.hostName = "megatron";
@@ -32,6 +27,10 @@
 	services.xserver.enable = true;
 	services.displayManager.sddm.enable = true;
 	services.desktopManager.plasma6.enable = true;
+
+	environment.systemPackages = with pkgs; [ 
+		prismlauncher
+	];
 
 	system.stateVersion = "26.05";
 }
