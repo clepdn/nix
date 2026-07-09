@@ -38,14 +38,14 @@ let
       url = "https://cdn.modrinth.com/data/l6YH9Als/versions/iYFOl6lQ/spark-1.10.173-fabric.jar";
       sha512 = "1dcbf2b76ceacf07523afaeaf63d3625b0318077cc6ce588bb701aea4a494bc2a5179fd2ca5aeda9513c6a2248c2ec590387e8aec6ac9fd8e3d01760bbc3dbfb";
     };
-    C2ME = pkgs.fetchurl {
-      url = "https://cdn.modrinth.com/data/VSNURh3q/versions/sBKVreDD/c2me-fabric-mc26.2-0.4.2-alpha.0.12.jar";
-      sha512 = "757eb369c94ca63b3297f30e2e561aff9c9b02aaaf9891fded7e60b97b6e981def556f226b0b272026f7ff90c550989efea21555d10d0fff7ac4de27a2fb66a5";
-    };
-    C2ME-OpenCL = pkgs.fetchurl {
-      url = "https://cdn.modrinth.com/data/qtPMklut/versions/qthAcnhZ/c2me-fabric-opts-accel-opencl-mc26.2-0.4.2-alpha.0.12.jar";
-      sha512 = "06f671bcea76342802b296be1ef823c4abd86abd2dba7f2ca7c40482a023e1dfb1420d8d0a47cd350472640e8676d9d31b7229d0b09257852f480781e08891d1";
-    };
+    #C2ME = pkgs.fetchurl {
+    #  url = "https://cdn.modrinth.com/data/VSNURh3q/versions/sBKVreDD/c2me-fabric-mc26.2-0.4.2-alpha.0.12.jar";
+    #  sha512 = "757eb369c94ca63b3297f30e2e561aff9c9b02aaaf9891fded7e60b97b6e981def556f226b0b272026f7ff90c550989efea21555d10d0fff7ac4de27a2fb66a5";
+    #};
+    # C2ME-OpenCL = pkgs.fetchurl {
+    #   url = "https://cdn.modrinth.com/data/qtPMklut/versions/qthAcnhZ/c2me-fabric-opts-accel-opencl-mc26.2-0.4.2-alpha.0.12.jar";
+    #   sha512 = "06f671bcea76342802b296be1ef823c4abd86abd2dba7f2ca7c40482a023e1dfb1420d8d0a47cd350472640e8676d9d31b7229d0b09257852f480781e08891d1";
+    # };
   });
 in
 {
@@ -56,6 +56,8 @@ in
   # NVIDIA OpenCL needs nvidia_uvm; don't rely on something else loading it.
   boot.kernelModules = [ "nvidia_uvm" ];
 
+  networking.firewall.allowedTCPPorts = [ 25566 ];
+
   services.minecraft-servers = {
     enable = true;
     eula = true;
@@ -64,7 +66,11 @@ in
     servers.vanilla = {
       enable = true;
       # Pin the MC version so the mod jars above stay paired with the server.
-      package = pkgs.fabricServers.fabric-26_2;
+      # MC 26.2 requires Java 25; nix-minecraft's fabric wrapper defaults to
+      # jre_headless (Java 21 in nixpkgs), so override it here.
+      package = pkgs.fabricServers.fabric-26_2.override {
+        jre_headless = pkgs.jdk25_headless;
+      };
       jvmOpts = "-Xms2G -Xmx8G";
 
       symlinks."mods" = mods;
@@ -77,10 +83,10 @@ in
       };
 
       serverProperties = {
-        server-port = 25566;
-        motd = "homura // nix-minecraft // fabric";
+        server-port = 1629;
+        motd = "§fbrickhons§r §l§n§4ONLY";
         difficulty = "normal";
-        view-distance = 12;
+        view-distance = 20;
         spawn-protection = 0;
       };
     };
