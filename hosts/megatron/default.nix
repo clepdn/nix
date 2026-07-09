@@ -30,6 +30,8 @@
 
 	environment.systemPackages = with pkgs; [ 
 		prismlauncher
+		nodejs
+		python3
 	];
 
 	system.stateVersion = "26.05";

@@ -46,6 +46,14 @@ let
     #   url = "https://cdn.modrinth.com/data/qtPMklut/versions/qthAcnhZ/c2me-fabric-opts-accel-opencl-mc26.2-0.4.2-alpha.0.12.jar";
     #   sha512 = "06f671bcea76342802b296be1ef823c4abd86abd2dba7f2ca7c40482a023e1dfb1420d8d0a47cd350472640e8676d9d31b7229d0b09257852f480781e08891d1";
     # };
+    ViaFabric = pkgs.fetchurl {
+      url = "https://cdn.modrinth.com/data/YlKdE5VK/versions/rRHSH3qm/ViaFabric-0.4.21%2B172-26.x.jar";
+      sha512 = "a7a221a80ad283ff58fc84167b98f2628d1800efcf218f79d9de670d28e31fe255bfb43c97caf295c0e84b096bafa6617184168b2dd444385026ca75884a1579";
+    };
+    ViaBackwards = pkgs.fetchurl {
+      url = "https://cdn.modrinth.com/data/NpvuJQoq/versions/YjpKsm6j/ViaBackwards-5.10.0.jar";
+      sha512 = "a301113283ff8dacb5f2ac4c45632b37ade79563689ee342c9e74bce16a5c805d72ec641b05f86fd772558312860f92f5fd52ae246cc28762534a4bed794beaa";
+    };
   });
 in
 {
