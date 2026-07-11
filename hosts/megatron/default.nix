@@ -28,6 +28,10 @@
 	services.displayManager.sddm.enable = true;
 	services.desktopManager.plasma6.enable = true;
 
+	services.udev.extraRules = ''
+	  ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:11:00.*", ATTR{power/wakeup}="disabled"
+	'';
+
 	environment.systemPackages = with pkgs; [ 
 		prismlauncher
 		nodejs
