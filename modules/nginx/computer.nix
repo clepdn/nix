@@ -46,10 +46,6 @@
       target = "100.116.202.116";
       extraServerConfig = "ssl_protocols TLSv1.2 TLSv1.3;";
     };
-    "home.on-her.computer" = config.myNixOS.cloudflareDns // {
-      port = 8123;
-      target = "100.116.202.116";
-    };
     "lta.on-her.computer" = config.myNixOS.cloudflareDns // {
       port = 8283;
       target = "100.116.202.116";
