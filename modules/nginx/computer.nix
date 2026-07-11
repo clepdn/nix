@@ -36,11 +36,6 @@
       port = 9091;
       target = "100.116.202.116";
     };
-    "cubit.on-her.computer" = config.myNixOS.cloudflareDns // {
-      port = 8080;
-      target = "100.116.202.116";
-      forwardAuth = true;
-    };
     "tv.on-her.computer" = config.myNixOS.cloudflareDns // {
       port = 8096;
       target = "100.116.202.116";

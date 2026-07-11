@@ -1,3 +1,25 @@
+# =============================================================================
+# ⚠️  STOP. READ THIS BEFORE YOU COPY ANYTHING FROM THIS FILE.  ⚠️
+# -----------------------------------------------------------------------------
+# `reef` is a **NixOS nspawn CONTAINER**, not a real host. The configuration
+# below is purpose-built for a throwaway container environment and contains
+# choices that are DANGEROUS, WRONG, or outright INSECURE on real hardware.
+#
+# DO NOT mirror, copy, or "take inspiration from" any of the following on a
+# real host (i.e. anything else under hosts/):
+#
+#   • users.allowNoPasswordLogin = true;        ← passwordless root login.
+#   • boot.isNspawnContainer = true;            ← nspawn-specific boot config.
+#   • networking.networkmanager.enable = mkForce false;
+#   • networking.wireless.enable = false;
+#   • services.tailscale.enable = mkForce false; ← no mesh networking.
+#   • The coral service, its secrets, and the package set below are tuned for
+#     this container's workload, not a general-purpose system.
+#
+# If you find yourself reaching for something in here while configuring a real
+# host, STOP. It almost certainly does not apply. Write the real config from
+# scratch using the other hosts/ as reference instead.
+# =============================================================================
 { config, lib, self, pkgs, ... }:
 {
 	imports = [

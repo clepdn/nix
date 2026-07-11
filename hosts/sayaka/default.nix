@@ -30,15 +30,23 @@
 	networking.hostName = "sayaka";
 	users.mutableUsers = false;
 
-	# Hetzner Cloud assigns the /64 to the host; no RA accepted by default,
-	# so configure the address statically. Gateway is the link-local on the
-	# Hetzner switch (fe80::1).
-	networking.interfaces.enp1s0.ipv6.addresses = [
-		{ address = "2a01:4ff:f0:deca::1"; prefixLength = 64; }
-	];
-	networking.defaultGateway6 = {
-		address = "fe80::1";
-		interface = "enp1s0";
+	networking.networkmanager.ensureProfiles.profiles.enp1s0 = {
+		connection = {
+			id = "enp1s0";
+			type = "ethernet";
+			"interface-name" = "enp1s0";
+		};
+		ipv4 = {
+			method = "manual";
+			address1 = "178.156.177.25/32";
+			gateway = "172.31.1.1";
+			route1 = "172.31.1.1/32";
+			dns = "1.1.1.1;8.8.8.8;";
+		};
+		ipv6 = {
+			method = "manual";
+			address1 = "2a01:4ff:f0:deca::1/64,fe80::1";
+		};
 	};
 
 	boot.loader.grub.enable = true;
