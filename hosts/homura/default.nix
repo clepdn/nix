@@ -71,6 +71,8 @@
   #services.displayManager.sddm.enable = true;
   #services.desktopManager.plasma6.enable = true;
 
+  boot.enableContainers = true;
+
   programs.firefox.enable = true;
 
   environment.systemPackages = with pkgs; [
