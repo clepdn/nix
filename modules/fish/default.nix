@@ -46,6 +46,19 @@
             end
             set_color $git_color
             echo -n "  $git_branch"
+
+            # ↑N local commits not on upstream, ↓N remote commits not on local
+            set -l ahead (command git rev-list --count @{upstream}..HEAD 2>/dev/null)
+            if test -n "$ahead"; and test "$ahead" -gt 0
+                set_color green
+                echo -n " ↑$ahead"
+            end
+            set -l behind (command git rev-list --count HEAD..@{upstream} 2>/dev/null)
+            if test -n "$behind"; and test "$behind" -gt 0
+                set_color red
+                echo -n " ↓$behind"
+            end
+
             set_color white
             echo -n " ✧"
         end
