@@ -1,5 +1,7 @@
-{ ... }:
+{ pkgs, ... }:
 {
+  home.packages = [ pkgs.neovim-remote ];
+
   home.sessionVariables = {
     EDITOR = "nvim";
     VISUAL = "nvim";
@@ -67,6 +69,14 @@
       '';
 
       net.body = "nix run nixpkgs#$argv[1] -- $argv[2..-1]";
+
+      tabnew = ''
+        if test (count $argv) -eq 0
+          echo "usage: tabnew <file path>" >&2
+          return 1
+        end
+        nvr --remote-tab $argv
+      '';
     };
 
     shellAliases = {
