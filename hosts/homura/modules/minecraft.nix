@@ -54,6 +54,12 @@ let
       url = "https://cdn.modrinth.com/data/NpvuJQoq/versions/YjpKsm6j/ViaBackwards-5.10.0.jar";
       sha512 = "a301113283ff8dacb5f2ac4c45632b37ade79563689ee342c9e74bce16a5c805d72ec641b05f86fd772558312860f92f5fd52ae246cc28762534a4bed794beaa";
     };
+
+    no-elytra = pkgs.fetchurl {
+      url = "https://github.com/clepdn/no-elytra/releases/download/v1.0.0/no-elytra-1.0.0.jar";
+      sha512 = "sha512-U5w/H8UZSHSXbB+7aLlHtsSuV8WnV1xvgEVG8QrgUn4g0kpKpGrn3BFWXen0
+ty+X5nzO/jNXO5Jba6N4MXK0wA==";
+    };
   });
 in
 {

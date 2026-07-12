@@ -29,6 +29,8 @@
 	    	pkgs.gamescope
 	  	];
 	})
+
+	prismlauncher
   ];
 
   # Deck has no agenix key enrolled yet — opt out until it does.

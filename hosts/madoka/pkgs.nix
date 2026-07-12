@@ -6,7 +6,6 @@ with pkgs; [
 	mpv
 	wl-clipboard
 	file
-	vesktop
 	vicinae
 	findutils
 	mlocate
@@ -55,4 +54,5 @@ with pkgs; [
 	distrobox
 	gnome-network-displays
 	spotify
+	android-tools
 ]
