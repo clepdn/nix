@@ -51,6 +51,7 @@ STOP# ⚠️  STOP. READ THIS BEFORE YOU COPY ANYTHING FROM THIS FILE.  ⚠️
 				name = "coral";
 				env  = "default";
 				boredom_wake_min = 30;
+				git_upstream_nag = true;
 			};
 
 			models = {
