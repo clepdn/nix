@@ -1,5 +1,5 @@
 # =============================================================================
-# ⚠️  STOP. READ THIS BEFORE YOU COPY ANYTHING FROM THIS FILE.  ⚠️
+STOP# ⚠️  STOP. READ THIS BEFORE YOU COPY ANYTHING FROM THIS FILE.  ⚠️
 # -----------------------------------------------------------------------------
 # `reef` is a **NixOS nspawn CONTAINER**, not a real host. The configuration
 # below is purpose-built for a throwaway container environment and contains
@@ -50,14 +50,56 @@
 			agent = {
 				name = "coral";
 				env  = "default";
+				boredom_wake_min = 30;
 			};
 
-			model = {
-				name            = "umans-glm-5.2";
-				base_url        = "https://api.code.umans.ai/v1";
-				enable_thinking = true;
-				thinking_effort = "xhigh";
+			models = {
+				umans-glm-5_2 = {
+					provider         = "openai";
+					model            = "umans-glm-5.2";
+					base_url         = "https://api.code.umans.ai/v1";
+					tool_choice      = "required";
+					enable_thinking  = true;
+					thinking_effort  = "xhigh";
+				};
+
+				umans-kimi = {
+					provider         = "openai";
+					model            = "umans-kimi-k2.7";
+					base_url         = "https://api.code.umans.ai/v1";
+					tool_choice      = "required";
+					enable_thinking  = true;
+					thinking_effort  = "xhigh";
+				};
+
+				umans-flash = {
+					provider         = "openai";
+					model            = "umans-flash";
+					base_url         = "https://api.code.umans.ai/v1";
+					tool_choice      = "required";
+					enable_thinking  = true;
+					thinking_effort  = "xhigh";
+				};
+
+				glm-openrouter = {
+					provider         = "openrouter";
+					model            = "zai-org/glm-4.7-flash";
+					tool_choice      = "required";
+					thinking_effort  = "xhigh";
+				};
+
+				gemini-embedding = {
+					provider   = "openai";
+					model      = "google/gemini-embedding-2-preview";
+					base_url   = "https://openrouter.ai/api/v1";
+					dimensions = 3072;
+				};
 			};
+
+			model      = { preset = "umans-glm-5_2";    };
+			fallback   = { preset = "umans_kimi";   };
+			summary    = { preset = "umans-flash";      };
+			embeddings = { preset = "gemini-embedding"; };
 
 			context = {
 				compact_trigger_tokens = 400000;
@@ -87,6 +129,13 @@
 		gcc
 		gnumake
 		pkg-config
+		(python3.withPackages (ps: with ps; [
+			spacy
+			numpy
+			textstat
+			transformers
+			torch
+		]))
 	];
 
 	users.allowNoPasswordLogin = true;
