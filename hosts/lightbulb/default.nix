@@ -4,6 +4,7 @@
 	      ./hardware-configuration.nix
 	      "${self}/users/callie"
 	      "${self}/modules/base"
+	      "${self}/modules/avahi"
 	      "${self}/modules/tz/ny.nix"
 	];
 

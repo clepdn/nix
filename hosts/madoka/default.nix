@@ -13,6 +13,7 @@
       "${self}/modules/plymouth"
       "${self}/modules/altserver"
       "${self}/modules/doh"
+      "${self}/modules/avahi"
       "${self}/modules/tz/ny.nix"
       "${self}/modules/nix-ld/steam-run.nix"
       "${self}/modules/nix-ld/slippi.nix"
@@ -112,8 +113,6 @@
     HibernateDelaySec = "4h";
   };
 
-  # services.avahi.nssmdns4.enable = true; # I don't particularly need this to be enabled on my (portable) laptop.
-  # no relation
   services.fprintd.enable  = true;
   services.printing.enable = true; # CUPS
 

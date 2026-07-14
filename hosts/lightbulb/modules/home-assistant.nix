@@ -1,8 +1,14 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   servicePort = 8123;
   dataDir = "/var/lib/home-assistant";
+  viewAssist = pkgs.fetchFromGitHub {
+    owner = "dinki";
+    repo = "view_assist_integration";
+    rev = "2026.6.0"; # pin to the release tag
+    hash = "sha256-jnnKHQh3qK0mJ9p37TVQI9Uzkh/L6iPWtR6wAxDyL24=";
+  };
 in
 {
   virtualisation.podman = {
@@ -37,6 +43,7 @@ in
     volumes = [
       "${dataDir}/config:/config"
       "/run/dbus:/run/dbus:ro"
+      "${viewAssist}/custom_components/view_assist:/config/custom_components/view_assist:ro,z"
     ];
     extraOptions = [
       "--network=host"

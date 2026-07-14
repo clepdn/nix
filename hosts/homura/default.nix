@@ -5,6 +5,7 @@
       "${self}/users/callie/graphicalSession.nix"
       "${self}/modules/comfymc"
       "${self}/modules/base"
+      "${self}/modules/avahi"
       "${self}/modules/pipewire"
       "${self}/modules/monitoring"
       "${self}/modules/tz/ny.nix"
@@ -82,9 +83,6 @@
      opencode
      claude-code
   ];
-
-  services.avahi.enable = true;
-  services.avahi.nssmdns4 = true;
 
   networking.firewall.enable = true;
   networking.firewall.trustedInterfaces = [ "podman+" ];
