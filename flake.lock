@@ -34,11 +34,11 @@
         "pi": "pi"
       },
       "locked": {
-        "lastModified": 1783907839,
-        "narHash": "sha256-BotzCW7kfYClic8ejeu6mbhAIVz3bnZAJwrOIzirEVs=",
+        "lastModified": 1784010439,
+        "narHash": "sha256-5uyKMOTPo5BpEXQt4L/K47yFNmWihP92HM/cqWMrsH0=",
         "ref": "refs/heads/main",
-        "rev": "2e8c181e987db0b5bed72f6b123b54927f6a6eec",
-        "revCount": 108,
+        "rev": "6922eb8954600dd651d1716be449e7bf1cca711c",
+        "revCount": 109,
         "type": "git",
         "url": "https://tangled.org/callie.on-her.computer/coral"
       },

@@ -1,5 +1,7 @@
+{ config, lib, self, pkgs, ... }:
+{
 # =============================================================================
-STOP# ⚠️  STOP. READ THIS BEFORE YOU COPY ANYTHING FROM THIS FILE.  ⚠️
+# ⚠️  STOP. READ THIS BEFORE YOU COPY ANYTHING FROM THIS FILE.  ⚠️
 # -----------------------------------------------------------------------------
 # `reef` is a **NixOS nspawn CONTAINER**, not a real host. The configuration
 # below is purpose-built for a throwaway container environment and contains
@@ -20,8 +22,6 @@ STOP# ⚠️  STOP. READ THIS BEFORE YOU COPY ANYTHING FROM THIS FILE.  ⚠️
 # host, STOP. It almost certainly does not apply. Write the real config from
 # scratch using the other hosts/ as reference instead.
 # =============================================================================
-{ config, lib, self, pkgs, ... }:
-{
 	imports = [
 	      "${self}/modules/base"
 	      "${self}/modules/tz/ny.nix"
