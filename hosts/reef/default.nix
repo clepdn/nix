@@ -98,7 +98,7 @@ STOP# ⚠️  STOP. READ THIS BEFORE YOU COPY ANYTHING FROM THIS FILE.  ⚠️
 			};
 
 			model      = { preset = "umans-glm-5_2";    };
-			fallback   = { preset = "umans_kimi";   };
+			fallback   = { preset = "umans-kimi";   };
 			summary    = { preset = "umans-flash";      };
 			embeddings = { preset = "gemini-embedding"; };
 
