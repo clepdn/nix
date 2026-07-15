@@ -5,6 +5,7 @@
 	      "${self}/users/callie/graphicalSession.nix"
 	      "${self}/modules/base"
 	      "${self}/modules/pipewire"
+	      "${self}/modules/easyeffects"
 	      "${self}/modules/doh"
 	      "${self}/modules/avahi"
 	      "${self}/modules/tz/ny.nix"

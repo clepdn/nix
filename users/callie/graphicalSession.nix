@@ -16,6 +16,8 @@
     pwvucontrol
     pavucontrol
     crosspipe
+    livecaptions
+    helvum
 
     (discord.override {
       withMoonlight = true;

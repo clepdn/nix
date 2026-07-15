@@ -10,6 +10,7 @@
       "${self}/users/callie/graphicalSession.nix"
       "${self}/modules/base"
       "${self}/modules/pipewire"
+      "${self}/modules/easyeffects"
       "${self}/modules/plymouth"
       "${self}/modules/altserver"
       "${self}/modules/doh"

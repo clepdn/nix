@@ -7,6 +7,7 @@
       "${self}/users/callie/graphicalSession.nix"
       "${self}/modules/tz/ny.nix"
       "${self}/modules/pipewire"
+      "${self}/modules/easyeffects"
       "${self}/modules/base"
     ];
 
