@@ -87,6 +87,7 @@
   	++ [ inputs.agenix.packages.${system}.default ];*/
 
   programs.firefox.enable = true;
+  programs.steam.enable   = true;
 
   fonts.packages = with pkgs; [
 	noto-fonts-cjk-sans
@@ -105,13 +106,14 @@
 
   services.logind = {
   	settings.Login = {
-		HandleLidSwitch = "suspend";
+		HandleLidSwitch = "suspend-then-hibernate";
 	};
   };
 
 
   systemd.sleep.settings.Sleep = {
-    HibernateDelaySec = "4h";
+    # suspend-then-hibernate stays suspended this long, then hibernates.
+    HibernateDelaySec = "8h";
   };
 
   services.fprintd.enable  = true;

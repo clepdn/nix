@@ -12,6 +12,7 @@ in
 {
   imports = [
     inputs.niri.nixosModules.niri
+    ./idle.nix
   ];
 
   programs.niri = {
@@ -70,6 +71,13 @@ in
         };
       };
 
+      xdg.configFile."swaylock/config".text = ''
+        color=000000
+        ignore-empty-password
+        show-failed-attempts
+        indicator-caps-lock
+      '';
+
       home.packages = [ niri-kill-focused pkgs.playerctl ];
     }
   ];
@@ -82,6 +90,8 @@ in
     rofimoji
     lxmenu-data
     wlogout
+    swaylock
+    swayidle
   ];
 
   environment.pathsToLink = [ "/etc/xdg/menus" ];
@@ -89,7 +99,6 @@ in
   services.udev.packages = [ pkgs.brightnessctl ];
 
   systemd.packages = [ pkgs.mako pkgs.blueman ] ++ (with pkgs.kdePackages; [
-    kded
     powerdevil
     kwallet-pam
     polkit-kde-agent-1
@@ -112,6 +121,10 @@ in
   };
 
   security.pam.services.sddm.kwallet.enable = true;
+
+  # swaylock authenticates the unlock attempt through its own PAM stack; without
+  # /etc/pam.d/swaylock it can never verify the password and locks you out.
+  security.pam.services.swaylock = { };
 
   environment.etc."quickshell/eww".source = quickshellConfig;
 
@@ -156,10 +169,6 @@ in
     wantedBy = [ "niri.service" ];
   };
 
-  systemd.user.services.plasma-kded6 = {
-    overrideStrategy = "asDropin";
-    wantedBy = [ "niri.service" ];
-  };
   systemd.user.services.plasma-powerdevil = {
     overrideStrategy = "asDropin";
     wantedBy = [ "niri.service" ];

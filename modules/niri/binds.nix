@@ -28,8 +28,8 @@
     };
 
     "Super+Alt+L" = {
-      action = spawn "hyprlock";
-      hotkey-overlay.title = "Lock the Screen: hyprlock";
+      action = spawn "swaylock" "-f";
+      hotkey-overlay.title = "Lock the Screen: swaylock";
     };
     "Mod+Alt+P".action = spawn "wlogout";
     "Mod+Alt+O".action = power-off-monitors;
