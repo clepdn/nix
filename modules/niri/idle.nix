@@ -2,8 +2,6 @@
 let
   cfg = config.myNixOS.niri.idle;
 
-  # swayidle timeout/action pairs. Each entry becomes
-  # `timeout <seconds> '<command>'` on the swayidle command line, in order.
   timeouts = [
     { seconds = cfg.lockTimeout; command = "swaylock -f"; }
     { seconds = cfg.dpmsTimeout; command = "niri msg action power-off-monitors"; }
@@ -65,9 +63,6 @@ in
   };
 
   config = {
-    # Idle management for the niri session: lock, DPMS-off shortly after,
-    # optionally sleep, and always lock before the system sleeps. niri drives
-    # DPMS via its power-off/on-monitors actions; swaylock is the locker.
     systemd.user.services.swayidle = {
       description = "swayidle idle manager (lock + DPMS) for niri";
       wantedBy = [ "niri.service" ];

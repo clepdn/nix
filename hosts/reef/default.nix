@@ -50,37 +50,72 @@
 			agent = {
 				name = "coral";
 				env  = "default";
-				boredom_wake_min = 30;
+				boredom_wake_min = 0;
 				git_upstream_nag = true;
+			};
+
+			discord.owner_id = "1509338575131512974";
+
+			context = {
+				compact_trigger_tokens = 400000;
+				idle_compaction_minutes = 0;
+				respect_cache = false;
 			};
 
 			models = {
 				umans-glm-5_2 = {
-					provider         = "openai";
 					model            = "umans-glm-5.2";
-					base_url         = "https://api.code.umans.ai/v1";
-					tool_choice      = "required";
-					enable_thinking  = true;
 					thinking_effort  = "xhigh";
+					enable_thinking  = true;
+					bridge           = true;
+					vision           = false;
+					tool_choice      = "required";
 				};
 
 				umans-kimi = {
-					provider         = "openai";
 					model            = "umans-kimi-k2.7";
-					base_url         = "https://api.code.umans.ai/v1";
-					tool_choice      = "required";
-					enable_thinking  = true;
 					thinking_effort  = "xhigh";
+					enable_thinking  = true;
+					vision           = true;
+					bridge           = true;
+					tool_choice      = "required";
 				};
 
 				umans-flash = {
-					provider         = "openai";
 					model            = "umans-flash";
-					base_url         = "https://api.code.umans.ai/v1";
-					tool_choice      = "required";
-					enable_thinking  = true;
 					thinking_effort  = "xhigh";
+					enable_thinking  = true;
+					bridge           = true;
+					tool_choice      = "required";
 				};
+
+				/*claude = {
+					model           = "claude-opus-4-8";
+					thinking_effort = "xhigh";
+					enable_thinking = true;
+					vision          = true;
+					bridge          = true;
+					tool_choice     = "required";
+				};*/
+
+				# If we're budgeting, why the fuck are we even using claude? Just use umans, or openrouter glm?
+				/*claude-mid = {
+					model           = "claude-opus-4-8";
+					thinking_effort = "medium";
+					enable_thinking = true;
+					vision          = true;
+					bridge          = true;
+					tool_choice     = "required";
+				};*/
+
+				/*claude-low = {
+					model           = "claude-sonnet-5";
+					thinking_effort = "medium";
+					enable_thinking = true;
+					vision          = true;
+					bridge          = true;
+					tool_choice     = "required";
+				};*/
 
 				glm-openrouter = {
 					provider         = "openrouter";
@@ -98,15 +133,9 @@
 			};
 
 			model      = { preset = "umans-glm-5_2";    };
-			fallback   = { preset = "umans-kimi";   };
+			fallback   = { preset = "umans-kimi";       };
 			summary    = { preset = "umans-flash";      };
 			embeddings = { preset = "gemini-embedding"; };
-
-			context = {
-				compact_trigger_tokens = 400000;
-				idle_compaction_minutes = 0;
-				respect_cache = false;
-			};
 
 			subagents = [
 				{
@@ -120,6 +149,19 @@
 					system_prompt = "You are a focused coding agent. Write, edit, and test code. Verify your work compiles.";
 					enabled_tools = [ "shell" "read_file" "edit_file" "write_file" ];
 				}
+				{
+					name = "vision";
+					model = "umans-kimi";
+					system_prompt = "You are a focused agent with vision.";
+					enabled_tools = [ "shell" "read_file" "edit_file" "write_file" ];
+				}
+				# Move to dedicated container with DRI device before enabling.
+				/*{ 
+					name = "computer";
+					model = "umans-kimi";
+					system_prompt = "You are a computer use agent. You can take screenshots, click, type, scroll, and drag on a graphical desktop. Always screenshot first to see the current state before acting. Work step by step: observe, act, observe again.";
+					enabled_tools = [ "computer" "shell" "read_file" "edit_file" "write_file" ];
+				}*/
 			];
 		};
 	};

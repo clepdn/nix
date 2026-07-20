@@ -122,8 +122,6 @@ in
 
   security.pam.services.sddm.kwallet.enable = true;
 
-  # swaylock authenticates the unlock attempt through its own PAM stack; without
-  # /etc/pam.d/swaylock it can never verify the password and locks you out.
   security.pam.services.swaylock = { };
 
   environment.etc."quickshell/eww".source = quickshellConfig;

@@ -4,6 +4,11 @@
     "${self}/modules/niri"
   ];
 
+  myNixOS.niri.idle.sleep = {
+    enable = true;
+    command = "systemctl suspend";
+  };
+
   home-manager.users.callie.programs.niri.settings.outputs = {
     "DP-1" = {
       mode = { width = 2560; height = 1440; refresh = 143.998; };

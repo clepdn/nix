@@ -112,7 +112,6 @@
 
 
   systemd.sleep.settings.Sleep = {
-    # suspend-then-hibernate stays suspended this long, then hibernates.
     HibernateDelaySec = "8h";
   };
 
