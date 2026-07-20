@@ -14,6 +14,7 @@
     homeDirectory = "/home/callie";
     packages = with pkgs; [
       mypkgs.helium
+      mypkgs.omp
       claude-code
       (symlinkJoin {
         name = "pi";
