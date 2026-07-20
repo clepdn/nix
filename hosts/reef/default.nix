@@ -54,6 +54,14 @@
 				git_upstream_nag = true;
 			};
 
+			llm_bridge = {
+				enabled = true;
+				host = "0.0.0.0";
+				port = 4040;
+			};
+
+			llm_bridge_url = "http://127.0.0.1:4040/v1";
+
 			discord.owner_id = "1509338575131512974";
 
 			context = {
