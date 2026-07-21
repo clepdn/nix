@@ -140,21 +140,11 @@
 
 			reef      = mkHost "reef"      [ inputs.coral.nixosModules.coral ];
 
-			# ClockworkPi uConsole (CM4) -- aarch64, built through nixos-uconsole's
-			# raspberry-pi stack rather than the x86_64 mkHost above.
 			clockwork = inputs.nixos-uconsole.lib.mkUConsoleSystem {
 				variant = "cm4";
 				modules = [ ./hosts/clockwork ];
 			};
 		};
-
-		# Flashable SD image:  nix build .#clockwork-sd
-		# then dd result/sd-image/*.img to the card.
-		packages.aarch64-linux.clockwork-sd =
-			(inputs.nixos-uconsole.lib.mkUConsoleImage {
-				variant = "cm4";
-				modules = [ ./hosts/clockwork ];
-			}).config.system.build.sdImage;
 	}
 
 	// flake-utils.lib.eachDefaultSystem(system: let 

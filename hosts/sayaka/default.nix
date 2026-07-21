@@ -1,4 +1,4 @@
-{ config, pkgs, self, ... }:
+{ self, ... }:
 {
 	imports = [
 	      ./disko.nix
