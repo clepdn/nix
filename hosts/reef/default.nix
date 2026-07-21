@@ -1,4 +1,5 @@
 { config, lib, self, pkgs, ... }:
+i
 {
 # =============================================================================
 # ⚠️  STOP. READ THIS BEFORE YOU COPY ANYTHING FROM THIS FILE.  ⚠️
@@ -42,6 +43,12 @@
 		owner = config.services.coral.user;
 	};
 
+	age.secrets.bridgetClientKey = {
+		file  = "${self}/secrets/bridget-client-key.age";
+		mode  = "0400";
+		owner = config.services.coral.user;
+	};
+
 	services.coral = {
 		enable      = true;
 		secretsFile = config.age.secrets.coralSecrets.path;
@@ -55,6 +62,7 @@
 			};
 
 			llm_bridge_url = "https://bridget.on-her.computer/v1";
+			llm_bridge_api_key_file = config.age.secrets.bridgetClientKey.path;
 
 			tools.hashline = true;
 

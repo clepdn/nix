@@ -68,8 +68,9 @@ let hosts = [
 		"mail-passwd-callie.age".publicKeys = keys;
 
 		# LLM bridge
-		"umans-api-key.age".publicKeys = keys;
+		"umans-api-key.age".publicKeys      = keys;
 		"bridge-keys.json.age".publicKeys   = keys; 
+		"bridget-client-key.age".publicKeys = keys;
 
 		# nano's secrets
 		"coral.env.age".publicKeys           = keys ++ readKeys [ "reef_pq" ]; # she can't get this one. this has real api keys
