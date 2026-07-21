@@ -3,6 +3,7 @@
   imports = clib.importFolder ./modules ++ [
       ./hardware-configuration.nix
       "${self}/users/callie/graphicalSession.nix"
+      "${self}/users/emelia"
       "${self}/modules/comfymc"
       "${self}/modules/base"
       "${self}/modules/avahi"
