@@ -102,6 +102,73 @@ if test $BUILD_LOCAL -eq 1
     set argv $FILTERED_ARGS
 end
 
+# ---------------------------------------------------------------------------
+# Sign the closure locally before pushing it to a remote host.
+#
+# home-manager writes some source files (e.g. programs.fish.functions.*) into
+# the store via builtins.toFile. Those paths are input-addressed and Nix never
+# signs them, so an unprivileged nix-copy-closure to a host that requires
+# signatures (and does not trust us as a user) is rejected with:
+#   "cannot add path ... because it lacks a signature by a trusted key".
+#
+# When we build here and push to a remote --target-host, sign the whole closure
+# with this host's signing key first so the target accepts every path. This
+# only applies to *local* builds: with a remote --build-host the copy is a
+# direct build-host -> target-host `nix copy`, so signing locally would not
+# help (the paths would need signing on the build host instead).
+set HAS_TARGET_HOST 0
+set REMOTE_TARGET ""
+set HAS_BUILD_HOST 0
+for i in (seq 1 (count $argv))
+    if test "$argv[$i]" = "--target-host"
+        set HAS_TARGET_HOST 1
+        set n (math $i + 1)
+        if test $n -le (count $argv)
+            set REMOTE_TARGET $argv[$n]
+        end
+    else if string match -q -- "--target-host=*" $argv[$i]
+        set HAS_TARGET_HOST 1
+        set REMOTE_TARGET (string replace "--target-host=" "" $argv[$i])
+    else if test "$argv[$i]" = "--build-host"
+        set HAS_BUILD_HOST 1
+    else if string match -q -- "--build-host=*" $argv[$i]
+        set HAS_BUILD_HOST 1
+    end
+end
+
+set SIGN_SUB (test (count $argv) -gt 0 && echo $argv[1] || echo "")
+
+if contains -- $SIGN_SUB switch boot test
+    and test $HAS_TARGET_HOST -eq 1
+    and test $HAS_BUILD_HOST -eq 0
+    and test -n "$REMOTE_TARGET"
+    and test "$REMOTE_TARGET" != localhost
+    and test "$REMOTE_TARGET" != (hostname)
+    set SIGN_KEY (nix config show secret-key-files 2>/dev/null | awk '{print $1; exit}')
+    if test -z "$SIGN_KEY"
+        echo "[sign] warning: no secret-key-files configured on "(hostname)"; skipping closure signing (remote push may fail on unsigned source paths)" >&2
+    else if test -z "$FLAKE_HOST"
+        echo "[sign] warning: could not determine flake host; skipping closure signing" >&2
+    else
+        echo "[sign] remote target '$REMOTE_TARGET' with local build — signing closure before push"
+        set TOPLEVEL_ATTR "$FLAKE_PATH#nixosConfigurations.$FLAKE_HOST.config.system.build.toplevel"
+        echo "[sign] building $TOPLEVEL_ATTR"
+        set SIGN_PATH (nix build --no-link --print-out-paths $TOPLEVEL_ATTR)
+        if test $status -ne 0 -o -z "$SIGN_PATH"
+            echo "[sign] error: failed to build closure for signing" >&2
+            exit 1
+        end
+        set NIX_BIN (command -v nix)
+        echo "[sign] signing $SIGN_PATH (recursive) with "(basename $SIGN_KEY)
+        sudo $NIX_BIN store sign --key-file $SIGN_KEY --recursive $SIGN_PATH
+        if test $status -ne 0
+            echo "[sign] error: nix store sign failed" >&2
+            exit 1
+        end
+        echo "[sign] closure signed; proceeding with push"
+    end
+end
+
 # Pass all arguments through to nixos-rebuild
 echo "nixos-rebuild $argv"
 nixos-rebuild $argv

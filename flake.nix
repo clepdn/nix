@@ -30,6 +30,11 @@
 			url = "github:Infinidoge/nix-minecraft";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		# ClockworkPi uConsole (CM4) support. Intentionally does NOT follow our
+		# nixpkgs: it pins nixpkgs 25.11 and ships a Cachix cache built against it
+		# (mainly the patched kernel). Overriding nixpkgs would blow the cache and
+		# force a multi-hour kernel build on the Pi.
+		nixos-uconsole.url = "github:nixos-uconsole/nixos-uconsole";
 		home-manager = {
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -134,7 +139,22 @@
 			lightbulb = mkHost "lightbulb" [ ];
 
 			reef      = mkHost "reef"      [ inputs.coral.nixosModules.coral ];
+
+			# ClockworkPi uConsole (CM4) -- aarch64, built through nixos-uconsole's
+			# raspberry-pi stack rather than the x86_64 mkHost above.
+			clockwork = inputs.nixos-uconsole.lib.mkUConsoleSystem {
+				variant = "cm4";
+				modules = [ ./hosts/clockwork ];
+			};
 		};
+
+		# Flashable SD image:  nix build .#clockwork-sd
+		# then dd result/sd-image/*.img to the card.
+		packages.aarch64-linux.clockwork-sd =
+			(inputs.nixos-uconsole.lib.mkUConsoleImage {
+				variant = "cm4";
+				modules = [ ./hosts/clockwork ];
+			}).config.system.build.sdImage;
 	}
 
 	// flake-utils.lib.eachDefaultSystem(system: let 

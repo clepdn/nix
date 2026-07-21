@@ -35,7 +35,7 @@
 
       vim.lsp.inlay_hint.enable(true)
 
-      vim.cmd('colorscheme evergarden-winter')
+      vim.cmd('colorscheme sorbet')
 
       require('tabby').setup({
         preset = 'active_wins_at_tail',
