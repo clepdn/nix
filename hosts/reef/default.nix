@@ -54,7 +54,9 @@
 				git_upstream_nag = true;
 			};
 
-			llm_bridge_url = "http://bridget.on-her.computer/v1";
+			llm_bridge_url = "https://bridget.on-her.computer/v1";
+
+			tools.hashline = true;
 
 			discord.owner_id = "1509338575131512974";
 

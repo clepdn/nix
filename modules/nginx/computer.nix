@@ -5,6 +5,15 @@
   ];
 
   myNixOS.acme = {
+    "bridget.on-her.computer" = config.myNixOS.cloudflareDns // {
+      port = 4040;
+      target = "100.116.202.116"; # homura — llm-bridge
+      extraLocationConfig = ''
+        client_max_body_size 100M;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+      '';
+    };
     "pds2.on-her.computer" = config.myNixOS.cloudflareDns // {
       port = 3084;
       target = "100.77.12.60";

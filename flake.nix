@@ -129,10 +129,11 @@
 						         inputs.direct-vx.nixosModules.default ];
 			madoka    = mkHost "madoka"    [ inputs.lanzaboote.nixosModules.lanzaboote ];
 			megatron  = mkHost "megatron"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
-			homura    = mkHost "homura"    [ inputs.jovian.nixosModules.jovian ];
+			homura    = mkHost "homura"    [ inputs.jovian.nixosModules.jovian 
+							 inputs.coral.nixosModules.llm-bridge ];
 			lightbulb = mkHost "lightbulb" [ ];
 
-			reef      = mkHost "reef"      [ inputs.coral.nixosModules.default ];
+			reef      = mkHost "reef"      [ inputs.coral.nixosModules.coral ];
 		};
 	}
 
