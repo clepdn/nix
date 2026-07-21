@@ -1,5 +1,4 @@
 { config, lib, self, pkgs, ... }:
-i
 {
 # =============================================================================
 # ⚠️  STOP. READ THIS BEFORE YOU COPY ANYTHING FROM THIS FILE.  ⚠️
