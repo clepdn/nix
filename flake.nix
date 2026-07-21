@@ -138,7 +138,7 @@
 							 inputs.coral.nixosModules.llm-bridge ];
 			lightbulb = mkHost "lightbulb" [ ];
 
-			reef      = mkHost "reef"      [ inputs.coral.nixosModules.coral ];
+			reef      = mkHost "reef"      [ inputs.coral.nixosModules.default ];
 
 			clockwork = inputs.nixos-uconsole.lib.mkUConsoleSystem {
 				variant = "cm4";
