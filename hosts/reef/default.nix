@@ -164,7 +164,7 @@
 					name = "vision";
 					model = "umans-kimi";
 					system_prompt = "You are a focused agent with vision.";
-					enabled_tools = [ "shell" "read_file" "edit_file" "write_file" ];
+					enabled_tools = [ "image_tool" "shell" "read_file" "edit_file" "write_file" ];
 				}
 				# Move to dedicated container with DRI device before enabling.
 				/*{ 
