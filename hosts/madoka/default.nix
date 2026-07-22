@@ -15,6 +15,7 @@
       "${self}/modules/altserver"
       "${self}/modules/doh"
       "${self}/modules/avahi"
+      "${self}/modules/steam"
       "${self}/modules/tz/ny.nix"
       "${self}/modules/nix-ld/steam-run.nix"
       "${self}/modules/nix-ld/slippi.nix"
@@ -49,6 +50,26 @@
   boot.extraModulePackages = [ 
 	config.boot.kernelPackages.xpadneo
   ];
+
+  # aarch64 emulation (qemu-user via binfmt) so madoka can build/deploy the
+  # clockwork (uConsole) system without offloading to the CM4.
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
+  # Trust the same binary caches clockwork uses, otherwise madoka would try to
+  # recompile the patched aarch64 kernel + Raspberry Pi stack from source under
+  # qemu (slow, and some of those builds can't be sandboxed under emulation).
+  # With these, the heavy artifacts are fetched prebuilt and only trivial
+  # per-host drvs are actually built.
+  nix.settings = {
+    extra-substituters = [
+      "https://nixos-clockworkpi-uconsole.cachix.org"
+      "https://nixos-raspberrypi.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nixos-clockworkpi-uconsole.cachix.org-1:6NRN3n9/r3w5ZS8/gZudW6PkPDoC3liCt/dBseICua0="
+      "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
+    ];
+  };
 
   swapDevices = [{
   	device = "/var/lib/swapfile";
@@ -87,7 +108,6 @@
   	++ [ inputs.agenix.packages.${system}.default ];*/
 
   programs.firefox.enable = true;
-  programs.steam.enable   = true;
 
   fonts.packages = with pkgs; [
 	noto-fonts-cjk-sans
