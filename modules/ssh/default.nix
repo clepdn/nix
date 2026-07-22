@@ -1,19 +1,18 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, lib, ... }:
 {
 	services.openssh = {
 		enable = true;
 		settings = {
-			PasswordAuthentication = false;
+			# mkForce: nixos-uconsole's modules/base.nix hardcodes
+			# PasswordAuthentication = true and PermitRootLogin = "yes" at normal
+			# priority (no mkDefault), so plain values would conflict on clockwork.
+			PasswordAuthentication = lib.mkForce false;
 			KbdInteractiveAuthentication = false;
-			PermitRootLogin = "no"; 
+			PermitRootLogin = lib.mkForce "no";
 		};
 	};
 
-	# tsshd: UDP-based SSH server with mosh-like roaming.
-	# Spawned per-session by `tssh --udp` after a normal OpenSSH login;
-	# reuses /etc/ssh/sshd_config so no extra config needed. Just needs to
-	# be on PATH and the default UDP port range open.
-	environment.systemPackages = [ pkgs.tsshd ];
+	# environment.systemPackages = [ pkgs.tsshd ];
 	networking.firewall.allowedUDPPortRanges = [
 		{ from = 61001; to = 61999; }
 	];

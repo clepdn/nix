@@ -40,11 +40,18 @@
 		];
 
 		# These take ages to build
-		documentation = {
-			man.cache.enable  = true;
-			man.man-db.enable = true;
-			dev.enable = true;
-		};
+		documentation = lib.mkMerge [
+			{
+				man.man-db.enable = true;
+				dev.enable = true;
+			}
+			# `man.generateCaches` was renamed to `man.cache.enable` after 25.11.
+			# clockwork (uConsole) builds against nixos-uconsole's 25.11 pin, while
+			# everything else tracks unstable, so pick the option that exists.
+			(if lib.versionAtLeast lib.version "26"
+			 then { man.cache.enable = true; }
+			 else { man.generateCaches = true; })
+		];
 
 		programs = {
 			git.enable  = true;

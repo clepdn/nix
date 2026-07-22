@@ -8,7 +8,7 @@
 }:
 stdenv.mkDerivation rec {
   pname = "helium";
-  version = "0.10.9.1";
+  version = "0.14.7.1";
 
   src =
     let
@@ -20,8 +20,8 @@ stdenv.mkDerivation rec {
       platform = platformMap.${stdenv.hostPlatform.system};
 
       hashes = {
-        "x86_64-linux" = "sha256-ob1iSE+4IrsHthEpEypgSkZs2LT4H2YXknjD1FKn3sc=";
-        "aarch64-linux" = lib.fakeHash;
+        "x86_64-linux"  = "sha256-W7p+DEx85p56si+hNAKFVM4q8rh5aZLS+BNmUTFroiE=";
+        "aarch64-linux" = "sha256-z4ejQPj4Qeo3GL+F+IFDQt4VhLTuHGr4LWamUBH3040=";
       };
 
       hash = hashes.${stdenv.hostPlatform.system};

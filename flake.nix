@@ -30,10 +30,6 @@
 			url = "github:Infinidoge/nix-minecraft";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		# ClockworkPi uConsole (CM4) support. Intentionally does NOT follow our
-		# nixpkgs: it pins nixpkgs 25.11 and ships a Cachix cache built against it
-		# (mainly the patched kernel). Overriding nixpkgs would blow the cache and
-		# force a multi-hour kernel build on the Pi.
 		nixos-uconsole.url = "github:nixos-uconsole/nixos-uconsole";
 		home-manager = {
 			url = "github:nix-community/home-manager";
@@ -142,7 +138,10 @@
 
 			clockwork = inputs.nixos-uconsole.lib.mkUConsoleSystem {
 				variant = "cm4";
-				modules = [ ./hosts/clockwork ];
+				modules = [ ./hosts/clockwork
+					    inputs.agenix.nixosModules.default
+					  ];
+				specialArgs = { inherit inputs self; clib = import ./lib nixpkgs.lib; };
 			};
 		};
 	}
