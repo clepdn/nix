@@ -196,14 +196,23 @@
 	users.users.root.openssh.authorizedKeys.keys =
 		config.users.users.callie.openssh.authorizedKeys.keys;
 
-	# coral group memberships for the bind-mounted resources:
+	# coral group memberships for the bind-mounted resources + compositor:
 	#  • slskd: /var/lib/slskd is 0770 slskd:slskd (gid 962) on homura;
 	#    privateUsers=no maps gids 1:1, so recreate that gid and join it.
-	#  • video: the passed-through DRM card nodes (/dev/dri/card1,card2) are
-	#    root:video (gid 26, static) — a compositor needs this for KMS/DRM master.
-	#    (renderD* are world-rw, so compute/decode works without any group.)
-	users.groups.slskd.gid = 962;
-	users.users.coral.extraGroups = [ "slskd" "video" ];
+	#  • video: DRM card nodes (/dev/dri/card1,card2) are root:video (gid 26,
+	#    static) — needed for KMS/DRM master. (renderD* are world-rw.)
+	#  • input: /dev/input devices are root:input (gid 174 on homura); pin it
+	#    so coral can read input devices for a compositor.
+	#  • seat: seatd's socket group, so the compositor can talk to seatd.
+	users.groups.slskd.gid  = 962;
+	users.groups.input.gid  = 174;
+	users.users.coral.extraGroups = [ "slskd" "video" "input" "seat" ];
+
+	# seatd provides seat management (no logind in a container). The compositor
+	# connects to /run/seatd.sock via the `seat` group; seatd (root) brokers
+	# device access + DRM master (needs CAP_SYS_ADMIN on the container, set in
+	# hosts/homura/modules/coral-container.nix).
+	services.seatd.enable = true;
 	
 	boot.isNspawnContainer = true;
 	networking.networkmanager.enable = lib.mkForce false;

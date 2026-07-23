@@ -65,28 +65,43 @@
     # ── Device passthrough (host-owned envelope) ─────────────────────────────
     # Expose both DRI devices: Intel iGPU (card1 / renderD128, pci 00:02.0) and
     # the discrete GPU (card2 / renderD129, pci 01:00.0). allowedDevices opens
-    # the device cgroup (systemd DeviceAllow); the bind mount below makes the
+    # the device cgroup (systemd DeviceAllow); the bind mounts below make the
     # nodes visible inside. renderD* are world-rw; card* are root:video, so a
-    # process inside coral needs the `video` group to use card1/card2 (set that
-    # in the reef config if you need display nodes, not just render/compute).
+    # process inside coral needs the `video` group (set in hosts/reef) for KMS.
+    # char-input (major 13) covers /dev/input event devices for a compositor.
     allowedDevices = [
       { node = "/dev/dri/renderD128"; modifier = "rw"; }
       { node = "/dev/dri/renderD129"; modifier = "rw"; }
       { node = "/dev/dri/card1";      modifier = "rw"; }
       { node = "/dev/dri/card2";      modifier = "rw"; }
+      { node = "char-input";          modifier = "rw"; }
     ];
+
+    # A compositor doing KMS needs DRM master, and drmSetMaster() requires
+    # CAP_SYS_ADMIN — which nspawn drops by default. Grant it so seatd (running
+    # as root inside) can acquire master on card1/card2. This weakens isolation
+    # (CAP_SYS_ADMIN is broad); drop it if you only run a headless compositor
+    # (WLR_BACKENDS=headless), which never calls drmSetMaster.
+    additionalCapabilities = [ "CAP_SYS_ADMIN" ];
 
     # ── Bind mounts (host-owned envelope) ────────────────────────────────────
     bindMounts = {
       # GPU device nodes.
       "/dev/dri" = { hostPath = "/dev/dri"; isReadOnly = false; };
 
+      # udev database + rules, so seatd/a compositor can enumerate devices and
+      # read their properties (IDs, tags). Read-only: don't mutate host udev.
+      "/run/udev" = { hostPath = "/run/udev"; isReadOnly = true; };
+
+      # Input devices (keyboards, pointers, touch). root:input (gid 174 on
+      # homura); char-input above opens the cgroup, and hosts/reef pins input's
+      # gid + adds coral to it.
+      "/dev/input" = { hostPath = "/dev/input"; isReadOnly = false; };
+
       # slskd state dir. slskd runs on homura (services.slskd, state in
-      # /var/lib/slskd); this exposes it to coral.
-      # NOTE: on the host it's 0770 slskd:slskd. privateUsers=no maps uids 1:1,
-      # so coral's service user must share slskd's gid (or the perms must allow
-      # it) to read/write — wire that group membership in the reef config if the
-      # agent needs access, otherwise it'll see the mount but be denied.
+      # /var/lib/slskd); this exposes it to coral. On the host it's 0770
+      # slskd:slskd (gid 962); privateUsers=no maps gids 1:1, so coral joins
+      # that group in hosts/reef to read/write it.
       "/var/lib/slskd" = { hostPath = "/var/lib/slskd"; isReadOnly = false; };
     };
   };
