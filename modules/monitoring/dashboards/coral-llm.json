@@ -1,0 +1,226 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "datasource", "uid": "grafana" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Agent State",
+      "datasource": { "type": "prometheus", "uid": null },
+      "gridPos": { "h": 7, "w": 4, "x": 0, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            { "type": "value", "options": { "1": { "text": "Working", "color": "green", "index": 0 } } },
+            { "type": "value", "options": { "0": { "text": "Idle", "color": "blue", "index": 1 } } }
+          ],
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "blue", "value": null }, { "color": "green", "value": 1 } ] }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": [ "lastNotNull" ], "fields": "", "values": false },
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "value"
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": null }, "expr": "coral_working", "legendFormat": "working", "refId": "A" }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "gauge",
+      "title": "Provider Usage (budget consumed)",
+      "description": "coral_provider_usage_ratio — fraction of the provider's usage window consumed, per provider/model.",
+      "datasource": { "type": "prometheus", "uid": null },
+      "gridPos": { "h": 7, "w": 8, "x": 4, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "mappings": [],
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.7 },
+              { "color": "red", "value": 0.9 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": [ "lastNotNull" ], "fields": "", "values": false },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": null }, "expr": "coral_provider_usage_ratio", "legendFormat": "{{provider}} / {{model}}", "refId": "A" }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "gauge",
+      "title": "Tokens / sec (latest)",
+      "datasource": { "type": "prometheus", "uid": null },
+      "gridPos": { "h": 7, "w": 6, "x": 12, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "min": 0,
+          "max": 200,
+          "mappings": [],
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "yellow", "value": 20 }, { "color": "green", "value": 50 } ] }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": [ "lastNotNull" ], "fields": "", "values": false },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": null }, "expr": "coral_llm_tokens_per_second", "legendFormat": "tok/s", "refId": "A" }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Total Cost (session)",
+      "datasource": { "type": "prometheus", "uid": null },
+      "gridPos": { "h": 7, "w": 6, "x": 18, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 2,
+          "mappings": [],
+          "color": { "mode": "fixed", "fixedColor": "text" }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": [ "lastNotNull" ], "fields": "", "values": false },
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "value"
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": null }, "expr": "coral_llm_cost_total", "legendFormat": "cost", "refId": "A" }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "gauge",
+      "title": "Requests in 5h Window",
+      "description": "coral_requests_in_window_calculated vs the umans-reported count.",
+      "datasource": { "type": "prometheus", "uid": null },
+      "gridPos": { "h": 7, "w": 6, "x": 0, "y": 7 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "min": 0,
+          "max": 400,
+          "mappings": [],
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "yellow", "value": 280 }, { "color": "red", "value": 360 } ] }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": [ "lastNotNull" ], "fields": "", "values": false },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": null }, "expr": "coral_requests_in_window_api", "legendFormat": "api", "refId": "A" },
+        { "datasource": { "type": "prometheus", "uid": null }, "expr": "coral_requests_in_window_calculated", "legendFormat": "calculated", "refId": "B" }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "LLM Request Rate (by outcome)",
+      "datasource": { "type": "prometheus", "uid": null },
+      "gridPos": { "h": 7, "w": 9, "x": 6, "y": 7 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": { "drawStyle": "line", "fillOpacity": 20, "lineWidth": 1, "showPoints": "never", "stacking": { "group": "A", "mode": "normal" } },
+          "color": { "mode": "palette-classic" },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": null }, "expr": "sum by (outcome) (rate(coral_llm_requests_total[5m]))", "legendFormat": "{{outcome}}", "refId": "A" }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Token Throughput (by type)",
+      "datasource": { "type": "prometheus", "uid": null },
+      "gridPos": { "h": 7, "w": 9, "x": 15, "y": 7 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "custom": { "drawStyle": "line", "fillOpacity": 20, "lineWidth": 1, "showPoints": "never", "stacking": { "group": "A", "mode": "normal" } },
+          "color": { "mode": "palette-classic" },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": null }, "expr": "sum by (type) (rate(coral_llm_tokens_total[5m]))", "legendFormat": "{{type}}", "refId": "A" }
+      ]
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": [ "coral", "llm" ],
+  "templating": { "list": [] },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Coral LLM Runtime",
+  "uid": "coral-llm",
+  "version": 1,
+  "weekStart": ""
+}

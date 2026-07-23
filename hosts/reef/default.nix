@@ -195,11 +195,24 @@
 	users.allowNoPasswordLogin = true;
 	users.users.root.openssh.authorizedKeys.keys =
 		config.users.users.callie.openssh.authorizedKeys.keys;
+
+	# coral group memberships for the bind-mounted resources:
+	#  • slskd: /var/lib/slskd is 0770 slskd:slskd (gid 962) on homura;
+	#    privateUsers=no maps gids 1:1, so recreate that gid and join it.
+	#  • video: the passed-through DRM card nodes (/dev/dri/card1,card2) are
+	#    root:video (gid 26, static) — a compositor needs this for KMS/DRM master.
+	#    (renderD* are world-rw, so compute/decode works without any group.)
+	users.groups.slskd.gid = 962;
+	users.users.coral.extraGroups = [ "slskd" "video" ];
 	
 	boot.isNspawnContainer = true;
 	networking.networkmanager.enable = lib.mkForce false;
 	networking.wireless.enable = false;
 	networking.firewall.enable = true;
+	# Expose the coral prometheus exporter to homura (the container host) so its
+	# prometheus can scrape it. The only non-loopback interface is the veth to
+	# homura, so 9100 is not reachable beyond the host.
+	networking.firewall.allowedTCPPorts = [ 9100 ];
 	services.tailscale.enable = lib.mkForce false;
 
 	myNixOS.nix.homuraBuilder.enable = false;

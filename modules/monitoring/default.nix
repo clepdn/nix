@@ -26,6 +26,15 @@
           targets = [ "localhost:${toString config.services.prometheus.exporters.node.port}" ];
         }];
       }
+      {
+        # coral LLM runtime exporter, running inside the `coral` nixos-container
+        # (the reef config). Reached over the container veth on its private IP.
+        # If the container is recreated, confirm with: nixos-container show-ip coral
+        job_name = "coral";
+        static_configs = [{
+          targets = [ "10.233.1.2:9100" ];
+        }];
+      }
     ];
   };
 
