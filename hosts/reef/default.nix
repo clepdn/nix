@@ -196,23 +196,17 @@
 	users.users.root.openssh.authorizedKeys.keys =
 		config.users.users.callie.openssh.authorizedKeys.keys;
 
-	# coral group memberships for the bind-mounted resources + compositor:
-	#  • slskd: /var/lib/slskd is 0770 slskd:slskd (gid 962) on homura;
-	#    privateUsers=no maps gids 1:1, so recreate that gid and join it.
-	#  • video: DRM card nodes (/dev/dri/card1,card2) are root:video (gid 26,
-	#    static) — needed for KMS/DRM master. (renderD* are world-rw.)
-	#  • input: /dev/input devices are root:input (gid 174 on homura); pin it
-	#    so coral can read input devices for a compositor.
-	#  • seat: seatd's socket group, so the compositor can talk to seatd.
-	users.groups.slskd.gid  = 962;
-	users.groups.input.gid  = 174;
-	users.users.coral.extraGroups = [ "slskd" "video" "input" "seat" ];
-
-	# seatd provides seat management (no logind in a container). The compositor
-	# connects to /run/seatd.sock via the `seat` group; seatd (root) brokers
-	# device access + DRM master (needs CAP_SYS_ADMIN on the container, set in
-	# hosts/homura/modules/coral-container.nix).
-	services.seatd.enable = true;
+	# coral joins the slskd group to reach the bind-mounted /var/lib/slskd
+	# (0770 slskd:slskd, gid 962 on homura). privateUsers=no maps gids 1:1, so
+	# recreate that gid and add coral to it.
+	#
+	# No GPU groups needed: the NVIDIA + render nodes the envelope passes through
+	# are all world-rw. CUDA (torch) uses /dev/nvidia*, and a headless compositor
+	# uses a render node (renderD12x) — never the root:video card* KMS nodes — so
+	# there's nothing here to join. (Hence also no seatd/CAP_SYS_ADMIN: coral does
+	# no KMS; homura's niri owns DRM master on card2.)
+	users.groups.slskd.gid = 962;
+	users.users.coral.extraGroups = [ "slskd" ];
 	
 	boot.isNspawnContainer = true;
 	networking.networkmanager.enable = lib.mkForce false;

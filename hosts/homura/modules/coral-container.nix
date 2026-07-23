@@ -62,41 +62,50 @@
     # container boots + self-rebuilds against its own generations.
     path = "/nix/var/nix/profiles/system";
 
-    # ── Device passthrough (host-owned envelope) ─────────────────────────────
-    # Expose both DRI devices: Intel iGPU (card1 / renderD128, pci 00:02.0) and
-    # the discrete GPU (card2 / renderD129, pci 01:00.0). allowedDevices opens
-    # the device cgroup (systemd DeviceAllow); the bind mounts below make the
-    # nodes visible inside. renderD* are world-rw; card* are root:video, so a
-    # process inside coral needs the `video` group (set in hosts/reef) for KMS.
-    # char-input (major 13) covers /dev/input event devices for a compositor.
+    # ── GPU passthrough: NVIDIA dGPU (card2) ─────────────────────────────────
+    # card2 = NVIDIA dGPU (pci 01:00.0, driver 580, `open=false`) — the GPU that
+    # drives homura's display (DP-4). card1 is the idle Intel iGPU (i915, no
+    # displays connected). "Wire to card2" = give coral the NVIDIA stack.
+    #
+    # NVIDIA is NOT the plain DRI model: compute/render go through the
+    # /dev/nvidia* char nodes (all world-rw, so no group needed — DeviceAllow
+    # gates the cgroup, the binds make them visible) plus the matching userspace
+    # driver at /run/opengl-driver. renderD129 is card2's DRM render node (GBM/
+    # prime interop); renderD128 (Intel) is exposed too as the cheap, zero-
+    # contention render node for a *headless* compositor (see hosts/reef).
+    #
+    # Deliberately NO card* primary nodes and NO CAP_SYS_ADMIN: coral must not do
+    # KMS. homura's niri already holds DRM master on card2, so any compositor in
+    # here is headless — it never calls drmSetMaster.
     allowedDevices = [
-      { node = "/dev/dri/renderD128"; modifier = "rw"; }
-      { node = "/dev/dri/renderD129"; modifier = "rw"; }
-      { node = "/dev/dri/card1";      modifier = "rw"; }
-      { node = "/dev/dri/card2";      modifier = "rw"; }
-      { node = "char-input";          modifier = "rw"; }
+      { node = "/dev/nvidia0";          modifier = "rw"; }
+      { node = "/dev/nvidiactl";        modifier = "rw"; }
+      { node = "/dev/nvidia-modeset";   modifier = "rw"; }
+      { node = "/dev/nvidia-uvm";       modifier = "rw"; }  # CUDA (torch/transformers)
+      { node = "/dev/nvidia-uvm-tools"; modifier = "rw"; }
+      { node = "/dev/dri/renderD129";   modifier = "rw"; }  # NVIDIA render node
+      { node = "/dev/dri/renderD128";   modifier = "rw"; }  # Intel render node (headless compositor)
     ];
-
-    # A compositor doing KMS needs DRM master, and drmSetMaster() requires
-    # CAP_SYS_ADMIN — which nspawn drops by default. Grant it so seatd (running
-    # as root inside) can acquire master on card1/card2. This weakens isolation
-    # (CAP_SYS_ADMIN is broad); drop it if you only run a headless compositor
-    # (WLR_BACKENDS=headless), which never calls drmSetMaster.
-    additionalCapabilities = [ "CAP_SYS_ADMIN" ];
 
     # ── Bind mounts (host-owned envelope) ────────────────────────────────────
     bindMounts = {
-      # GPU device nodes.
+      # NVIDIA device nodes (compute + EGL/GBM).
+      "/dev/nvidia0"          = { hostPath = "/dev/nvidia0";          isReadOnly = false; };
+      "/dev/nvidiactl"        = { hostPath = "/dev/nvidiactl";        isReadOnly = false; };
+      "/dev/nvidia-modeset"   = { hostPath = "/dev/nvidia-modeset";   isReadOnly = false; };
+      "/dev/nvidia-uvm"       = { hostPath = "/dev/nvidia-uvm";       isReadOnly = false; };
+      "/dev/nvidia-uvm-tools" = { hostPath = "/dev/nvidia-uvm-tools"; isReadOnly = false; };
+
+      # DRI render nodes (NVIDIA renderD129 + Intel renderD128). The whole dir
+      # is bound for visibility; DeviceAllow above restricts actual access to
+      # the two render nodes (the root:video card* KMS nodes stay blocked).
       "/dev/dri" = { hostPath = "/dev/dri"; isReadOnly = false; };
 
-      # udev database + rules, so seatd/a compositor can enumerate devices and
-      # read their properties (IDs, tags). Read-only: don't mutate host udev.
-      "/run/udev" = { hostPath = "/run/udev"; isReadOnly = true; };
-
-      # Input devices (keyboards, pointers, touch). root:input (gid 174 on
-      # homura); char-input above opens the cgroup, and hosts/reef pins input's
-      # gid + adds coral to it.
-      "/dev/input" = { hostPath = "/dev/input"; isReadOnly = false; };
+      # Host GPU userspace driver, matched to the running kernel module (580).
+      # nspawn shares the host kernel, so binding the host's /run/opengl-driver
+      # guarantees the userspace↔kmod version match (libcuda, libGL, libEGL).
+      # Re-resolved at each container start, so it tracks host driver updates.
+      "/run/opengl-driver" = { hostPath = "/run/opengl-driver"; isReadOnly = true; };
 
       # slskd state dir. slskd runs on homura (services.slskd, state in
       # /var/lib/slskd); this exposes it to coral. On the host it's 0770
