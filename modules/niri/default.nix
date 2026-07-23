@@ -15,17 +15,21 @@ in
     ./idle.nix
   ];
 
-  programs.niri = {
-    enable = true;
-    package = niriPkgs.niri-unstable;
-  };
-
-  programs.uwsm = {
-    enable = true;
-    waylandCompositors.niri = {
-      prettyName = "Niri";
-      binPath = lib.getExe config.programs.niri.package;
+  programs = {
+    niri = {
+      enable = true;
+      package = niriPkgs.niri-unstable;
     };
+
+    uwsm = {
+      enable = true;
+      waylandCompositors.niri = {
+        prettyName = "Niri";
+        binPath = lib.getExe config.programs.niri.package;
+      };
+    };
+
+    nm_applet.enable = true;
   };
 
   services.gnome.gnome-keyring.enable = lib.mkForce false;

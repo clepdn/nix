@@ -8,10 +8,13 @@
     "bridget.on-her.computer" = config.myNixOS.cloudflareDns // {
       port = 4040;
       target = "100.116.202.116"; # homura — llm-bridge
+      proxyWebsockets = true;
       extraLocationConfig = ''
         client_max_body_size 100M;
         proxy_read_timeout 3600s;
         proxy_send_timeout 3600s;
+        proxy_cache off;
+        chunked_transfer_encoding off;
       '';
     };
     "chat.on-her.computer" = config.myNixOS.cloudflareDns // {

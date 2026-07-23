@@ -49,11 +49,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1784678117,
-        "narHash": "sha256-fnd1rExzxb3V6+DYKhjloncuxEHkRYiFYJXPmuVFZ/k=",
+        "lastModified": 1784791589,
+        "narHash": "sha256-fo2R/LHLGEnIynwm2AgVv2Mq1Vgv0TZbQf98+qGDJOY=",
         "ref": "refs/heads/main",
-        "rev": "d0e70efb70504832cc45ff988e574f5d7972cad7",
-        "revCount": 216,
+        "rev": "12fbd825c53b484844f807c98f5fc46e38923ffc",
+        "revCount": 218,
         "type": "git",
         "url": "https://tangled.org/callie.on-her.computer/coral"
       },

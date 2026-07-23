@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, mypkgs, ... }:
 {
   imports = [
     ./default.nix
@@ -18,6 +18,7 @@
     crosspipe
     livecaptions
     helvum
+    mypkgs.helium
 
     (discord.override {
       withMoonlight = true;

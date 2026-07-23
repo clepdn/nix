@@ -59,6 +59,8 @@ in {
         default = "";
       };
 
+      options.proxyWebsockets = lib.mkOption { type = lib.types.bool; default = false; };
+
       options.wildcard      = lib.mkOption { type = lib.types.bool; default = false; };
       options.tailscaleOnly = lib.mkOption { type = lib.types.bool; default = false; };
     });
@@ -96,6 +98,7 @@ in {
         useACMEHost = name;
         locations."/" = {
           proxyPass = "http://${opts.target}:${toString opts.port}";
+          proxyWebsockets = opts.proxyWebsockets;
           extraConfig = commonProxyHeaders + "\n" + opts.extraLocationConfig;
         };
         extraConfig = opts.extraServerConfig;
