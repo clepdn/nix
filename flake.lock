@@ -49,11 +49,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1784791589,
-        "narHash": "sha256-fo2R/LHLGEnIynwm2AgVv2Mq1Vgv0TZbQf98+qGDJOY=",
+        "lastModified": 1784825758,
+        "narHash": "sha256-PL92WxRAXztw3cvxvHrubiZzQEvXR/miSFnxUuTnk1M=",
         "ref": "refs/heads/main",
-        "rev": "12fbd825c53b484844f807c98f5fc46e38923ffc",
-        "revCount": 218,
+        "rev": "6a9be9fde56f579b9db485c5e58f4183e439cdea",
+        "revCount": 219,
         "type": "git",
         "url": "https://tangled.org/callie.on-her.computer/coral"
       },
@@ -636,11 +636,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783111179,
-        "narHash": "sha256-bZlPOAqGOs8+856Q5xgtOvvzQEaDmfUU+SpNhK6nAaM=",
+        "lastModified": 1784828771,
+        "narHash": "sha256-WUgqx2b9XBfXjJlC9ZVK1In9xdoU61+icnpyO5ZxzK4=",
         "ref": "refs/heads/main",
-        "rev": "326bb9f7e50ead03d9e598aa7d6af575a2269e1a",
-        "revCount": 4346,
+        "rev": "50e00ef6285d150a1177a5b3108ac176534ff24e",
+        "revCount": 4347,
         "type": "git",
         "url": "https://codeberg.org/cowie/pi-fork.git"
       },
