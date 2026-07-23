@@ -14,6 +14,15 @@
         proxy_send_timeout 3600s;
       '';
     };
+    "chat.on-her.computer" = config.myNixOS.cloudflareDns // {
+      port = 8097;
+      target = "100.116.202.116"; # homura — open-webui
+      extraLocationConfig = ''
+        client_max_body_size 512M;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+      '';
+    };
     "pds2.on-her.computer" = config.myNixOS.cloudflareDns // {
       port = 3084;
       target = "100.77.12.60";

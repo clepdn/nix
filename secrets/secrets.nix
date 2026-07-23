@@ -71,6 +71,9 @@ let hosts = [
 		"umans-api-key.age".publicKeys      = keys;
 		"bridge-keys.json.age".publicKeys   = keys; 
 		"bridget-client-key.age".publicKeys = keys ++ readKeys [ "reef_pq" ];
+		# open-webui talks to the llm-bridge; this holds its OPENAI_API_KEY (a UUID
+		# registered in bridge-keys.json). Decryptable wherever open-webui runs (homura).
+		"open-webui.env.age".publicKeys = keys;
 
 		# nano's secrets
 		"coral.env.age".publicKeys           = keys ++ readKeys [ "reef_pq" ]; # she can't get this one. this has real api keys
