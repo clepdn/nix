@@ -218,5 +218,9 @@
 	nix.gc.automatic = lib.mkForce false;
 	nix.optimise.automatic = lib.mkForce false;
 
+	# nspawn bind-mounts homura's zoneinfo over /etc/localtime, so setup-etc can't
+	# replace it and warns on every switch. Both sides are America/New_York.
+	environment.etc."localtime".enable = false;
+
 	system.stateVersion = "26.05";
 }
