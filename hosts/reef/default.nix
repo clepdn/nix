@@ -166,13 +166,12 @@
 					system_prompt = "You are a focused agent with vision.";
 					enabled_tools = [ "image_tool" "shell" "read_file" "edit_file" "write_file" ];
 				}
-				# Move to dedicated container with DRI device before enabling.
-				/*{ 
+				{
 					name = "computer";
 					model = "umans-kimi";
 					system_prompt = "You are a computer use agent. You can take screenshots, click, type, scroll, and drag on a graphical desktop. Always screenshot first to see the current state before acting. Work step by step: observe, act, observe again.";
-					enabled_tools = [ "computer" "shell" "read_file" "edit_file" "write_file" ];
-				}*/
+					enabled_tools = [ "computer" "image_tool" "shell" "read_file" "edit_file" "write_file" ];
+				}
 			];
 		};
 	};
@@ -196,15 +195,6 @@
 	users.users.root.openssh.authorizedKeys.keys =
 		config.users.users.callie.openssh.authorizedKeys.keys;
 
-	# coral joins the slskd group to reach the bind-mounted /var/lib/slskd
-	# (0770 slskd:slskd, gid 962 on homura). privateUsers=no maps gids 1:1, so
-	# recreate that gid and add coral to it.
-	#
-	# No GPU groups needed: the NVIDIA + render nodes the envelope passes through
-	# are all world-rw. CUDA (torch) uses /dev/nvidia*, and a headless compositor
-	# uses a render node (renderD12x) — never the root:video card* KMS nodes — so
-	# there's nothing here to join. (Hence also no seatd/CAP_SYS_ADMIN: coral does
-	# no KMS; homura's niri owns DRM master on card2.)
 	users.groups.slskd.gid = 962;
 	users.users.coral.extraGroups = [ "slskd" ];
 	
@@ -220,6 +210,13 @@
 
 	myNixOS.nix.homuraBuilder.enable = false;
 	myNixOS.nix.signing.enable = true;
+
+	# Allow container to rebuild itself from inside with `nixos-rebuild`
+	nix.settings.store = "daemon";
+	systemd.sockets.nix-daemon.enable = false;
+	systemd.services.nix-daemon.enable = false;
+	nix.gc.automatic = lib.mkForce false;
+	nix.optimise.automatic = lib.mkForce false;
 
 	system.stateVersion = "26.05";
 }
