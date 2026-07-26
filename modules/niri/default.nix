@@ -98,6 +98,7 @@ in
     wlogout
     swaylock
     swayidle
+    networkmanagerapplet
   ];
 
   environment.pathsToLink = [ "/etc/xdg/menus" ];

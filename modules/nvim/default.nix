@@ -37,12 +37,7 @@
 
       vim.cmd('colorscheme sorbet')
 
-      -- Tabby colors its powerline separators using the raw `bg` of the
-      -- TabLine* groups and ignores the `reverse` style attribute (see
-      -- tabby/feature/lines.lua `sep`). Themes like sorbet define TabLine with
-      -- `gui=reverse`, so the separator glyphs get fg=<raw bg>=#000000 and
-      -- render completely black. Resolve `reverse` into an explicit fg/bg swap
-      -- so the visuals are identical but tabby reads the real background.
+      -- Fix for tabby separators on sorbet.
       local function resolve_tabline_reverse()
         for _, name in ipairs({ 'TabLine', 'TabLineSel', 'TabLineFill' }) do
           local hl = vim.api.nvim_get_hl(0, { name = name, link = false })
