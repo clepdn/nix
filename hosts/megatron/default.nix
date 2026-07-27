@@ -9,6 +9,7 @@
 	      "${self}/modules/doh"
 	      "${self}/modules/avahi"
 	      "${self}/modules/steam"
+	      "${self}/modules/tools"
 	      "${self}/modules/tz/ny.nix"
 	      "${self}/modules/nix-ld/steam-run.nix"
               "${self}/modules/nix-ld/slippi.nix"

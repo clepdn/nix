@@ -8,6 +8,7 @@
       "${self}/modules/base"
       "${self}/modules/avahi"
       "${self}/modules/pipewire"
+      "${self}/modules/tools"
       "${self}/modules/monitoring"
       "${self}/modules/tz/ny.nix"
       "${self}/modules/open-webui"

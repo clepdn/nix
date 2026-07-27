@@ -51,6 +51,12 @@
 	services.coral = {
 		enable      = true;
 		secretsFile = config.age.secrets.coralSecrets.path;
+
+		agents.coral = {
+			client = "local";
+			home   = "/home/coral";
+		};
+
 		settings = {
 			server.port = 4220;
 			agent = {
