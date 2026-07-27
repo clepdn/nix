@@ -86,6 +86,8 @@ in
     }
   ];
 
+  security.pam.services.swaylock.fprintAuth = false;
+
   environment.systemPackages = with pkgs; [
     quickshell
     awww
