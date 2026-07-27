@@ -53,7 +53,7 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		pi-mono = {
-			url = "git+https://codeberg.org/cowie/pi-fork.git";
+			url = "git+https://tangled.org/did:plc:6sne3swnekt6dtcmfagifvoi";
 			inputs = {
 				nixpkgs.follows = "nixpkgs";
 				flake-utils.follows = "flake-utils";
@@ -88,6 +88,11 @@
 		quickshell-config = {
 			url = "git+https://tangled.org/callie.on-her.computer/quickshell";
 			flake = false;
+		};
+
+		claude-desktop = {
+			url = "github:aaddrick/claude-desktop-debian";
+			inputs.nixpkgs.follows = "nixpkgs";
 		};
 	};
 
