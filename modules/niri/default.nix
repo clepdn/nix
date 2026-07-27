@@ -29,7 +29,7 @@ in
       };
     };
 
-    nm_applet.enable = true;
+    nm-applet.enable = true;
   };
 
   services.gnome.gnome-keyring.enable = lib.mkForce false;
