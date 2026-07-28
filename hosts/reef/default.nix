@@ -71,7 +71,7 @@
 
 			tools.hashline = true;
 
-			discord.owner_id = "1509338575131512974";
+			discord.owner_id = "257329343301156886";
 
 			context = {
 				compact_trigger_tokens = 400000;
