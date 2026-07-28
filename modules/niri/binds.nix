@@ -52,8 +52,38 @@
       allow-when-locked = true;
     };
 
-    "XF86MonBrightnessUp".action = spawn "brightnessctl" "s" "5%+";
-    "XF86MonBrightnessDown".action = spawn "brightnessctl" "s" "5%-";
+    "XF86MonBrightnessUp" = {
+      action = spawn "brightnessctl" "--class=backlight" "set" "+5%";
+      allow-when-locked = true;
+    };
+    "XF86MonBrightnessDown" = {
+      action = spawn "brightnessctl" "--class=backlight" "set" "5%-";
+      allow-when-locked = true;
+    };
+    "XF86KbdBrightnessUp" = {
+      action = spawn "brightnessctl" "--device=*::kbd_backlight" "set" "+1";
+      allow-when-locked = true;
+    };
+    "XF86KbdBrightnessDown" = {
+      action = spawn "brightnessctl" "--device=*::kbd_backlight" "set" "1-";
+      allow-when-locked = true;
+    };
+
+    "XF86PowerOff" = {
+      action = spawn "systemctl" "suspend";
+      allow-when-locked = true;
+      repeat = false;
+    };
+    "XF86Sleep" = {
+      action = spawn "systemctl" "suspend";
+      allow-when-locked = true;
+      repeat = false;
+    };
+    "XF86Hibernate" = {
+      action = spawn "systemctl" "hibernate";
+      allow-when-locked = true;
+      repeat = false;
+    };
 
     "Mod+XF86AudioRaiseVolume" = {
       action = spawn "playerctl" "volume" "0.05+";

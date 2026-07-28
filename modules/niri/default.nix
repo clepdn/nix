@@ -138,7 +138,6 @@ in
   services.udev.packages = [ pkgs.brightnessctl ];
 
   systemd.packages = [ pkgs.mako pkgs.blueman ] ++ (with pkgs.kdePackages; [
-    powerdevil
     kwallet-pam
     polkit-kde-agent-1
   ]);
@@ -204,10 +203,6 @@ in
     wantedBy = [ "niri.service" ];
   };
 
-  systemd.user.services.plasma-powerdevil = {
-    overrideStrategy = "asDropin";
-    wantedBy = [ "niri.service" ];
-  };
   # pam_kwallet_init must run after niri has imported WAYLAND_DISPLAY into
   # the user systemd env, otherwise the PAM-launched ksecretd aborts on
   # QApplication and the wallet stays locked.
