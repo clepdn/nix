@@ -11,10 +11,10 @@ let
       homeMode = "755";
     };
 
-    /*systemd.tmpfiles.rules = [
+    systemd.tmpfiles.rules = [
       # Each home readable by group computer-sex so that everyone can just write shit everywhere. If it's a bad idea, then... we can just change mode to 0755
       "d /var/www/computers.sex/${name} 0775 ${name} computer-sex -"
-    ];*/
+    ];
   };
   userConfigs = 
     map mkJailedUser [ 
