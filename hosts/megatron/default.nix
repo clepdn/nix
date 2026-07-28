@@ -27,6 +27,7 @@
 		loader.systemd-boot.enable = true;
 		loader.efi.canTouchEfiVariables = true;
 		initrd.luks.devices."luks-7bee7b38-eff2-49f8-b996-130e4927a566".device = "/dev/disk/by-uuid/7bee7b38-eff2-49f8-b996-130e4927a566";
+		binfmt.emulatedSystems = [ "aarch64-linux" ];
 	};
 
 	services.xserver.enable = true;

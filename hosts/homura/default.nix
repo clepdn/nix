@@ -20,6 +20,8 @@
     device = "/dev/disk/by-uuid/f43fb5e6-2a5e-42a8-b0d0-fe43f495ad33";
   };
 
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   fileSystems."/mnt/hdd" = {
     device = "/dev/mapper/hdd";
     fsType = "btrfs";
