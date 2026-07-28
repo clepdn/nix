@@ -68,7 +68,7 @@ in
       wantedBy = [ "niri.service" ];
       after = [ "graphical-session.target" ];
       partOf = [ "graphical-session.target" ];
-      path = [ config.programs.niri.package pkgs.swaylock ];
+      path = [ config.programs.niri.package pkgs.swaylock-effects ];
       serviceConfig = {
         Type = "simple";
         ExecStart = swayidleCmd;
