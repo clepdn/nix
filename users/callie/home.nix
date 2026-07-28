@@ -15,6 +15,7 @@
     packages = with pkgs; [
       mypkgs.omp
       claude-code
+      codex
       (symlinkJoin {
         name = "pi";
         paths = [ inputs.pi-mono.packages.${pkgs.system}.default ];

@@ -60,6 +60,29 @@
         "type": "github"
       }
     },
+    "codex-desktop": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1785137740,
+        "narHash": "sha256-rJMvcTyK49dWFUCwuN4rk/aByPnXz4otMbe0wMn6rzY=",
+        "owner": "ilysenko",
+        "repo": "codex-desktop-linux",
+        "rev": "c6d76231f0623c3ef0b18c7e9158697c96bdcf9f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ilysenko",
+        "repo": "codex-desktop-linux",
+        "type": "github"
+      }
+    },
     "coral": {
       "inputs": {
         "flake-utils": [
@@ -789,6 +812,7 @@
       "inputs": {
         "agenix": "agenix",
         "claude-desktop": "claude-desktop",
+        "codex-desktop": "codex-desktop",
         "coral": "coral",
         "direct-vx": "direct-vx",
         "disko": "disko",

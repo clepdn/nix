@@ -46,6 +46,8 @@ in
 
     claude-desktop
 
+    inputs.codex-desktop.packages.${system}.default
+
     (discord.override {
       withMoonlight = true;
     })
