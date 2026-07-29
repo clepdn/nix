@@ -76,7 +76,10 @@
 			context = {
 				compact_trigger_tokens = 400000;
 				idle_compaction_minutes = 0;
-				respect_cache = false;
+				preserve_prompt_cache = false;
+				tool_result_compaction_min_age_turns = 5;
+				tool_result_compaction_min_chars = 2000;
+				tool_result_compaction_min_context_percent = 50;
 			};
 
 			models = {
@@ -96,6 +99,7 @@
 					vision           = true;
 					bridge           = true;
 					tool_choice      = "required";
+					nudge_on_no_tool = true;
 				};
 
 				umans-flash = {
