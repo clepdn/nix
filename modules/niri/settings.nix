@@ -21,13 +21,7 @@
       size = 32;
     };
 
-    environment = {
-    /*
-      XDG_MENU_PREFIX = "arch-";
-      SSH_ASKPASS = "ksshaskpass";
-      SSH_ASKPASS_REQUIRE = "prefer";
-    */
-    };
+    environment.XDG_MENU_PREFIX = "plasma-";
 
     layout = {
       gaps = 0;

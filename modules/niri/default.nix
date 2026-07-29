@@ -47,6 +47,10 @@ in
     {
       services.gnome-keyring.enable = lib.mkForce false;
 
+      xdg.configFile."uwsm/env-niri".text = ''
+        export XDG_MENU_PREFIX=plasma-
+      '';
+
       programs.niri.settings.xwayland-satellite = {
         enable = true;
         path = lib.getExe niriPkgs.xwayland-satellite-unstable;
