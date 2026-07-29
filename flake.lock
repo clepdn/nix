@@ -823,6 +823,10 @@
         "llama-cpp-src": "llama-cpp-src",
         "niri": "niri",
         "nix-minecraft": "nix-minecraft",
+        "nixos-raspberrypi": [
+          "nixos-uconsole",
+          "nixos-raspberrypi"
+        ],
         "nixos-uconsole": "nixos-uconsole",
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",

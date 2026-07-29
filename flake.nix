@@ -31,6 +31,10 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		nixos-uconsole.url = "github:nixos-uconsole/nixos-uconsole";
+		# Expose the Raspberry Pi input pinned by nixos-uconsole. Its packages
+		# stay on 25.11 for binary-compatible kernel/cache artifacts, while the
+		# system constructor below evaluates against our unstable nixpkgs.
+		nixos-raspberrypi.follows = "nixos-uconsole/nixos-raspberrypi";
 		home-manager = {
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -149,12 +153,58 @@
 
 			reef      = mkHost "reef"      [ inputs.coral.nixosModules.default ];
 
-			clockwork = inputs.nixos-uconsole.lib.mkUConsoleSystem {
-				variant = "cm4";
-				modules = [ ./hosts/clockwork
-					    inputs.agenix.nixosModules.default
-					  ];
-				specialArgs = { inherit inputs self; clib = import ./lib nixpkgs.lib; };
+			clockwork = inputs.nixos-raspberrypi.lib.nixosSystem {
+				# Keep the NixOS module/package environment aligned with every
+				# other host. The Raspberry Pi modules select their kernel from
+				# inputs.nixos-raspberrypi.packages, which remains pinned to the
+				# nixos-uconsole 25.11 package set and therefore hits its cache.
+				nixpkgs = nixpkgs;
+				trustCaches = true;
+				specialArgs = {
+					inherit inputs self;
+					clib = import ./lib nixpkgs.lib;
+					isCM4 = true;
+				};
+				modules = [
+					inputs.nixos-raspberrypi.nixosModules.raspberry-pi-4.base
+					inputs.nixos-raspberrypi.nixosModules.raspberry-pi-4.bluetooth
+					inputs.nixos-uconsole.nixosModules.kernel
+					inputs.nixos-uconsole.nixosModules.configtxt
+					inputs.nixos-uconsole.nixosModules.cm
+					inputs.nixos-uconsole.nixosModules.base
+					inputs.nixos-uconsole.nixosModules.uc-sleep
+					inputs.nixos-uconsole.nixosModules.uc-4g
+					({ lib, modulesPath, ... }: {
+						disabledModules = [ (modulesPath + "/rename.nix") ];
+						imports = [
+							(lib.mkAliasOptionModule
+								[ "environment" "checkConfigurationOptions" ]
+								[ "_module" "check" ])
+						];
+						# Preserve the 25.11 platform field consumed by the
+						# pinned Raspberry Pi bootloader module.
+						nixpkgs.hostPlatform = lib.mkForce {
+							system = "aarch64-linux";
+							"linux-kernel".target = "Image";
+						};
+						boot.loader.raspberry-pi.bootloader = "kernel";
+						# 26.05's device-tree module asks kernels whether they
+						# build DTBs. The cached 25.11 kernel predates that
+						# passthru attribute but does ship the DTBs.
+						hardware.deviceTree.enable = true;
+						fileSystems."/" = lib.mkDefault {
+							device = "/dev/disk/by-label/NIXOS_SD";
+							fsType = "ext4";
+						};
+						fileSystems."/boot/firmware" = {
+							device = lib.mkDefault "/dev/disk/by-label/FIRMWARE";
+							fsType = lib.mkDefault "vfat";
+							options = lib.mkForce [ "fmask=0022" "dmask=0022" ];
+						};
+					})
+					./hosts/clockwork
+					inputs.agenix.nixosModules.default
+				];
 			};
 		};
 	}
