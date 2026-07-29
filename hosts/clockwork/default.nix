@@ -1,11 +1,52 @@
-{ lib, self, ... }:
+{ lib, self, pkgs, ... }:
+let
+	statusScript = pkgs.writeShellScript "sway-status" ''
+		while true; do
+			bat=$(cat /sys/class/power_supply/*/capacity 2>/dev/null | head -n1)
+			stat=$(cat /sys/class/power_supply/*/status 2>/dev/null | head -n1)
+			echo "''${stat} ''${bat}%  |  $(date '+%a %d %b  %H:%M')"
+			sleep 10
+		done
+	'';
+in
 {
 	imports = [
-		./modules/sway.nix
+		"${self}/modules/sway"
 		"${self}/users/callie/account.nix"
 		"${self}/users/emelia"
 		"${self}/modules/base"
 		"${self}/modules/tz/ny.nix"
+	];
+
+	myNixOS.sway = {
+		enable = true;
+		modifier = "Mod1";
+		statusCommand = "${statusScript}";
+		outputConfig = ''
+			### Display (built-in uConsole panel)
+			# Kernel revisions expose the portrait DSI panel under either name.
+			output DSI-1 {
+				mode 720x1280
+				transform 90
+				scale 1.0
+			}
+			output DSI-2 {
+				mode 720x1280
+				transform 90
+				scale 1.0
+			}
+			output HDMI-A-1 {
+				scale 1.0
+				position 1280 0
+			}
+		'';
+	};
+
+	environment.systemPackages = with pkgs; [
+		firefox
+		pavucontrol
+		foot
+		htop
 	];
 
 	networking.hostName = "clockwork";
