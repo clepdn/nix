@@ -1,4 +1,4 @@
-{ lib, self, pkgs, pkgsUnstable, ... }:
+{ lib, pkgs, pkgsUnstable, ... }:
 let
 	statusScript = pkgs.writeShellScript "sway-status" ''
 		while true; do
@@ -11,11 +11,11 @@ let
 in
 {
 	imports = [
-		"${self}/modules/sway"
-		"${self}/users/callie/account.nix"
-		"${self}/users/emelia"
-		"${self}/modules/base"
-		"${self}/modules/tz/ny.nix"
+		../../modules/sway
+		../../users/callie/account.nix
+		../../users/emelia
+		../../modules/base
+		../../modules/tz/ny.nix
 	];
 
 	myNixOS.sway = {
@@ -61,10 +61,11 @@ in
 	# over_voltage=6, force_turbo=1) which is great for speed but drains the
 	# battery. To trade some performance for runtime, uncomment:
 
-	hardware.raspberry-pi.config.cm4.options.force_turbo.value = "0";
-	hardware.raspberry-pi.config.cm4.options.arm_freq.value    = "1500";
-	hardware.raspberry-pi.config.cm4.options.over_voltage.value = "2";
+	# The bootable uConsole image enables this through sd-image.nix.
+	hardware.enableAllHardware = true;
 
+	# The image profile enables ZFS by default, which would rebuild the kernel.
+	boot.supportedFilesystems.zfs = lib.mkForce false;
 	# Generating every man-db cache under aarch64 emulation takes hours.
 	documentation.man.generateCaches = lib.mkForce false;
 

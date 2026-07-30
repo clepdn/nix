@@ -166,6 +166,22 @@
 				];
 			};
 		};
+
+		packages.aarch64-linux.clockwork-image =
+			(inputs.nixos-uconsole.lib.mkUConsoleImage {
+				variant = "cm4";
+				modules = [
+					({ ... }: {
+						_module.args = {
+							inherit self;
+							agenixPackage = inputs.agenix.packages.aarch64-linux.default;
+							pkgsUnstable = nixpkgs.legacyPackages.aarch64-linux;
+						};
+					})
+					./hosts/clockwork
+					inputs.agenix.nixosModules.default
+				];
+			}).config.system.build.sdImage;
 	}
 
 	// flake-utils.lib.eachDefaultSystem(system: let 

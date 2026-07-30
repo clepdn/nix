@@ -1,9 +1,9 @@
-{ config, pkgs, lib, self, inputs, ... }:
+{ config, pkgs, lib, inputs, agenixPackage ? inputs.agenix.packages.${pkgs.system}.default, ... }:
 {
 	imports = [
-		"${self}/modules/ssh/"
-		"${self}/modules/nix/"
-		"${self}/modules/age-pq/"
+		../ssh
+		../nix
+		../age-pq
 	];
 
 	options.myNixOS.graphical = lib.mkOption {
@@ -28,7 +28,7 @@
 			trzsz-ssh
 			openssl
 			psmisc # killall
-			inputs.agenix.packages.${pkgs.system}.default
+			agenixPackage
 			busybox
 			nix-search
 			nmap
