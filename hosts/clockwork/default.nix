@@ -1,4 +1,4 @@
-{ lib, self, pkgs, ... }:
+{ lib, self, pkgs, pkgsUnstable, ... }:
 let
 	statusScript = pkgs.writeShellScript "sway-status" ''
 		while true; do
@@ -42,10 +42,10 @@ in
 		'';
 	};
 
-	environment.systemPackages = with pkgs; [
+	environment.systemPackages = with pkgsUnstable; [
 		firefox
 		pavucontrol
-		foot
+		(lib.hiPrio foot)
 		htop
 	];
 
@@ -64,6 +64,9 @@ in
 	hardware.raspberry-pi.config.cm4.options.force_turbo.value = "0";
 	hardware.raspberry-pi.config.cm4.options.arm_freq.value    = "1500";
 	hardware.raspberry-pi.config.cm4.options.over_voltage.value = "2";
+
+	# Generating every man-db cache under aarch64 emulation takes hours.
+	documentation.man.generateCaches = lib.mkForce false;
 
 	system.stateVersion = lib.mkDefault "25.11";
 }
