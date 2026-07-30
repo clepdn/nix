@@ -12,7 +12,7 @@ let
     set $mod ${cfg.modifier}
     set $term foot
     set $menu fuzzel
-    set $lock ${lib.getExe pkgs.swaylock-effects} -f
+    set $lock ${lib.getExe config.myNixOS.swaylock.package} -f
 
     ${cfg.outputConfig}
 

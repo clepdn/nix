@@ -126,7 +126,7 @@ in
       wantedBy = [ "niri.service" ];
       after = [ "graphical-session.target" ];
       partOf = [ "graphical-session.target" ];
-      path = [ config.programs.niri.package pkgs.brightnessctl pkgs.swaylock-effects ];
+      path = [ config.programs.niri.package pkgs.brightnessctl config.myNixOS.swaylock.package ];
       serviceConfig = {
         Type = "simple";
         ExecStart = swayidleCmd;
