@@ -115,7 +115,11 @@
 		mypkgs = import ./pkgs { pkgs = nixpkgs.legacyPackages.x86_64-linux; lib = nixpkgs.lib; };
 		mkHost = host: extraModules: nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
-			specialArgs = { inherit inputs self mypkgs; clib = import ./lib nixpkgs.lib; };
+			specialArgs = {
+				inherit inputs self mypkgs;
+				agenixPackage = inputs.agenix.packages.x86_64-linux.default;
+				clib = import ./lib nixpkgs.lib;
+			};
 			modules = [
 				./hosts/${host}
 				inputs.agenix.nixosModules.default
@@ -157,6 +161,7 @@
 				variant = "cm4";
 				specialArgs = {
 					inherit inputs self;
+					agenixPackage = inputs.agenix.packages.aarch64-linux.default;
 					clib = import ./lib inputs.nixos-uconsole.inputs.nixpkgs.lib;
 					pkgsUnstable = nixpkgs.legacyPackages.aarch64-linux;
 				};

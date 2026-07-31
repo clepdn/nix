@@ -93,11 +93,19 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1785464413,
         "narHash": "sha256-KXDHdYdZ4EYMtNsLFX8fnnfQqk/WbroK07J3bkDekag=",
         "ref": "refs/heads/main",
         "rev": "1a328ee45711c190f84044fb5297177c0eae02e2",
         "revCount": 238,
+=======
+        "lastModified": 1785456931,
+        "narHash": "sha256-lG3JShkdrIB9+DqepHtPyRIHly4vbcmkaTbZVhtz3Oc=",
+        "ref": "refs/heads/main",
+        "rev": "6ec767ad5ce45c425674e0c946eac6a38010237c",
+        "revCount": 236,
+>>>>>>> cdcd56c (fix homura builds after clockwork)
         "type": "git",
         "url": "https://tangled.org/callie.on-her.computer/coral"
       },

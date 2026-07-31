@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, agenixPackage ? inputs.agenix.packages.${pkgs.system}.default, ... }:
+{ config, pkgs, lib, inputs, agenixPackage, ... }:
 {
 	imports = [
 		../ssh
