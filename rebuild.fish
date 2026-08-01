@@ -222,7 +222,7 @@ git update-ref "refs/heads/$BRANCH" $COMMIT
 
 echo "[hook] Pushing to origin/$BRANCH"
 
-git push -u origin $BRANCH --force-with-lease; or echo "[hook] Push to origin failed!" >&2
+git push -u origin $BRANCH --force; or echo "[hook] Push to origin failed!" >&2
 
 git restore --staged . 2>/dev/null; or git reset HEAD . 2>/dev/null
 
