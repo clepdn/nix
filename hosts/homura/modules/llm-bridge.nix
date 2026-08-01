@@ -1,11 +1,5 @@
 { config, self, ... }:
 {
-	age.secrets.umansKey = {
-		file  = "${self}/secrets/umans-api-key.age";
-		mode  = "0400";
-		owner = config.services.llm-bridge.user;
-	};
-
 	age.secrets.bridgeKeys = {
 		file  = "${self}/secrets/bridge-keys.json.age";
 		mode  = "0400";
@@ -20,11 +14,6 @@
 		settings = {
 			host = "0.0.0.0";
 			port = 4040;
-
-			providers.umans = {
-				api_key_file = config.age.secrets.umansKey.path;
-				base_url = "https://api.code.umans.ai/v1";
-			};
 		};
 	};
 
