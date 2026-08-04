@@ -30,6 +30,7 @@ let basePreset = {
 	deep_archive = true;
 	compaction_strategy = "companion";
 	journal_before_compaction = true;
+	idle_compaction_minutes = 30;
 };
 claudePreset = basePreset // {
 	vision = true;
