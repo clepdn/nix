@@ -273,7 +273,7 @@ in
                        ExecStart = pkgs.writeShellScript "shot-reminder" ''
                                set -euo pipefail
 
-                               ANCHOR_DATE="2026-07-30"      # a known shot day
+                               ANCHOR_DATE="2026-08-05"      # a known shot day (reset aug 5: missed aug 4, re-anchored)
                                INTERVAL_DAYS=5               # cadence
                                DOSE="8mg"
                                WORKER_URL="http://127.0.0.1:4221/trigger/webhook"
