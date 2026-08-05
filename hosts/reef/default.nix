@@ -36,6 +36,7 @@ claudePreset = basePreset // {
 	vision = true;
 	compact_trigger_tokens = 240000;
 	preserve_prompt_cache = true;
+	idle_compaction_minutes = 50;
 };
 oaiPreset = claudePreset // {
 	compaction_strategy = "remote";
