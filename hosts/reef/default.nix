@@ -22,30 +22,6 @@
 # =============================================================================
 
 { config, lib, self, pkgs, ... }:
-let basePreset = {
-	enable_thinking = true;
-	vision = true;
-	bridge = true;
-	tool_choice = "required";
-	deep_archive = true;
-	compaction_strategy = "companion";
-	journal_before_compaction = true;
-	idle_compaction_minutes = 30;
-};
-claudePreset = basePreset // {
-	vision = true;
-	compact_trigger_tokens = 240000;
-	preserve_prompt_cache = true;
-	idle_compaction_minutes = 50;
-};
-oaiPreset = claudePreset // {
-	compaction_strategy = "remote";
-};
-gpt-luna  = oaiPreset // {
-	model = "gpt-5.6-luna";
-	thinking_effort = "xhigh";
-};
-in
 {
 	imports = [
 	      "${self}/modules/base"
@@ -55,28 +31,23 @@ in
 
 	networking.hostName = "reef";
 
-	# Executor: runs nano's tools (shell/file/image/computer) inside this
-	# sandboxed nspawn container. The control plane (LLM loop/session/memory)
-	# runs on homura and reaches this over the private veth. See
-	# hosts/homura/modules/nano-control.nix.
-	#
-	# Shared bearer token, encrypted for BOTH reef and homura (same plaintext).
 	age.secrets.nanoExecutorToken = {
-	file  = "${self}/secrets/nano-executor-token.age";
-	mode  = "0400";
-	owner = config.services.nano-executor.user;
+		file  = "${self}/secrets/nano-executor-token.age";
+		mode  = "0400";
+		owner = config.services.nano-executor.user;
 	};
 
 	services.nano-executor = {
-	enable        = true;
-	workspace     = "/var/lib/nano-executor";
-	# Bind on the container's veth address so only homura (the container
-	# host) can reach it. Networking is otherwise private to the veth.
-	listenAddress = "10.233.1.2";
-	port          = 4221;
-	tokenFile     = config.age.secrets.nanoExecutorToken.path;
-	hashline      = true;
-	capabilities  = [ "shell" "read_file" "edit_file" "write_file" "image_tool" "computer" ];
+		enable        = true;
+		# Her home: cwd, $HOME and relative tool paths all resolve to one
+		# place. Migrated from /home/coral (orphaned uid) on 2026-08-06.
+		workspace     = "/home/nano";
+		listenAddress = "0.0.0.0";
+		port          = 4221;
+		tokenFile     = config.age.secrets.nanoExecutorToken.path;
+		hashline      = true;
+		capabilities  = [ "shell" "read_file" "edit_file" "image_tool" "computer" "read_bytes" ];
+		imageMaxBytes = 5000000;
 	};
 
 	environment.systemPackages = with pkgs; [
@@ -129,13 +100,6 @@ in
                };
        };
 
-       # HRT shot reminder — fires daily, but only wakes nano (via the worker
-       # webhook) on days that land on callie's injection cadence, so nano DMs her a
-       # nudge in her own voice. The schedule is derived deterministically from an
-       # anchor shot date + interval, so no mutable state is needed and it
-       # self-perpetuates. When callie logs a shot on a different day, bump
-       # ANCHOR_DATE. This does NOT depend on nano remembering anything — the date
-       # fires it. See memories/people/callie-hrt-shots.md.
        systemd.services.shot-reminder = {
                description = "callie HRT shot reminder";
                serviceConfig = {
@@ -175,14 +139,8 @@ in
                description = "callie HRT shot reminder timer";
                wantedBy = [ "timers.target" ];
                timerConfig = {
-                       # 10:00 each day in the service's local time. Services here run in EDT
-                       # via the homura /etc/localtime bind-mount (verified: a systemd oneshot
-                       # reports -0400), so a bare time is correct. The explicit
-                       # "America/New_York" suffix is buggy on this systemd build (it drops the
-                       # offset and fires at 06:00 EDT), so don't use it. The script decides if
-                       # today actually lands on the shot cadence.
                        OnCalendar = "*-*-* 10:00:00";
-                       Persistent = true;   # catch up if the container was down at fire time
+                       Persistent = true;
                };
        };
 
@@ -190,10 +148,9 @@ in
 	networking.networkmanager.enable = lib.mkForce false;
 	networking.wireless.enable = false;
 	networking.firewall.enable = true;
-	# Expose the nano prometheus exporter to homura (the container host) so its
-	# prometheus can scrape it. The only non-loopback interface is the veth to
-	# homura, so 9100 is not reachable beyond the host.
-	networking.firewall.allowedTCPPorts = [ 9100 ];
+
+	# 4221 = executor tool server, reachable only over the private veth.
+	networking.firewall.allowedTCPPorts = [ 9100 4221 ];
 	services.tailscale.enable = lib.mkForce false;
 
 	myNixOS.nix.homuraBuilder.enable = false;

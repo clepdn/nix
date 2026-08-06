@@ -83,29 +83,6 @@
         "type": "github"
       }
     },
-    "coral": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1785566967,
-        "narHash": "sha256-5Laz7A60frSWWyloGB6adqlQ2OXS7BNkNHUNm5T/SE4=",
-        "ref": "refs/heads/main",
-        "rev": "61923e4dba66775e650d05b10be03b04f8936d33",
-        "revCount": 255,
-        "type": "git",
-        "url": "https://tangled.org/callie.on-her.computer/coral"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://tangled.org/callie.on-her.computer/coral"
-      }
-    },
     "crane": {
       "locked": {
         "lastModified": 1784564969,
@@ -389,6 +366,29 @@
         "owner": "AtomicBot-ai",
         "repo": "atomic-llama-cpp-turboquant",
         "type": "github"
+      }
+    },
+    "nano": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786064787,
+        "narHash": "sha256-KYWDM0Mg0C++CtU1f0+7tQzRs02ofaw63miAD3vuugs=",
+        "ref": "refs/heads/main",
+        "rev": "317dfe9f462dc7b148963f48ca7370145a80a829",
+        "revCount": 267,
+        "type": "git",
+        "url": "https://tangled.org/did:plc:vsjfqg3m57r3xghg4pqv4v6i"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://tangled.org/did:plc:vsjfqg3m57r3xghg4pqv4v6i"
       }
     },
     "niri": {
@@ -790,7 +790,6 @@
         "agenix": "agenix",
         "claude-desktop": "claude-desktop",
         "codex-desktop": "codex-desktop",
-        "coral": "coral",
         "direct-vx": "direct-vx",
         "disko": "disko",
         "flake-utils": "flake-utils",
@@ -798,6 +797,7 @@
         "jovian": "jovian",
         "lanzaboote": "lanzaboote",
         "llama-cpp-src": "llama-cpp-src",
+        "nano": "nano",
         "niri": "niri",
         "nix-minecraft": "nix-minecraft",
         "nixos-raspberrypi": [

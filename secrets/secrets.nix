@@ -18,17 +18,11 @@ let hosts = [
 		"callie_madoka_pq"
 	];
 
-	coral_keys = [
-		"reef_pq"
-		"coral_reef_pq"
-	];
-
 	readKeys = files: map(key: builtins.readFile ./publicKeys/${key}.pub) files;
 
 	
 	systemSSHKeys = map(host: builtins.readFile ./publicKeys/root_${host}.pub) hosts;
 	userSSHKeys   = readKeys users;
-	coralKeys     = readKeys coral_keys;
 	pqKeys        = readKeys pq_pubkeys;
 
 	DEPRECATED_sshKeys = systemSSHKeys ++ userSSHKeys;
@@ -71,22 +65,15 @@ let hosts = [
 		"umans-api-key.age".publicKeys      = keys;
 		"bridge-keys.json.age".publicKeys   = keys; 
 		"bridget-client-key.age".publicKeys = keys ++ readKeys [ "reef_pq" ];
-		# open-webui talks to the llm-bridge; this holds its OPENAI_API_KEY (a UUID
-		# registered in bridge-keys.json). Decryptable wherever open-webui runs (homura).
 		"open-webui.env.age".publicKeys = keys;
 
 		# nano's secrets
 		"coral.env.age".publicKeys           = keys ++ readKeys [ "reef_pq" ]; # she can't get this one. this has real api keys
 		"slskd.env.age".publicKeys           = keys ++ readKeys [ "coral_reef_pq" ];
 		"coral-secrets.toml.age".publicKeys  = keys ++ readKeys [ "coral_reef_pq" ] ++ readKeys [ "reef_pq" ];
-		"coral-webhook-token.age".publicKeys = keys ++ coralKeys;
-		# Shared bearer token for the control-plane -> executor REST boundary.
-		# Decryptable on BOTH homura (control plane) and reef (executor) at activation.
-		"nano-executor-token.age".publicKeys = keys ++ readKeys [ "homura_pq" "reef_pq" ];
+		"nano-executor-token.age".publicKeys = keys ++ readKeys [ "reef_pq" ];
 
 		# Per-host nix binary-cache signing keys.
-		# Only the owning host needs to decrypt (used at activation to sign
-		# store paths locally so nix-copy-closure works without trusted-users).
 		"nix-signing-madoka.age".publicKeys   = readKeys [ "madoka_pq"   "callie_madoka_pq"   ];
 		"nix-signing-homura.age".publicKeys   = readKeys [ "homura_pq"   "callie_homura_pq"   ];
 		"nix-signing-megatron.age".publicKeys = readKeys [ "megatron_pq" "callie_megatron_pq" ];

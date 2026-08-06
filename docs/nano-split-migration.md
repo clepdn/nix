@@ -43,10 +43,12 @@ she just loses tool execution until reef reconnects.
 3. **Migrate nano's durable state** from the reef container to `/var/lib/nano`
    on homura — this is her brain, it must live with the control plane:
    ```
-   memories/   soul.md   nano.db   metrics.db   control/
+   memories/   soul.md   niri.db   metrics.db   control/
    ```
-   Copy with rsync while the reef nano-executor service is stopped, preserving
-   perms. The state dir is `0700` and owned by the `nano` service user.
+   They now sit in `/home/nano` inside the container (see below). Copy with
+   rsync while the reef nano-executor service is stopped, preserving perms.
+   The state dir is `0700` and owned by the `nano` service user. **Not done
+   yet** — `/var/lib/nano` does not exist on homura.
 
 ## Cutover order
 
@@ -72,8 +74,21 @@ she just loses tool execution until reef reconnects.
   control-plane worker webhook (`http://10.233.1.1:4220/trigger/webhook`).
   Confirm the worker's webhook port after the control plane is live; consider
   moving the timer to homura alongside the loop.
-- `computer_use` drives the Xvfb `:99` display on reef; the control plane reaches
-  it through the executor's `computer`/`shell` tools, not a local X server.
+- Executor `capabilities` are client tool names: `shell`, `read_file`,
+  `edit_file`, `image_tool`, `computer`, `read_bytes`. Anything else (discord,
+  memory, subagents, web search) runs in the control plane.
+- `computer` and `read_bytes` exist so the split keeps parity: xdotool/`import`
+  drive reef's Xvfb `:99` (the control plane only supplies `display`), and
+  `discord_upload` pulls its bytes off the executor instead of homura's disk.
+  The 1 MB client image ceiling is raised via `imageMaxBytes` — a full-screen
+  screenshot blows straight through the default.
+- `/home/coral` became `/home/nano` (2026-08-06). The rename had orphaned it
+  under uid 1001 with no passwd entry; 84k files, 14 GB, moved within the same
+  filesystem, chowned to `nano`, absolute symlinks repointed, and
+  `.harness.toml` / `bin/rebuild` / `scripts/*.sh` rewritten. Journals,
+  memories, `soul.md`, patches and git checkouts still say `/home/coral`
+  because that is what it was — history, not config. Her `nix profile` links
+  were already dangling (store paths GC'd) before the move.
 - The nspawn container name (`coral`) and the pre-existing `coral*.age` secrets
   (real API keys) are intentionally NOT renamed here — they need re-encryption /
   container recreation and belong in a follow-up.
