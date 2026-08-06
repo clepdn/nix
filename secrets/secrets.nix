@@ -80,6 +80,9 @@ let hosts = [
 		"slskd.env.age".publicKeys           = keys ++ readKeys [ "coral_reef_pq" ];
 		"coral-secrets.toml.age".publicKeys  = keys ++ readKeys [ "coral_reef_pq" ] ++ readKeys [ "reef_pq" ];
 		"coral-webhook-token.age".publicKeys = keys ++ coralKeys;
+		# Shared bearer token for the control-plane -> executor REST boundary.
+		# Decryptable on BOTH homura (control plane) and reef (executor) at activation.
+		"nano-executor-token.age".publicKeys = keys ++ readKeys [ "homura_pq" "reef_pq" ];
 
 		# Per-host nix binary-cache signing keys.
 		# Only the owning host needs to decrypt (used at activation to sign

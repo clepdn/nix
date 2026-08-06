@@ -13,7 +13,7 @@
 #   • networking.networkmanager.enable = mkForce false;
 #   • networking.wireless.enable = false;
 #   • services.tailscale.enable = mkForce false; ← no mesh networking.
-#   • The coral service, its secrets, and the package set below are tuned for
+#   • The nano executor service, its secrets, and the package set below are tuned for
 #     this container's workload, not a general-purpose system.
 #
 # If you find yourself reaching for something in here while configuring a real
@@ -55,157 +55,28 @@ in
 
 	networking.hostName = "reef";
 
-	age.secrets.coralSecrets = {
-		file  = "${self}/secrets/coral-secrets.toml.age";
-		mode  = "0400";
-		owner = config.services.coral.user;
+	# Executor: runs nano's tools (shell/file/image/computer) inside this
+	# sandboxed nspawn container. The control plane (LLM loop/session/memory)
+	# runs on homura and reaches this over the private veth. See
+	# hosts/homura/modules/nano-control.nix.
+	#
+	# Shared bearer token, encrypted for BOTH reef and homura (same plaintext).
+	age.secrets.nanoExecutorToken = {
+	file  = "${self}/secrets/nano-executor-token.age";
+	mode  = "0400";
+	owner = config.services.nano-executor.user;
 	};
 
-	age.secrets.coralWebhookToken = {
-		file  = "${self}/secrets/coral-webhook-token.age";
-		mode  = "0400";
-		owner = config.services.coral.user;
-	};
-
-	age.secrets.bridgetClientKey = {
-		file  = "${self}/secrets/bridget-client-key.age";
-		mode  = "0400";
-		owner = config.services.coral.user;
-	};
-
-	services.coral = {
-		enable      = true;
-		secretsFile = config.age.secrets.coralSecrets.path;
-
-		agents.coral = {
-			client = "local";
-			home   = "/home/coral";
-		};
-
-		settings = {
-			server.port = 4220;
-			agent = {
-				name = "coral";
-				env  = "default";
-				boredom_wake_min = 0;
-				git_upstream_nag = true;
-			};
-
-			llm_bridge_url = "https://bridget.on-her.computer/v1";
-			llm_bridge_api_key_file = config.age.secrets.bridgetClientKey.path;
-
-			tools.hashline = true;
-
-			discord.owner_id = "257329343301156886";
-
-			computer_use = {
-				enabled = true;
-				display = ":99";
-			};
-
-			image_tool.max_bytes = 5000000;
-
-			models = {
-				umans-glm-5_2 = basePreset // {
-					model            = "umans-glm-5.2";
-					thinking_effort  = "xhigh";
-					vision           = false;
-				};
-
-				umans-kimi = basePreset // {
-					model            = "umans-kimi-k2.7";
-					thinking_effort  = "xhigh";
-					vision           = true;
-					nudge_on_no_tool = true;
-				};
-
-				umans-flash = basePreset // {
-					model            = "umans-flash";
-					thinking_effort  = "xhigh";
-					vision           = true;
-					enable_thinking  = true;
-					bridge           = true;
-					tool_choice      = "required";
-				};
-
-				claude = claudePreset // {
-					model           = "claude-opus-4-8";
-					thinking_effort = "xhigh";
-				};
-
-				claude-opus-mid = claudePreset // {
-					model           = "claude-opus-4-8";
-					thinking_effort = "medium";
-				};
-
-				claude-low = claudePreset // {
-					model           = "claude-sonnet-5";
-					thinking_effort = "medium";
-				};
-
-				gpt-luna = gpt-luna;
-
-				gpt-luna-low = oaiPreset // {
-					thinking_effort = "low";
-				};
-				gpt-terra = oaiPreset // {
-					model = "gpt-5.6-terra";
-					thinking_effort = "high";
-
-				};
-				gpt-sol = oaiPreset // {
-					model = "gpt-5.6-sol";
-					thinking_effort = "high";
-				};
-
-				glm-openrouter = {
-					provider         = "openrouter";
-					model            = "zai-org/glm-5.2";
-					tool_choice      = "required";
-					thinking_effort  = "xhigh";
-				};
-
-				gemini-embedding = {
-					provider   = "openai";
-					model      = "google/gemini-embedding-2-preview";
-					base_url   = "https://openrouter.ai/api/v1";
-					dimensions = 3072;
-				};
-			};
-
-			model      = { preset = "claude";           };
-			fallback   = { preset = "gpt-terra";        };
-			summary    = { preset = "gpt-luna-low";     };
-			embeddings = { preset = "gemini-embedding"; };
-
-			subagents = [
-				{
-					name = "explore";
-					model = "gpt-luna";
-					system_prompt = "You are an exploratory agent. Your goal is to investigate thoroughly to achieve the task assigned to you by your calling agent.";
-					enabled_tools = [ "shell" "read_file" ];
-
-				}
-				{
-					name = "coder";
-					model = "gpt-luna";
-					system_prompt = "You are a focused coding agent. Write, edit, and test code. Verify your work compiles.";
-					enabled_tools = [ "shell" "read_file" "edit_file" "write_file" ];
-				}
-				{
-					name = "vision";
-					model = "gpt-luna";
-					system_prompt = "You are a focused agent with vision.";
-					enabled_tools = [ "image_tool" "shell" "read_file" "edit_file" "write_file" ];
-				}
-				{
-					name = "computer";
-					model = "gpt-luna";
-					system_prompt = "You are a computer use agent. You can take screenshots, click, type, scroll, and drag on a graphical desktop. Always screenshot first to see the current state before acting. Work step by step: observe, act, observe again.";
-					enabled_tools = [ "computer" "image_tool" "shell" "read_file" "edit_file" "write_file" ];
-				}
-			];
-		};
+	services.nano-executor = {
+	enable        = true;
+	workspace     = "/var/lib/nano-executor";
+	# Bind on the container's veth address so only homura (the container
+	# host) can reach it. Networking is otherwise private to the veth.
+	listenAddress = "10.233.1.2";
+	port          = 4221;
+	tokenFile     = config.age.secrets.nanoExecutorToken.path;
+	hashline      = true;
+	capabilities  = [ "shell" "read_file" "edit_file" "write_file" "image_tool" "computer" ];
 	};
 
 	environment.systemPackages = with pkgs; [
@@ -232,7 +103,7 @@ in
 		config.users.users.callie.openssh.authorizedKeys.keys;
 
 	users.groups.slskd.gid = 962;
-	users.users.coral.extraGroups = [ "slskd" ];
+	users.users.nano.extraGroups = [ "slskd" ];
 	       systemd.services.xvfb = {
                description = "Xvfb Virtual Framebuffer";
                after = [ "multi-user.target" ];
@@ -252,7 +123,7 @@ in
                serviceConfig = {
                        ExecStart = "${pkgs.i3}/bin/i3 -c /dev/null";
                        Environment = "DISPLAY=:99";
-                       User = "coral";
+                       User = "nano";
                        Restart = "always";
                        RestartSec = 3;
                };
@@ -269,14 +140,14 @@ in
                description = "callie HRT shot reminder";
                serviceConfig = {
                        Type = "oneshot";
-                       User = "coral";
+                       User = "nano";
                        ExecStart = pkgs.writeShellScript "shot-reminder" ''
                                set -euo pipefail
 
                                ANCHOR_DATE="2026-08-05"      # a known shot day (reset aug 5: missed aug 4, re-anchored)
                                INTERVAL_DAYS=5               # cadence
                                DOSE="8mg"
-                               WORKER_URL="http://127.0.0.1:4221/trigger/webhook"
+                               WORKER_URL="http://10.233.1.1:4220/trigger/webhook"   # homura control plane
                                DM_CHANNEL="1509435403143479398"
 
                                anchor_epoch=$(${pkgs.coreutils}/bin/date -d "$ANCHOR_DATE" +%s)
@@ -319,7 +190,7 @@ in
 	networking.networkmanager.enable = lib.mkForce false;
 	networking.wireless.enable = false;
 	networking.firewall.enable = true;
-	# Expose the coral prometheus exporter to homura (the container host) so its
+	# Expose the nano prometheus exporter to homura (the container host) so its
 	# prometheus can scrape it. The only non-loopback interface is the veth to
 	# homura, so 9100 is not reachable beyond the host.
 	networking.firewall.allowedTCPPorts = [ 9100 ];

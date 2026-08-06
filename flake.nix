@@ -73,8 +73,8 @@
 			url = "git+https://codeberg.org/cowie/plymouth-signalis.git";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		coral = {
-			url = "git+https://tangled.org/callie.on-her.computer/coral";
+		nano = {
+			url = "git+https://tangled.org/did:plc:vsjfqg3m57r3xghg4pqv4v6i";
 			inputs = {
 				nixpkgs.follows = "nixpkgs";
 				flake-utils.follows = "flake-utils";
@@ -152,10 +152,11 @@
 			madoka    = mkHost "madoka"    [ inputs.lanzaboote.nixosModules.lanzaboote ];
 			megatron  = mkHost "megatron"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
 			homura    = mkHost "homura"    [ inputs.jovian.nixosModules.jovian 
-							 inputs.coral.nixosModules.llm-bridge ];
+							 inputs.nano.nixosModules.llm-bridge
+							 inputs.nano.nixosModules.default ];
 			lightbulb = mkHost "lightbulb" [ ];
 
-			reef      = mkHost "reef"      [ inputs.coral.nixosModules.default ];
+			reef      = mkHost "reef"      [ inputs.nano.nixosModules.nano-executor ];
 
 			clockwork = inputs.nixos-uconsole.lib.mkUConsoleSystem {
 				variant = "cm4";
