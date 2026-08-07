@@ -5,6 +5,7 @@ let devices = [
   "/dev/nvidia-modeset" 
   "/dev/nvidia-uvm"  # CUDA (torch/transformers)
   "/dev/nvidia-uvm-tools"
+  "/dev/kvm"
 ];
 in
 {
