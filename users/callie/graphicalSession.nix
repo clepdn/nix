@@ -50,10 +50,6 @@ in
 
     zoom-us
 
-    (discord.override {
-      withMoonlight = true;
-    })
-
     equibop
   ];
 }
