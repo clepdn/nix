@@ -48,8 +48,12 @@ in
 
     inputs.codex-desktop.packages.${system}.default
 
+    zoom-us
+
     (discord.override {
       withMoonlight = true;
     })
+
+    equibop
   ];
 }

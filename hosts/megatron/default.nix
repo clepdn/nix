@@ -3,6 +3,7 @@
 	imports = clib.importFolder ./modules ++ [
 	      ./hardware-configuration.nix
 	      "${self}/users/callie/graphicalSession.nix"
+	      "${self}/users/emelia"
 	      "${self}/modules/base"
 	      "${self}/modules/pipewire"
 	      "${self}/modules/easyeffects"
@@ -40,6 +41,7 @@
 
 	environment.systemPackages = with pkgs; [ 
 		prismlauncher
+		arch-install-scripts
 		nodejs
 		python3
 	];
