@@ -3,11 +3,7 @@
 let
   cfg = config.myNixOS.pavement;
   
-  # Expects inputs.pavement to contain pre-built output:
-  #   build/          - sveltekit build output
-  #   node_modules/   - production dependencies
-  #   package.json
-  src = inputs.pavement;
+  src = inputs.pavement.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in
 {
   options.myNixOS.pavement = {

@@ -86,8 +86,7 @@
 			flake = false;
 		};
 		pavement = {
-			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=release";
-			flake = false;
+			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=main";
 		};
 		quickshell-config = {
 			url = "git+https://tangled.org/callie.on-her.computer/quickshell";
