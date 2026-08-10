@@ -23,7 +23,6 @@ with pkgs; [
 	hyfetch
 	fastfetch
 	gnome-font-viewer
-	prismlauncher
 	krita
 	mosh
 	minio-client

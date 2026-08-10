@@ -14,6 +14,7 @@
 	      "${self}/modules/tz/ny.nix"
 	      "${self}/modules/nix-ld/steam-run.nix"
               "${self}/modules/nix-ld/slippi.nix"
+              "${self}/modules/nix-ld/mcef.nix"
 	];
 
 	myNixOS.nix.homuraBuilder.enable = false;
@@ -40,7 +41,6 @@
 	'';
 
 	environment.systemPackages = with pkgs; [ 
-		prismlauncher
 		arch-install-scripts
 		nodejs
 		python3

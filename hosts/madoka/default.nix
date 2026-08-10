@@ -16,6 +16,7 @@
       "${self}/modules/tz/ny.nix"
       "${self}/modules/nix-ld/steam-run.nix"
       "${self}/modules/nix-ld/slippi.nix"
+      "${self}/modules/nix-ld/mcef.nix"
     ];
 
   virtualisation.virtualbox.host.enable = true;
