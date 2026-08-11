@@ -27,6 +27,9 @@ let
     libxrandr
     libxcb
   ];
+  prismlauncherWithMcef = pkgs.prismlauncher.override {
+    additionalLibs = mcefLibraries;
+  };
 in
 {
   imports = [ ./default.nix ];
@@ -36,13 +39,17 @@ in
   programs.nix-ld.libraries = mcefLibraries;
 
   environment.systemPackages = [
-    (pkgs.writeShellApplication {
+    (pkgs.symlinkJoin {
       name = "prismlauncher";
-      text = ''
-        export LD_LIBRARY_PATH="${lib.makeLibraryPath mcefLibraries}''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-        export XKB_CONFIG_ROOT="${pkgs.xkeyboard-config}/share/X11/xkb"
-        exec ${pkgs.prismlauncher}/bin/prismlauncher "$@"
+      paths = [ prismlauncherWithMcef ];
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        # Prism's inner wrapper overwrites inherited LD_LIBRARY_PATH. Adding
+        # these libraries there ensures its Java child inherits them.
+        wrapProgram "$out/bin/prismlauncher" \
+          --set XKB_CONFIG_ROOT "${pkgs.xkeyboard-config}/share/X11/xkb"
       '';
+      meta.mainProgram = "prismlauncher";
     })
   ];
 }
