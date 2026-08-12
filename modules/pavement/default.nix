@@ -56,6 +56,7 @@ in
         NODE_ENV = "production";
         PORT = toString cfg.port;
         HOST = "0.0.0.0";
+        ADDRESS_HEADER = "x-real-ip";
         BODY_SIZE_LIMIT = "Infinity";
       };
 
