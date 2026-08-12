@@ -11,8 +11,8 @@ let
 in
 {
 	imports = [
+		./zram.nix
 		../../modules/sway
-		../../users/callie/account.nix
 		../../users/emelia
 		../../modules/base
 		../../modules/tz/ny.nix

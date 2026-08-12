@@ -39,6 +39,10 @@
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		home-manager-clockwork = {
+			url = "github:nix-community/home-manager/release-25.11";
+			inputs.nixpkgs.follows = "nixos-uconsole/nixpkgs";
+		};
 		plasma-manager = {
 			url = "github:nix-community/plasma-manager";
 			inputs = {
@@ -112,6 +116,34 @@
 
 	let
 		mypkgs = import ./pkgs { pkgs = nixpkgs.legacyPackages.x86_64-linux; lib = nixpkgs.lib; };
+		armPkgs = import nixpkgs {
+			system = "aarch64-linux";
+			config.allowUnfree = true;
+		};
+		armMypkgs = import ./pkgs { pkgs = armPkgs; lib = nixpkgs.lib; };
+		clockworkUserModule = { ... }: {
+			imports = [
+				(import ./users/callie/graphicalSession.nix {
+					pkgs = armPkgs;
+					inputs = inputs;
+					mypkgs = armMypkgs;
+				})
+			];
+			home-manager.useGlobalPkgs = true;
+			home-manager.extraSpecialArgs = {
+				inherit inputs;
+				mypkgs = armMypkgs;
+			};
+			home-manager.sharedModules = [
+				inputs.agenix.homeManagerModules.default
+			];
+		};
+		clockworkModules = [
+			./hosts/clockwork
+			inputs.agenix.nixosModules.default
+			inputs.home-manager-clockwork.nixosModules.home-manager
+			clockworkUserModule
+		];
 		mkHost = host: extraModules: nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
 			specialArgs = {
@@ -161,14 +193,12 @@
 				variant = "cm4";
 				specialArgs = {
 					inherit inputs self;
+					mypkgs = armMypkgs;
 					agenixPackage = inputs.agenix.packages.aarch64-linux.default;
 					clib = import ./lib inputs.nixos-uconsole.inputs.nixpkgs.lib;
-					pkgsUnstable = nixpkgs.legacyPackages.aarch64-linux;
+					pkgsUnstable = armPkgs;
 				};
-				modules = [
-					./hosts/clockwork
-					inputs.agenix.nixosModules.default
-				];
+				modules = clockworkModules;
 			};
 		};
 
@@ -178,14 +208,13 @@
 				modules = [
 					({ ... }: {
 						_module.args = {
-							inherit self;
+							inherit self inputs;
+							mypkgs = armMypkgs;
 							agenixPackage = inputs.agenix.packages.aarch64-linux.default;
-							pkgsUnstable = nixpkgs.legacyPackages.aarch64-linux;
+							pkgsUnstable = armPkgs;
 						};
 					})
-					./hosts/clockwork
-					inputs.agenix.nixosModules.default
-				];
+				] ++ clockworkModules;
 			}).config.system.build.sdImage;
 	}
 

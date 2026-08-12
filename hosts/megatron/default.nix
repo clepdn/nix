@@ -38,6 +38,12 @@
 
 	services.udev.extraRules = ''
 	  ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:11:00.*", ATTR{power/wakeup}="disabled"
+	  # Moondrop Dawn Pro 2 (Savitech chip, 35d8:011d) — rw on its hidraw node for
+	  # WebHID control (hub.moondroplab.tech). Granted via the plugdev group rather
+	  # than TAG+="uaccess": extraRules lands in 99-local.rules, which runs *after*
+	  # systemd's 73-seat-late.rules that fires the uaccess builtin, so the tag is
+	  # set too late to produce an ACL. GROUP+MODE has no such ordering dependency.
+	  KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="35d8", MODE="0660", GROUP="plugdev"
 	'';
 
 	environment.systemPackages = with pkgs; [ 

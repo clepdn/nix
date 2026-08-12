@@ -18,7 +18,7 @@
       codex
       (symlinkJoin {
         name = "pi";
-        paths = [ inputs.pi-mono.packages.${pkgs.system}.default ];
+        paths = [ inputs.pi-mono.packages.${pkgs.stdenv.hostPlatform.system}.default ];
         buildInputs = [ makeWrapper ];
         postBuild = ''
           wrapProgram $out/bin/pi \

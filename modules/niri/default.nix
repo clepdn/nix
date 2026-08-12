@@ -109,12 +109,20 @@ in
 
   xdg.portal = {
     enable = true;
-    wlr.enable = true;
     extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
     config.niri = {
       default = [ "kde" ];
-      "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-      "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+      # Screencasting on niri only works through xdg-desktop-portal-gnome
+      # (niri implements org.gnome.Mutter.ScreenCast / org.gnome.Shell.Screenshot).
+      # niri-flake already pulls that backend in.
+      #
+      # Do NOT route these to wlr or kde:
+      #   wlr  - advertises MONITOR sources only, so no window sharing, no
+      #          "niri Dynamic Cast Target" (Mod+G / Mod+Shift+G), and it
+      #          ignores `block-out-from "screencast"` rules.
+      #   kde  - its backend needs KWin and never claims the bus name here.
+      "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
+      "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
     };
   };
 
