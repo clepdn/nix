@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, self, ... }:
 let
   quickshellConfig = pkgs.runCommand "quickshell-eww-config" { } ''
     mkdir -p $out
@@ -163,6 +163,7 @@ in
     serviceConfig = {
       Type = "simple";
       ExecStart = "${pkgs.awww}/bin/awww-daemon";
+      ExecStartPost = "${pkgs.awww}/bin/awww img ${self}/assets/mirrored_green_offset_2560x1440_flipped.jpg";
       Restart = "on-failure";
       RestartSec = 2;
     };

@@ -34,6 +34,15 @@
     "Mod+Alt+P".action = spawn "wlogout";
     "Mod+Alt+O".action = power-off-monitors;
 
+    "Mod+4" = {
+      action = spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05-";
+      allow-when-locked = true;
+    };
+    "Mod+5" = {
+      action = spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05+";
+      allow-when-locked = true;
+    };
+
     "XF86AudioRaiseVolume" = {
       action = spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05+";
       allow-when-locked = true;
