@@ -23,12 +23,6 @@
       wildcard = true;
       extraLocationConfig = ''client_max_body_size 2G;'';
     };
-    "pds.on-her.computer" = config.myNixOS.cloudflareDns // {
-      port = 3000;
-      target = "100.102.161.7";
-      wildcard = true;
-      extraLocationConfig = ''client_max_body_size 2G;'';
-    };
 
     /* Dead for some reason
     "cobalt.on-her.computer" = config.myNixOS.cloudflareDns // {

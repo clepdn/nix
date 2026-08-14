@@ -15,6 +15,7 @@
         proxy_send_timeout 3600s;
       '';
     };
+
     "grafana.callie.moe" = config.myNixOS.cloudflareDns // {
       port = 3000;
       target = "100.116.202.116"; # homura — Grafana
@@ -27,6 +28,16 @@
       proxyWebsockets = true;
       proxyForwardHeaders = false;
       tailscaleOnly = true;
+    };
+
+    "flood.callie.moe" = config.myNixOS.cloudflareDns // {
+      port = 3001;
+      target = "100.116.202.116";
+    };
+
+    "autobrr.callie.moe" = config.myNixOS.cloudflareDns // {
+      port = 7474;
+      target = "100.116.202.116";
     };
   };
 }
