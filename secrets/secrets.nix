@@ -48,7 +48,6 @@ let hosts = [
 		"letta-password.age".publicKeys          = DEPRECATED_sshKeys;
 		"happy.env.age".publicKeys               = DEPRECATED_sshKeys;
 		"nix-remote-builder-key.age".publicKeys  = DEPRECATED_sshKeys;
-		"piclaw-keychain-key.env.age".publicKeys = DEPRECATED_sshKeys;
 		"garage-rpc-secret.age".publicKeys       = DEPRECATED_sshKeys;
 		"garage-admin-token.age".publicKeys      = DEPRECATED_sshKeys;
 		"garage-metrics-token.age".publicKeys    = DEPRECATED_sshKeys;
