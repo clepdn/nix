@@ -1,4 +1,4 @@
-{ self, ... }:
+{ self, pkgs, ... }:
 {
   imports = [
     "${self}/modules/niri"
@@ -7,6 +7,17 @@
   myNixOS.niri.idle.sleep = {
     enable = true;
     command = "systemctl suspend";
+  };
+
+  systemd.user.services.awww-wallpaper = {
+    description = "Hatsune Miku wallpaper";
+    wantedBy = [ "niri.service" ];
+    after = [ "awww-daemon.service" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.awww}/bin/awww img ${self}/assets/mirrored_green_offset_2560x1440_flipped.jpg";
+    };
   };
 
   home-manager.users.callie.programs.niri.settings.outputs = {
