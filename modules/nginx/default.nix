@@ -2,6 +2,7 @@
   imports = [
     ./computer.nix
     ./nematodes.nix
+    ./callie.moe.nix
     ./pavement.nix
     ./mail-stream.nix
   ];
@@ -31,6 +32,18 @@
     ];
     default = true;
     locations."/".return = "301 https://$host$request_uri";
+  };
+
+  services.nginx.virtualHosts."_reject" = {
+    listen = [
+      { addr = "0.0.0.0"; port = 443; }
+      { addr = "[::]";    port = 443; }
+    ];
+
+    default = true;
+    rejectSSL = true;
+
+    locations."/".return = "444";
   };
 
   networking.firewall = {

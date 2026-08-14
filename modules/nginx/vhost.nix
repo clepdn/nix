@@ -11,13 +11,15 @@ let cfg = config.myNixOS.acme;
     { addr = "[fd7a:115c:a1e0::4f37:c3c]"; port = 443; ssl = true; extraParameters = [ "http2" ]; }
   ];
   
-  commonProxyHeaders = ''
+  commonProxyHeaders = forwardHeaders: ''
     proxy_pass_request_headers on;
     proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_set_header X-Forwarded-Host $http_host;
+    ${lib.optionalString forwardHeaders ''
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Host $http_host;
+    ''}
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection $http_connection;
     proxy_buffering off;
@@ -65,6 +67,8 @@ in {
 
       options.proxyWebsockets = lib.mkOption { type = lib.types.bool; default = false; };
 
+      options.proxyForwardHeaders = lib.mkOption { type = lib.types.bool; default = true; };
+
       options.wildcard      = lib.mkOption { type = lib.types.bool; default = false; };
       options.tailscaleOnly = lib.mkOption { type = lib.types.bool; default = false; };
     });
@@ -104,7 +108,7 @@ in {
         locations."/" = {
           proxyPass = "http://${opts.target}:${toString opts.port}";
           proxyWebsockets = opts.proxyWebsockets;
-          extraConfig = commonProxyHeaders + "\n" + opts.extraLocationConfig;
+          extraConfig = (commonProxyHeaders opts.proxyForwardHeaders) + "\n" + opts.extraLocationConfig;
         };
         extraConfig = opts.extraServerConfig;
       };
