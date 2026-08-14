@@ -8,7 +8,7 @@ let cfg = config.myNixOS.acme;
   tailscaleSayaka = [
     # sayaka's tailscale IPs
     { addr = "100.77.12.60"; port = 443; ssl = true; extraParameters = [ "http2" ]; }
-    { addr = "fd7a:115c:a1e0::4f37:c3c"; port = 443; ssl = true; extraParameters = [ "http2" ]; }
+    { addr = "[fd7a:115c:a1e0::4f37:c3c]"; port = 443; ssl = true; extraParameters = [ "http2" ]; }
   ];
   
   commonProxyHeaders = ''
@@ -30,6 +30,9 @@ in {
     default = {
       dnsProvider = "cloudflare";
       environmentFile = config.age.secrets.cloudflare.path;
+      # Sayaka's Tailnet resolver is authoritative for private subdomains.
+      # ACME must discover and verify the public Cloudflare zone instead.
+      dnsResolver = "1.1.1.1:53";
     };
   };
 
@@ -48,6 +51,7 @@ in {
       options.target          = lib.mkOption { type = lib.types.str;  };
       options.dnsProvider     = lib.mkOption { type = lib.types.str;  };
       options.environmentFile = lib.mkOption { type = lib.types.str;  };
+      options.dnsResolver     = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
       options.extraNginxOpts  = lib.mkOption {
         type = lib.types.attrsOf lib.types.anything;
         default = {};
@@ -88,6 +92,7 @@ in {
       group = "nginx";
       dnsProvider = opts.dnsProvider;
       environmentFile = opts.environmentFile;
+      dnsResolver = opts.dnsResolver;
     }) cfg;
 
     services.nginx.virtualHosts = lib.listToAttrs (lib.flatten (lib.mapAttrsToList (name: opts:

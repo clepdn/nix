@@ -160,7 +160,11 @@ if contains -- $SIGN_SUB switch boot test
         end
         set NIX_BIN (command -v nix)
         echo "[sign] signing $SIGN_PATH (recursive) with "(basename $SIGN_KEY)
-        sudo $NIX_BIN store sign --key-file $SIGN_KEY --recursive $SIGN_PATH
+        set sign_argv store sign --key-file $SIGN_KEY --recursive $SIGN_PATH
+        set_color cyan
+        echo "nix $sign_argv"
+        set_color normal
+        sudo $NIX_BIN $sign_argv
         if test $status -ne 0
             echo "[sign] error: nix store sign failed" >&2
             exit 1
@@ -170,7 +174,9 @@ if contains -- $SIGN_SUB switch boot test
 end
 
 # Pass all arguments through to nixos-rebuild
+set_color cyan
 echo "nixos-rebuild $argv"
+set_color normal
 nixos-rebuild $argv
 set REBUILD_EXIT $status
 

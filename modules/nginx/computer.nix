@@ -5,6 +5,20 @@
   ];
 
   myNixOS.acme = {
+    "home.callie.moe" = config.myNixOS.cloudflareDns // {
+      port = 8123;
+      target = "100.127.202.125"; # lightbulb — Home Assistant
+      proxyWebsockets = true;
+      # Home Assistant rejects forwarded client headers until its mutable
+      # configuration explicitly trusts Sayaka as a reverse proxy.
+      extraLocationConfig = ''proxy_set_header X-Forwarded-For "";'';
+      tailscaleOnly = true;
+    };
+    "grafana.callie.moe" = config.myNixOS.cloudflareDns // {
+      port = 3000;
+      target = "100.116.202.116"; # homura — Grafana
+      tailscaleOnly = true;
+    };
     "bridget.on-her.computer" = config.myNixOS.cloudflareDns // {
       port = 4040;
       target = "100.116.202.116"; # homura — llm-bridge
