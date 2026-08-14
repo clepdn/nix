@@ -93,14 +93,9 @@
 			NoNewPrivileges = true;
 			DynamicUser = true;
 			ExecStart = "${pkgs.coredns}/bin/coredns -conf=${pkgs.writeText "Corefile-tail" ''
-				home.callie.moe:53 {
+				callie.moe:53 {
 					bind 100.77.12.60
-					file /etc/coredns/home.callie.moe.zone
-				}
-
-				grafana.callie.moe:53 {
-					bind 100.77.12.60
-					file /etc/coredns/grafana.callie.moe.zone
+					file /etc/coredns/callie.moe.zone
 				}
 
 				. {
@@ -129,8 +124,8 @@ $TTL 300
 _atproto IN TXT "did=did:plc:madoka2bgqe6vudktdb7lzop"
 '';
 
-	environment.etc."coredns/home.callie.moe.zone".text = ''
-$ORIGIN home.callie.moe.
+	environment.etc."coredns/callie.moe.zone".text = ''
+$ORIGIN callie.moe.
 $TTL 300
 @ IN SOA tail-ns.callie.moe. hostmaster.callie.moe. (
   1
@@ -140,23 +135,8 @@ $TTL 300
   300
 )
 @ IN NS tail-ns.callie.moe.
-@ IN A 100.77.12.60
-@ IN AAAA fd7a:115c:a1e0::4f37:c3c
-'';
-
-	environment.etc."coredns/grafana.callie.moe.zone".text = ''
-$ORIGIN grafana.callie.moe.
-$TTL 300
-@ IN SOA tail-ns.callie.moe. hostmaster.callie.moe. (
-  1
-  3600
-  600
-  1209600
-  300
-)
-@ IN NS tail-ns.callie.moe.
-@ IN A 100.77.12.60
-@ IN AAAA fd7a:115c:a1e0::4f37:c3c
+* IN A 100.77.12.60
+* IN AAAA fd7a:115c:a1e0::4f37:c3c
 '';
 
 
