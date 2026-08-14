@@ -6,6 +6,11 @@
 
     "Mod+Shift+Slash".action = show-hotkey-overlay;
 
+    "Mod+Tab" = {
+      action = spawn "rofi" "-show" "window";
+      hotkey-overlay.title = "Show open windows in Rofi";
+    };
+
     "Mod+Q" = {
       action = spawn "uwsm" "app" "--" "kitty";
       hotkey-overlay.title = "Open a Terminal: kitty";

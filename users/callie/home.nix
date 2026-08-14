@@ -16,6 +16,8 @@
       mypkgs.omp
       claude-code
       codex
+      fastfetch
+      hyfetch
       (symlinkJoin {
         name = "pi";
         paths = [ inputs.pi-mono.packages.${pkgs.stdenv.hostPlatform.system}.default ];

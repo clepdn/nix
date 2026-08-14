@@ -1,4 +1,4 @@
-{ pkgs, mypkgs, ... }:
+{ pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
     qemu
@@ -13,5 +13,6 @@
     nodejs_24
     distrobox
     android-tools
+    nixfmt
   ];
 }

@@ -28,16 +28,16 @@ in
 			output DSI-1 {
 				mode 720x1280
 				transform 90
-				scale 1.0
+				scale 2.0
 			}
 			output DSI-2 {
 				mode 720x1280
 				transform 90
-				scale 1.0
+				scale 2.0
 			}
 			output HDMI-A-1 {
 				scale 1.0
-				position 1280 0
+				position 640 0
 			}
 		'';
 	};

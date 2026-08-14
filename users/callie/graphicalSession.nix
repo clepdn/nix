@@ -18,6 +18,45 @@ in
   ];
 
   services.gvfs.enable = true;
+
+  # Preserve Rofi's stock layout while using its Solarized dark counterpart.
+  home-manager.users.callie.xdg.configFile."rofi/config.rasi".text = ''
+    configuration {
+      show-icons: false;
+    }
+
+    * {
+      background: #002b36;
+      background-alt: #073642;
+      foreground: #eee8d5;
+      lightbg: #073642;
+      lightfg: #586e75;
+      selected: #586e75;
+      blue: #eee8d5;
+      accent: #eee8d5;
+      red: #dc322f;
+      normal-background: @background;
+      normal-foreground: @foreground;
+      alternate-normal-background: @lightbg;
+      alternate-normal-foreground: @foreground;
+      active-background: @background;
+      active-foreground: @foreground;
+      selected-normal-background: @lightfg;
+      selected-normal-foreground: @foreground;
+      alternate-active-background: @lightbg;
+      alternate-active-foreground: @foreground;
+      selected-active-background: @lightfg;
+      selected-active-foreground: @foreground;
+      urgent-background: @background;
+      urgent-foreground: @red;
+      alternate-urgent-background: @lightbg;
+      alternate-urgent-foreground: @red;
+      selected-urgent-background: @red;
+      selected-urgent-foreground: @background;
+      separatorcolor: @foreground;
+      border-color: @foreground;
+    }
+  '';
   services.udisks2.enable = true;
 
   users.users.callie.packages = builtins.filter
