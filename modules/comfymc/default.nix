@@ -6,12 +6,6 @@
   imports = [
     ./ci.nix
   ];
-  # Runtime
-  virtualisation.podman = {
-    enable = true;
-    autoPrune.enable = true;
-    dockerCompat = true;
-  };
 
   # Enable container name DNS for all Podman networks.
   networking.firewall.interfaces = let
@@ -26,8 +20,6 @@
     "d /var/lib/comfymc/datapacks 0755 root root -"
     "d /var/lib/comfymc/mods 0755 root root -"
   ];
-
-  virtualisation.oci-containers.backend = "podman";
 
   virtualisation.oci-containers.containers.minecraft = {
     image = "itzg/minecraft-server";

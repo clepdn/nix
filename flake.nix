@@ -84,6 +84,14 @@
 				flake-utils.follows = "flake-utils";
 			};
 		};
+		llm-bridge = {
+			url = "git+ssh://git@knot.bas.sh/did:plc:qnt6tjqrplzxukueirbxqmya";
+			inputs = {
+				nixpkgs.follows = "nixpkgs";
+				flake-utils.follows = "flake-utils";
+			};
+		};
+
 
 		llama-cpp-src = {
 			url = "github:AtomicBot-ai/atomic-llama-cpp-turboquant";
@@ -183,7 +191,7 @@
 			madoka    = mkHost "madoka"    [ inputs.lanzaboote.nixosModules.lanzaboote ];
 			megatron  = mkHost "megatron"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
 			homura    = mkHost "homura"    [ inputs.jovian.nixosModules.jovian 
-							 inputs.nano.nixosModules.llm-bridge
+							 inputs.llm-bridge.nixosModules.llm-bridge
 							 inputs.nano.nixosModules.default ];
 			lightbulb = mkHost "lightbulb" [ ];
 

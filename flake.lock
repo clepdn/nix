@@ -70,11 +70,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786463624,
-        "narHash": "sha256-ipMpmn47BMf5DGuR7wDIm0rYRMlNAWR43K9qjCRDNlE=",
+        "lastModified": 1786736374,
+        "narHash": "sha256-ajf3HZ0reQYFhB9ZIX/d3DBoTKiZVVnE3hnTuoq+zzw=",
         "owner": "ilysenko",
         "repo": "codex-desktop-linux",
-        "rev": "76ea570f8ca3393721a6baefae4739abbacbf21c",
+        "rev": "6bd381696abe551effda853cfa11da94a1730b4c",
         "type": "github"
       },
       "original": {
@@ -406,6 +406,29 @@
         "owner": "AtomicBot-ai",
         "repo": "atomic-llama-cpp-turboquant",
         "type": "github"
+      }
+    },
+    "llm-bridge": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786766986,
+        "narHash": "sha256-zdBFKvszT1UfpkHzyuvoXYYyDDEqyBE7jdVtK/yvaIU=",
+        "ref": "refs/heads/main",
+        "rev": "8d77a52b3848bd35b94f40701865397986616bce",
+        "revCount": 7,
+        "type": "git",
+        "url": "ssh://git@knot.bas.sh/did:plc:qnt6tjqrplzxukueirbxqmya"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@knot.bas.sh/did:plc:qnt6tjqrplzxukueirbxqmya"
       }
     },
     "nano": {
@@ -857,6 +880,7 @@
         "jovian": "jovian",
         "lanzaboote": "lanzaboote",
         "llama-cpp-src": "llama-cpp-src",
+        "llm-bridge": "llm-bridge",
         "nano": "nano",
         "niri": "niri",
         "nix-minecraft": "nix-minecraft",

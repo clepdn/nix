@@ -18,6 +18,7 @@
       "${self}/modules/nix-ld/slippi.nix"
       "${self}/modules/nix-ld/mcef.nix"
       "${self}/modules/nix-ld/iloader.nix"
+      "${self}/modules/podman"
     ];
 
   virtualisation.virtualbox.host.enable = true;
@@ -175,12 +176,7 @@ services.tlp.settings={
     enable = true;
     package = pkgs.waydroid-nftables;
   };
-
-  virtualisation.podman = {
-    enable = true;
-    dockerCompat = true;
-  };
-
+  myNixOS.podman.enable = true;
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];

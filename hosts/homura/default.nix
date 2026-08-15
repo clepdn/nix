@@ -12,6 +12,7 @@
       "${self}/modules/monitoring"
       "${self}/modules/tz/ny.nix"
       "${self}/modules/open-webui"
+      "${self}/modules/podman"
     ];
 
   boot.initrd.systemd.enable = true;
@@ -54,6 +55,7 @@
   # Homura is the build server — don't offload back to itself.
   myNixOS.nix.homuraBuilder.enable = false;
   myNixOS.nix.signing.enable = true;
+  myNixOS.podman.enable = true;
 
   # Accept remote build connections from other machines.
   users.users.nix-remote-builder = {

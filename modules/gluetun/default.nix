@@ -35,13 +35,7 @@ in
 
 	config = lib.mkIf cfg.enable (lib.mkMerge [
 		{
-			virtualisation.podman = {
-				enable = true;
-				dockerCompat = true;
-			};
-
 			virtualisation.oci-containers = {
-				backend = "podman";
 				containers.gluetun = {
 					image = "qmcgaw/gluetun";
 					environment = {

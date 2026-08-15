@@ -15,10 +15,12 @@
 	      "${self}/modules/nix-ld/steam-run.nix"
               "${self}/modules/nix-ld/slippi.nix"
               "${self}/modules/nix-ld/mcef.nix"
+              "${self}/modules/podman"
 	];
 
 	myNixOS.nix.homuraBuilder.enable = false;
 	myNixOS.nix.signing.enable = true;
+	myNixOS.podman.enable = true;
 
 	powerManagement.cpuFreqGovernor = "performance";
 	environment.sessionVariables.mesa_glthread = "true";
