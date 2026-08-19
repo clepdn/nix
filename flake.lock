@@ -70,11 +70,19 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1786736374,
         "narHash": "sha256-ajf3HZ0reQYFhB9ZIX/d3DBoTKiZVVnE3hnTuoq+zzw=",
         "owner": "ilysenko",
         "repo": "codex-desktop-linux",
         "rev": "6bd381696abe551effda853cfa11da94a1730b4c",
+=======
+        "lastModified": 1786948352,
+        "narHash": "sha256-qFouSfAf8Az0j7dUMf128KNXqszdBi8LtmWHEhT3FOw=",
+        "owner": "ilysenko",
+        "repo": "codex-desktop-linux",
+        "rev": "2078f4da93bc262cb0c5dddd7ad483c6d37fb8cd",
+>>>>>>> cc29e60 (supersav mode for tlp)
         "type": "github"
       },
       "original": {

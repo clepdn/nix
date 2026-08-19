@@ -153,21 +153,36 @@
   users.groups.plugdev = {};
 
 services.tlp.settings={
-    CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
-    CPU_MAX_PERF_ON_BAT = 80;
-    PLATFORM_PROFILE_ON_BAT = "power";
+    # plugged in
+    CPU_BOOST_ON_AC  = 1;
+    CPU_MAX_PERF_ON_AC = 100;
+    CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
 
+    PCIE_ASPM_ON_AC = "performance";
+    WIFI_PWR_ON_AC = "off";
+
+    PLATFORM_PROFILE_ON_AC = "balanced";
+
+    # battery
+    CPU_BOOST_ON_BAT = 1;
+    CPU_MAX_PERF_ON_BAT = 80;
+    CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
+    
     PCIE_ASPM_ON_BAT = "powersave";
     WIFI_PWR_ON_BAT = "off";
+    
+    PLATFORM_PROFILE_ON_BAT = "power";
 
-    # Enable turbo.
-    CPU_BOOST_ON_AC  = 1;
-    CPU_BOOST_ON_BAT = 1;
-    CPU_BOOST_ON_SAV = 1;
+    # power-save
 
-    CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
-    CPU_MAX_PERF_ON_AC = 100;
-    PLATFORM_PROFILE_ON_AC = "balanced";
+    CPU_BOOST_ON_SAV = 0;
+    CPU_MAX_PERF_ON_SAV = 60;
+    CPU_ENERGY_PERF_POLICY_ON_SAV = "power";
+
+    PCIE_ASPM_ON_SAV = "powersupersave";
+    WIFI_PWR_ON_SAV  = "on";
+
+    PLATFORM_PROFILE_ON_SAV = "quiet";
   };
 
   services.flatpak.enable = true;
