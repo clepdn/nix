@@ -14,6 +14,10 @@
     microphone.noiseSuppression = 0;
     vad.enable = false;
     sound.command = "pw-play --rate 22050 --channels 1 --format s16 --raw -";
+    sounds = {
+      awake = ../../../assets/voice-assistant-awake.wav;
+      done = ../../../assets/voice-assistant-done.wav;
+    };
 
     # Keep wake-word detection local; only the satellite is reachable by Home
     # Assistant. Restrict detection to "Okay Nabu" to avoid activation by the
