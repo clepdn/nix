@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ pkgs, self, ... }:
 {
-  imports = [ ../../modules/services/codex-remote-control.nix ];
+  imports = [ "${self}/modules/services/codex-remote-control.nix" ];
 
   services.codexRemoteControl = {
     enable = true;

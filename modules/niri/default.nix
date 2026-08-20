@@ -36,6 +36,16 @@ in
   };
 
   services.gnome.gnome-keyring.enable = lib.mkForce false;
+  # Darkman supplies the desktop-wide color-scheme portal and uses GeoClue
+  # to schedule transitions at local sunrise and sunset.
+  services.geoclue2 = {
+    enable = true;
+    appConfig.darkman = {
+      isAllowed = true;
+      isSystem = false;
+    };
+  };
+
 
   services.blueman.enable = true;
   hardware.bluetooth.enable = true;
@@ -49,6 +59,14 @@ in
     ./plasma.nix
     {
       services.gnome-keyring.enable = lib.mkForce false;
+      services.darkman = {
+        enable = true;
+        settings = {
+          usegeoclue = true;
+          portal = true;
+        };
+      };
+
 
       xdg.configFile."uwsm/env-niri".text = ''
         export XDG_MENU_PREFIX=plasma-
@@ -109,8 +127,9 @@ in
 
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
+    extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde pkgs.darkman ];
     config.niri = {
+      "org.freedesktop.impl.portal.Settings" = [ "darkman" "kde" ];
       default = [ "kde" ];
       # Screencasting on niri only works through xdg-desktop-portal-gnome
       # (niri implements org.gnome.Mutter.ScreenCast / org.gnome.Shell.Screenshot).
