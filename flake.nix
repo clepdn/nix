@@ -98,7 +98,7 @@
 			flake = false;
 		};
 		pavement = {
-			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=main";
+			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=first-class-events";
 		};
 		quickshell-config = {
 			url = "git+https://tangled.org/callie.on-her.computer/quickshell";
@@ -116,6 +116,9 @@
 				nixpkgs.follows = "nixpkgs";
 				flake-utils.follows = "flake-utils";
 			};
+		};
+		paseo = {
+			url = "github:getpaseo/paseo/v0.4.0";
 		};
 	};
 
@@ -184,15 +187,21 @@
 			modules = [ inputs.agenix.homeManagerModules.default ./users/callie/home.nix ];
 		};
 
+		checks.x86_64-linux.codex-remote-control =
+			import ./checks/codex-remote-control.nix {
+				pkgs = nixpkgs.legacyPackages.x86_64-linux;
+			};
+
 		nixosConfigurations = {
 			deck      = mkHost "deck"      [ inputs.jovian.nixosModules.jovian ];
 			sayaka    = mkHost "sayaka"    [ inputs.disko.nixosModules.disko
 						         inputs.direct-vx.nixosModules.default ];
-			madoka    = mkHost "madoka"    [ inputs.lanzaboote.nixosModules.lanzaboote ];
-			megatron  = mkHost "megatron"  [ inputs.lanzaboote.nixosModules.lanzaboote ];
+			madoka    = mkHost "madoka"    [ inputs.lanzaboote.nixosModules.lanzaboote inputs.paseo.nixosModules.default ];
+			megatron  = mkHost "megatron"  [ inputs.lanzaboote.nixosModules.lanzaboote inputs.paseo.nixosModules.default ];
 			homura    = mkHost "homura"    [ inputs.jovian.nixosModules.jovian 
 							 inputs.llm-bridge.nixosModules.llm-bridge
-							 inputs.nano.nixosModules.default ];
+							 inputs.nano.nixosModules.default
+							 inputs.paseo.nixosModules.default ];
 			lightbulb = mkHost "lightbulb" [ ];
 
 			reef      = mkHost "reef"      [ inputs.nano.nixosModules.nano-executor ];

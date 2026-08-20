@@ -53,4 +53,19 @@
 	];
 
 	system.stateVersion = "26.05";
+
+	services.paseo = {
+		enable = true;
+		user = "callie";
+		group = "users";
+		inheritUserEnvironment = true;
+		listenAddress = "127.0.0.1";
+		port = 6767;
+		openFirewall = false;
+
+		relay = {
+			enable = true;
+			mode = "hosted";
+		};
+	};
 }

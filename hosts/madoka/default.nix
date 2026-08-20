@@ -200,4 +200,19 @@ services.tlp.settings={
 
   system.stateVersion = "25.11"; # Don't change me : )
 
+  services.paseo = {
+    enable = true;
+    user = "callie";
+    group = "users";
+    inheritUserEnvironment = true;
+    listenAddress = "127.0.0.1";
+    port = 6767;
+    openFirewall = false;
+
+    relay = {
+      enable = true;
+      mode = "hosted";
+    };
+  };
+
 }
