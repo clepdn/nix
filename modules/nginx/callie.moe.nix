@@ -35,6 +35,16 @@
       target = "100.116.202.116";
     };
 
+    "qb1.callie.moe" = config.myNixOS.cloudflareDns // {
+      port = 8080;
+      target = "100.116.202.116";
+    };
+
+    "qb2.callie.moe" = config.myNixOS.cloudflareDns // {
+      port = 8080;
+      target = "100.116.202.116";
+    };
+
     "autobrr.callie.moe" = config.myNixOS.cloudflareDns // {
       port = 7474;
       target = "100.116.202.116";

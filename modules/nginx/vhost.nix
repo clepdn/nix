@@ -5,12 +5,15 @@ let cfg = config.myNixOS.acme;
     { addr = "0.0.0.0"; port = 443; ssl = true; extraParameters = [ "http2" ]; }
   ];
 
-  tailscaleSayaka = [
-    # sayaka's tailscale IPs
-    { addr = "100.77.12.60"; port = 443; ssl = true; extraParameters = [ "http2" ]; }
-    { addr = "[fd7a:115c:a1e0::4f37:c3c]"; port = 443; ssl = true; extraParameters = [ "http2" ]; }
-  ];
-  
+  # Tailscale-only hosts must share the wildcard listener with public hosts.
+  # Binding an exact Tailscale address makes Nginx select that server before
+  # SNI, so unrelated hosts such as flood.callie.moe get the wrong backend.
+  tailscaleAccess = ''
+    allow 100.64.0.0/10;
+    allow fd7a:115c:a1e0::/48;
+    deny all;
+  '';
+
   commonProxyHeaders = forwardHeaders: ''
     proxy_pass_request_headers on;
     proxy_set_header Host $host;
@@ -110,14 +113,13 @@ in {
           proxyWebsockets = opts.proxyWebsockets;
           extraConfig = (commonProxyHeaders opts.proxyForwardHeaders) + "\n" + opts.extraLocationConfig;
         };
-        extraConfig = opts.extraServerConfig;
-      };
-      tailscaleVhost = lib.optionalAttrs opts.tailscaleOnly {
-        listen = tailscaleSayaka;
+        extraConfig =
+          (lib.optionalString opts.tailscaleOnly tailscaleAccess)
+          + opts.extraServerConfig;
       };
       mkVhost = n: lib.nameValuePair n
-        (lib.recursiveUpdate (lib.recursiveUpdate baseVhost tailscaleVhost) opts.extraNginxOpts);
-    in 
+        (lib.recursiveUpdate baseVhost opts.extraNginxOpts);
+    in
       if opts.wildcard
       then [ (mkVhost name) (mkVhost "*.${name}") ]
       else [ (mkVhost name) ]

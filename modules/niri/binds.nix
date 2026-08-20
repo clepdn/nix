@@ -48,6 +48,15 @@
       allow-when-locked = true;
     };
 
+    "Mod+Shift+4" = {
+      action = spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.01-";
+      allow-when-locked = true;
+    };
+    "Mod+Shift+5" = {
+      action = spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.01+";
+      allow-when-locked = true;
+    };
+
     "XF86AudioRaiseVolume" = {
       action = spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05+";
       allow-when-locked = true;
