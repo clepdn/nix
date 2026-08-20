@@ -1,15 +1,15 @@
 { pkgs, ... }:
 {
   # Home Assistant connects to this Wyoming satellite over the tailnet. The
-  # satellite captures from PipeWire's default source, which is the existing
-  # DeepFilter noise-canceling microphone on this host, and plays replies on
-  # PipeWire's default sink.
+  # satellite captures from DeepFilter's explicitly named virtual source,
+  # which wraps the Yeti microphone, and plays replies on PipeWire's default
+  # sink.
   services.wyoming.satellite = {
     enable = true;
     user = "callie";
     name = "Megatron";
 
-    microphone.command = "pw-record --rate 16000 --channels 1 --format s16 --raw -";
+    microphone.command = "pw-record --target deepfilter-source --rate 16000 --channels 1 --format s16 --raw -";
     microphone.autoGain = 0;
     microphone.noiseSuppression = 0;
     vad.enable = false;

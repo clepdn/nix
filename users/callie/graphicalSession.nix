@@ -93,5 +93,7 @@ in
     obs-studio
 
     equibop
+
+    darkman
   ]);
 }

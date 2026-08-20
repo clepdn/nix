@@ -46,9 +46,11 @@
           "audio.channels" = 1;
           "audio.position" = [ "MONO" ];
           "capture.props" = {
+            "node.name" = "capture.deepfilter-source";
             "node.passive" = true;
           };
           "playback.props" = {
+            "node.name" = "deepfilter-source";
             "media.class" = "Audio/Source";
           };
         };
