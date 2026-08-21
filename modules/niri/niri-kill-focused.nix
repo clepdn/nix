@@ -1,8 +1,8 @@
-{ pkgs, niri-unstable }:
+{ pkgs, niri }:
 pkgs.writeShellApplication {
   name = "niri-kill-focused";
   runtimeInputs = [
-    niri-unstable
+    niri
     pkgs.jq
     pkgs.gawk
     pkgs.coreutils

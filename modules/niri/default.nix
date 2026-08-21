@@ -4,9 +4,8 @@ let
     mkdir -p $out
     cp -r ${inputs.quickshell-config}/. $out/
   '';
-  niriPkgs = inputs.niri.packages.${pkgs.system};
   niri-kill-focused = pkgs.callPackage ./niri-kill-focused.nix {
-    inherit (niriPkgs) niri-unstable;
+    niri = pkgs.niri;
   };
 in
 {
@@ -21,7 +20,7 @@ in
   programs = {
     niri = {
       enable = true;
-      package = niriPkgs.niri-unstable;
+      package = pkgs.niri;
     };
 
     uwsm = {
@@ -74,7 +73,7 @@ in
 
       programs.niri.settings.xwayland-satellite = {
         enable = true;
-        path = lib.getExe niriPkgs.xwayland-satellite-unstable;
+        path = lib.getExe pkgs.xwayland-satellite;
       };
 
       services.mako = {
