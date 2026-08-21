@@ -418,11 +418,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787031064,
-        "narHash": "sha256-jq07UWgNR3V2NMXnS9gLNeOjXk9PrNs/oEXDUEcg5Dc=",
+        "lastModified": 1787268351,
+        "narHash": "sha256-ZatYtGBiwXC9yj7qjkyWcwDzw0LwvToKxG7Ok4LvrIs=",
         "ref": "refs/heads/main",
-        "rev": "abcfe0c90b1cd0f2b14724bddf5526c86ca8107d",
-        "revCount": 11,
+        "rev": "a413bb1c50f2b8732a5b26f1592ce54c8b60a63c",
+        "revCount": 13,
         "type": "git",
         "url": "ssh://git@knot.bas.sh/did:plc:qnt6tjqrplzxukueirbxqmya"
       },

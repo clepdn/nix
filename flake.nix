@@ -120,6 +120,11 @@
 		paseo = {
 			url = "github:getpaseo/paseo/v0.4.0";
 		};
+		omp = {
+			url = "git+https://github.com/metaphorics/oh-my-pi?ref=feat/cross-platform-sleep-prevention";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
+
 	};
 
 	outputs =

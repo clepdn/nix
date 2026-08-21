@@ -3,7 +3,6 @@
 let
   cfg = config.myNixOS.paseo;
   paseoServer = inputs.paseo.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
-    # Paseo v0.4.0's published NPM dependency hash is stale.
     npmDepsHash = "sha256-i5PbVUe2Ec+GtghV9IpCJQJ9hcUT5hFhmxneNvoD584=";
   };
 in

@@ -31,6 +31,7 @@ in
     hostname = "home-assistant";
     environment = {
       TZ = config.time.timeZone;
+      OPENAI_BASE_URL = "https://bridget.on-her.computer/v1";
     };
     volumes = [
       "${dataDir}/config:/config"
