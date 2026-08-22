@@ -1,4 +1,4 @@
-{ pkgs, lib, inputs, mypkgs, ... }: {
+{ pkgs, inputs, ... }: {
   imports = [
     inputs.nixvim.homeModules.nixvim
     ../../modules/fish
@@ -13,20 +13,11 @@
     username = "callie";
     homeDirectory = "/home/callie";
     packages = with pkgs; [
-      mypkgs.omp
+      inputs.omp.packages.${pkgs.system}.default
       claude-code
       codex
       fastfetch
       hyfetch
-      (symlinkJoin {
-        name = "pi";
-        paths = [ inputs.pi-mono.packages.${pkgs.stdenv.hostPlatform.system}.default ];
-        buildInputs = [ makeWrapper ];
-        postBuild = ''
-          wrapProgram $out/bin/pi \
-            --prefix PATH : ${lib.makeBinPath [ nodejs ]}
-        '';
-      })
     ];
     stateVersion = "25.11";
   };

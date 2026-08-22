@@ -44,7 +44,7 @@ with pkgs; [
 	appimage-run
 	patchelf
 	openssl
-	aseprite
+
 	claude-code
 	gf
 	blender
