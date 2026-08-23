@@ -19,7 +19,7 @@
       "${self}/modules/nix-ld/mcef.nix"
       "${self}/modules/nix-ld/iloader.nix"
       "${self}/modules/podman"
-      "${self}/modules/paseo"
+      
     ];
 
   virtualisation.virtualbox.host.enable = true;

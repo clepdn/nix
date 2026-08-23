@@ -14,7 +14,7 @@
               "${self}/modules/nix-ld/slippi.nix"
               "${self}/modules/nix-ld/mcef.nix"
               "${self}/modules/podman"
-              "${self}/modules/paseo"
+              
 	];
 
 	myNixOS.nix.homuraBuilder.enable = false;

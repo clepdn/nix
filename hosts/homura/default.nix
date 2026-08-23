@@ -11,7 +11,7 @@
       "${self}/modules/tz/ny.nix"
       "${self}/modules/open-webui"
       "${self}/modules/podman"
-      "${self}/modules/paseo"
+      
     ];
 
   # Bootloader.
