@@ -140,6 +140,10 @@ $TTL 300
 '';
 
 
+	services.tailscale.extraUpFlags = [ "--advertise-exit-node" ] ;
+
+	boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
+
 	boot.loader.grub.enable = true;
 	
 	networking.firewall.enable = true;

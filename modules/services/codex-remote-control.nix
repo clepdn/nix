@@ -46,7 +46,7 @@ let
     name = "codex-remote-control-service";
     runtimeInputs = [ cfg.package ] ++ cfg.extraPackages;
     text = ''
-      exec ${codexExecutable} ${codexArgs} remote-control
+      exec ${codexExecutable} ${codexArgs} remote-control start
     '';
   };
 

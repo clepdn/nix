@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, inputs, mypkgs, ... }: {
   imports = [
     inputs.nixvim.homeModules.nixvim
     ../../modules/fish
@@ -13,11 +13,11 @@
     username = "callie";
     homeDirectory = "/home/callie";
     packages = with pkgs; [
-      inputs.omp.packages.${pkgs.system}.default
       claude-code
       codex
       fastfetch
       hyfetch
+      mypkgs.omp
     ];
     stateVersion = "25.11";
   };

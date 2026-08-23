@@ -117,14 +117,6 @@
 				flake-utils.follows = "flake-utils";
 			};
 		};
-		paseo = {
-			url = "github:getpaseo/paseo/v0.4.0";
-		};
-		omp = {
-			url = "git+https://github.com/metaphorics/oh-my-pi?ref=feat/cross-platform-sleep-prevention";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
-
 	};
 
 	outputs =
@@ -201,12 +193,12 @@
 			deck      = mkHost "deck"      [ inputs.jovian.nixosModules.jovian ];
 			sayaka    = mkHost "sayaka"    [ inputs.disko.nixosModules.disko
 						         inputs.direct-vx.nixosModules.default ];
-			madoka    = mkHost "madoka"    [ inputs.lanzaboote.nixosModules.lanzaboote inputs.paseo.nixosModules.default ];
-			megatron  = mkHost "megatron"  [ inputs.lanzaboote.nixosModules.lanzaboote inputs.paseo.nixosModules.default ];
+			madoka    = mkHost "madoka"    [ inputs.lanzaboote.nixosModules.lanzaboote  ];
+			megatron  = mkHost "megatron"  [ inputs.lanzaboote.nixosModules.lanzaboote  ];
 			homura    = mkHost "homura"    [ inputs.jovian.nixosModules.jovian 
 							 inputs.llm-bridge.nixosModules.llm-bridge
 							 inputs.nano.nixosModules.default
-							 inputs.paseo.nixosModules.default ];
+							];
 			lightbulb = mkHost "lightbulb" [ ];
 
 			reef      = mkHost "reef"      [ inputs.nano.nixosModules.nano-executor ];

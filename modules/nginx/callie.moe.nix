@@ -7,7 +7,7 @@
   myNixOS.acme = {
     "owebui.callie.moe" = config.myNixOS.cloudflareDns // {
       port = 8097;
-      target = "100.116.202.116"; # homura — open-webui
+      target = "100.116.202.116"; 
       tailscaleOnly = true;
       extraLocationConfig = ''
         client_max_body_size 512M;
@@ -18,13 +18,13 @@
 
     "grafana.callie.moe" = config.myNixOS.cloudflareDns // {
       port = 3000;
-      target = "100.116.202.116"; # homura — Grafana
+      target = "100.116.202.116"; 
       tailscaleOnly = true;
     };
 
     "home.callie.moe" = config.myNixOS.cloudflareDns // {
       port = 8123;
-      target = "100.127.202.125"; # lightbulb — Home Assistant
+      target = "100.127.202.125"; 
       proxyWebsockets = true;
       proxyForwardHeaders = false;
       tailscaleOnly = true;
