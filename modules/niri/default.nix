@@ -61,7 +61,7 @@ in
       services.darkman = {
         enable = true;
         settings = {
-          usegeoclue = true;
+          usegeoclue = false;
           portal = true;
         };
       };
