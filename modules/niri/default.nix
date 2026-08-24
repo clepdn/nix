@@ -38,7 +38,7 @@ in
   # Darkman supplies the desktop-wide color-scheme portal and uses GeoClue
   # to schedule transitions at local sunrise and sunset.
   services.geoclue2 = {
-    enable = true;
+    enable = false;
     appConfig.darkman = {
       isAllowed = true;
       isSystem = false;
