@@ -81,19 +81,6 @@ in
       image_tool.max_bytes = 5000000;
 
       models = {
-        umans-glm-5_2 = basePreset // {
-          model = "umans-glm-5.2";
-          thinking_effort = "xhigh";
-          vision = false;
-        };
-
-        umans-kimi = basePreset // {
-          model = "umans-kimi-k2.7";
-          thinking_effort = "xhigh";
-          vision = true;
-          nudge_on_no_tool = true;
-        };
-
         umans-flash = basePreset // {
           model = "umans-flash";
           thinking_effort = "xhigh";
@@ -123,6 +110,7 @@ in
         gpt-luna-low = oaiPreset // {
           thinking_effort = "low";
         };
+
         gpt-terra = oaiPreset // {
           model = "gpt-5.6-terra";
           thinking_effort = "high";
@@ -147,11 +135,13 @@ in
         };
       };
 
+      # Both routes stay on Bridget's subscription-backed Codex accounts.
+      # Never fail over to OpenRouter/Umans pay-per-token providers.
       model = {
-        preset = "claude";
+        preset = "gpt-terra";
       };
       fallback = {
-        preset = "gpt-terra";
+        preset = "gpt-sol";
       };
       summary = {
         preset = "gpt-luna-low";

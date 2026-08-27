@@ -1,9 +1,31 @@
 {
-  lib, stdenv, fetchurl, autoPatchelfHook,
-  alsa-lib, mesa, nss, nspr,
-  libx11, libxcomposite, libxdamage, libxext, libxfixes, libxrandr, libxcb,
-  libdrm, libxkbcommon, expat, cups, dbus,
-  at-spi2-atk, pango, cairo, glib, gtk3,
+  lib,
+  stdenv,
+  fetchurl,
+  autoPatchelfHook,
+  makeWrapper,
+  alsa-lib,
+  mesa,
+  libglvnd,
+  nss,
+  nspr,
+  libx11,
+  libxcomposite,
+  libxdamage,
+  libxext,
+  libxfixes,
+  libxrandr,
+  libxcb,
+  libdrm,
+  libxkbcommon,
+  expat,
+  cups,
+  dbus,
+  at-spi2-atk,
+  pango,
+  cairo,
+  glib,
+  gtk3,
   qt6,
 }:
 stdenv.mkDerivation rec {
@@ -20,7 +42,7 @@ stdenv.mkDerivation rec {
       platform = platformMap.${stdenv.hostPlatform.system};
 
       hashes = {
-        "x86_64-linux"  = "sha256-W7p+DEx85p56si+hNAKFVM4q8rh5aZLS+BNmUTFroiE=";
+        "x86_64-linux" = "sha256-W7p+DEx85p56si+hNAKFVM4q8rh5aZLS+BNmUTFroiE=";
         "aarch64-linux" = "sha256-z4ejQPj4Qeo3GL+F+IFDQt4VhLTuHGr4LWamUBH3040=";
       };
 
@@ -31,7 +53,11 @@ stdenv.mkDerivation rec {
       inherit hash;
     };
 
-  nativeBuildInputs = [ autoPatchelfHook qt6.wrapQtAppsHook ];
+  nativeBuildInputs = [
+    autoPatchelfHook
+    makeWrapper
+    qt6.wrapQtAppsHook
+  ];
 
   buildInputs = [
     alsa-lib
@@ -59,7 +85,9 @@ stdenv.mkDerivation rec {
   ];
 
   autoPatchelfIgnoreMissingDeps = [
-    "libQt5Core.so.5" "libQt5Gui.so.5" "libQt5Widgets.so.5"
+    "libQt5Core.so.5"
+    "libQt5Gui.so.5"
+    "libQt5Widgets.so.5"
   ];
 
   installPhase = ''
@@ -69,7 +97,9 @@ stdenv.mkDerivation rec {
     mkdir -p "$out/share/lib/helium"
 
     cp -r . "$out/share/lib/helium/"
-    ln -s "$out/share/lib/helium/helium" "$out/bin/helium"
+    # ANGLE dlopens libEGL from libGLESv2, whose RUNPATH autoPatchelf cannot alter.
+    makeWrapper "$out/share/lib/helium/helium" "$out/bin/helium" \
+      --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ libglvnd ]}"
 
     cp -r locales "$out/share/lib/helium/"
     cp -r usr/share "$out/" 2>/dev/null || true
@@ -87,7 +117,10 @@ stdenv.mkDerivation rec {
     description = "Private, fast, and honest web browser based on Chromium";
     homepage = "https://github.com/imputnet/helium-chromium";
     changelog = "https://github.com/imputnet/helium-linux/releases/tag/${version}";
-    platforms = [ "x86_64-linux" "aarch64-linux" ];
+    platforms = [
+      "x86_64-linux"
+      "aarch64-linux"
+    ];
     license = lib.licenses.gpl3;
     mainProgram = "helium";
   };

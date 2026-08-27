@@ -1,9 +1,15 @@
 {
-  lib, stdenv, fetchurl, autoPatchelfHook,
+  lib,
+  stdenv,
+  fetchurl,
+  autoPatchelfHook,
+  makeWrapper,
+  alsa-lib,
+  libpulseaudio,
 }:
 stdenv.mkDerivation rec {
   pname = "omp";
-  version = "17.0.5";
+  version = "18.0.4";
 
   src =
     let
@@ -15,8 +21,8 @@ stdenv.mkDerivation rec {
       platform = platformMap.${stdenv.hostPlatform.system};
 
       hashes = {
-        "x86_64-linux" = "sha256-MZ0Iq45fuAxz9zSQfV9Hqou9TqMfehm6z4YRxauibDE=";
-        "aarch64-linux" = "sha256-VVBGuVuI0VNP9MqF6lgU74nLNfqKpK87Dj0zEGLanCw=";
+        "x86_64-linux" = "sha256-lOxC0X1xl1o4HiAzW7PABaf9fuwZsxk1jfbSLyjhazc=";
+        "aarch64-linux" = "sha256-8rfIoBloHt4xSsFlEAwcW1zUkAE5B1lI2oCcAEvsXOc=";
       };
 
       hash = hashes.${stdenv.hostPlatform.system};
@@ -32,10 +38,14 @@ stdenv.mkDerivation rec {
   # discards that trailing payload, degrading omp into the plain Bun runtime.
   dontStrip = true;
 
-  nativeBuildInputs = [ autoPatchelfHook ];
+  nativeBuildInputs = [
+    autoPatchelfHook
+    makeWrapper
+  ];
 
-  # Bun-compiled standalone binary; only links against glibc, but keep
-  # libstdc++/libgcc available in case it dlopens them at runtime.
+  # Bun dlopens the playback backends and the TTS runtime dlopens libstdc++.
+  # Patching this executable's RPATH corrupts its appended JavaScript bundle,
+  # so supply every dynamic runtime library from a wrapper.
   buildInputs = [ stdenv.cc.cc.lib ];
 
   installPhase = ''
@@ -44,11 +54,25 @@ stdenv.mkDerivation rec {
     runHook postInstall
   '';
 
+  postFixup = ''
+    wrapProgram "$out/bin/omp" \
+      --prefix LD_LIBRARY_PATH : "${
+        lib.makeLibraryPath [
+          alsa-lib
+          libpulseaudio
+          stdenv.cc.cc.lib
+        ]
+      }"
+  '';
+
   meta = with lib; {
     description = "oh-my-pi (omp): AI coding agent for the terminal";
     homepage = "https://omp.sh";
     license = licenses.mit;
     mainProgram = "omp";
-    platforms = [ "x86_64-linux" "aarch64-linux" ];
+    platforms = [
+      "x86_64-linux"
+      "aarch64-linux"
+    ];
   };
 }

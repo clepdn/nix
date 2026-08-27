@@ -42,11 +42,23 @@ let
     "-c"
     (lib.escapeShellArg ''cli_auth_credentials_store="file"'')
   ];
-  codexRemoteControl = pkgs.writeShellApplication {
-    name = "codex-remote-control-service";
-    runtimeInputs = [ cfg.package ] ++ cfg.extraPackages;
+  codexDaemonRuntimeInputs = [
+    cfg.package
+    pkgs.procps
+  ]
+  ++ cfg.extraPackages;
+  codexRemoteControlStart = pkgs.writeShellApplication {
+    name = "codex-remote-control-start";
+    runtimeInputs = codexDaemonRuntimeInputs;
     text = ''
       exec ${codexExecutable} ${codexArgs} remote-control start
+    '';
+  };
+  codexRemoteControlStop = pkgs.writeShellApplication {
+    name = "codex-remote-control-stop";
+    runtimeInputs = codexDaemonRuntimeInputs;
+    text = ''
+      exec ${codexExecutable} ${codexArgs} remote-control stop
     '';
   };
 
@@ -146,11 +158,6 @@ in
       description = "Non-secret environment, such as proxy or custom CA settings.";
     };
 
-    restartSec = lib.mkOption {
-      type = lib.types.str;
-      default = "10s";
-      description = "Delay before restarting the foreground process.";
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -210,7 +217,7 @@ in
       wants = [ "network-online.target" ];
       after = [ "network-online.target" ];
 
-      path = [ cfg.package ] ++ cfg.extraPackages;
+      path = codexDaemonRuntimeInputs;
       environment = serviceEnvironment;
 
       unitConfig = {
@@ -221,14 +228,14 @@ in
 
       restartTriggers = [ cfg.package ];
       serviceConfig = {
-        Type = "simple";
+        Type = "oneshot";
+        RemainAfterExit = true;
         User = cfg.user;
         Group = serviceGroup;
         WorkingDirectory = cfg.workingDirectory;
-        ExecStart = "${codexRemoteControl}/bin/codex-remote-control-service";
+        ExecStart = "${codexRemoteControlStart}/bin/codex-remote-control-start";
+        ExecStop = "${codexRemoteControlStop}/bin/codex-remote-control-stop";
 
-        Restart = "always";
-        RestartSec = cfg.restartSec;
         TimeoutStopSec = "30s";
         KillMode = "control-group";
         UMask = "0077";

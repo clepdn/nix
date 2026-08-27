@@ -418,11 +418,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787268351,
-        "narHash": "sha256-ZatYtGBiwXC9yj7qjkyWcwDzw0LwvToKxG7Ok4LvrIs=",
+        "lastModified": 1787681872,
+        "narHash": "sha256-L4GzLdkrJqmLrEP1TzqhSUT6ZRsogfwEWHe4mIExh0k=",
         "ref": "refs/heads/main",
-        "rev": "a413bb1c50f2b8732a5b26f1592ce54c8b60a63c",
-        "revCount": 13,
+        "rev": "6369b8a5f2845e6f7455157df26017d4ae23e9d2",
+        "revCount": 14,
         "type": "git",
         "url": "ssh://git@knot.bas.sh/did:plc:qnt6tjqrplzxukueirbxqmya"
       },
@@ -441,11 +441,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786064787,
-        "narHash": "sha256-KYWDM0Mg0C++CtU1f0+7tQzRs02ofaw63miAD3vuugs=",
+        "lastModified": 1787681410,
+        "narHash": "sha256-Z40eCL2y/HMg1Giv+0sprfTcZqSfxdurTFbJlMFiIac=",
         "ref": "refs/heads/main",
-        "rev": "317dfe9f462dc7b148963f48ca7370145a80a829",
-        "revCount": 267,
+        "rev": "6bacab06f782549dd7146d68e9b6977c6ec1aead",
+        "revCount": 268,
         "type": "git",
         "url": "https://tangled.org/did:plc:vsjfqg3m57r3xghg4pqv4v6i"
       },

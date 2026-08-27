@@ -1,6 +1,6 @@
 # Codex Remote Control on Homura
 
-Homura runs Codex Remote Control as the Nix-managed `codex-remote-control.service` unit under the non-root `callie` account. The service executes the foreground command `codex remote-control`; it does not run `remote-control start`, an app-server daemon, or a standalone updater.
+Homura runs Codex Remote Control as the Nix-managed `codex-remote-control.service` unit under the non-root `callie` account. The oneshot unit invokes `codex remote-control start`, which starts Codex's managed app-server daemon with remote control enabled, then remains active. `systemctl stop` invokes `codex remote-control stop`. The daemon inherits a Nix-pinned runtime path that includes `ps`, which its PID manager requires.
 
 `CODEX_HOME=/home/callie/.codex` is mutable state outside the Nix store. Homura's `/home` filesystem is persistent. Keep this directory private and preserve it across generations.
 
@@ -46,7 +46,7 @@ sudo -u callie -H codex-remote-login-status
 sudo -u callie -H codex-remote-doctor
 ```
 
-A clean `systemctl stop` is intentional and is not restarted by `Restart=always`. Authentication, pairing, sessions, SQLite state, configuration, and plugins remain under `CODEX_HOME`.
+A clean `systemctl stop` invokes the managed daemon stop command and leaves the oneshot unit inactive. Authentication, pairing, sessions, SQLite state, configuration, and plugins remain under `CODEX_HOME`.
 
 ## Migration from an existing daemon
 
@@ -60,15 +60,15 @@ There must be one owner of Codex's app-server control socket.
    ps -fu callie | grep -E 'codex.*(remote-control|app-server|proxy)' | grep -v grep
    ```
 
-2. Stop any existing Codex-managed lifecycle with the binary that created it, if supported:
+2. Stop any existing Codex-managed lifecycle with the binary that created it:
 
    ```sh
    codex remote-control stop
    codex app-server daemon stop
    ```
 
-3. Disable old hand-written or Home Manager units that run `codex remote-control start`, `app-server daemon`, or `app-server --listen unix://`.
-4. Disconnect active Codex Desktop SSH remote sessions if they spawn `codex app-server proxy`.
+3. Disable old hand-written or Home Manager units that also own the app-server daemon.
+4. Disconnect active Codex Desktop SSH remote sessions if they spawn a separate app server.
 5. Confirm no old process owns the control socket before starting the Nix unit.
 6. Do not delete `auth.json`, `state_*.sqlite`, sessions, configuration, or pairing state.
 7. Start the Nix unit and inspect the process tree and journal.

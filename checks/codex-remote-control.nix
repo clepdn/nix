@@ -10,15 +10,25 @@ let
       exit 0
     fi
 
+    if [[ "$*" == *"remote-control stop"* ]]; then
+      if [[ -e "$CODEX_HOME/child.pid" ]]; then
+        kill "$(< "$CODEX_HOME/child.pid")" 2>/dev/null || true
+      fi
+      touch "$CODEX_HOME/stopped"
+      exit 0
+    fi
+
+    if [[ "$*" != *"remote-control start"* ]]; then
+      exit 2
+    fi
+
     printf '%s\n' "$@" > "$CODEX_HOME/argv"
     printf 'HOME=%s\nCODEX_HOME=%s\nSHELL=%s\nPATH=%s\nPWD=%s\nCODEX_TEST=%s\n' \
       "$HOME" "$CODEX_HOME" "$SHELL" "$PATH" "$PWD" "$CODEX_TEST" > "$CODEX_HOME/environment"
+    command -v ps > "$CODEX_HOME/ps-path"
 
-    sleep 3600 &
-    child="$!"
-    printf '%s\n' "$child" > "$CODEX_HOME/child.pid"
-    trap 'kill "$child" 2>/dev/null || true; touch "$CODEX_HOME/stopped"; exit 0' TERM INT
-    wait "$child"
+    ${pkgs.coreutils}/bin/sleep 3600 </dev/null >/dev/null 2>&1 &
+    printf '%s\n' "$!" > "$CODEX_HOME/child.pid"
   '';
 in
 pkgs.testers.nixosTest {
@@ -66,15 +76,19 @@ pkgs.testers.nixosTest {
     machine.succeed("systemctl start codex-remote-control.service")
     machine.wait_for_unit("codex-remote-control.service")
 
+    machine.succeed("test \"$(systemctl show codex-remote-control.service -p Type --value)\" = oneshot")
+    machine.succeed("test \"$(systemctl show codex-remote-control.service -p RemainAfterExit --value)\" = yes")
     machine.succeed("test \"$(systemctl show codex-remote-control.service -p User --value)\" = developer")
     machine.succeed("test \"$(systemctl show codex-remote-control.service -p Group --value)\" = users")
     machine.succeed("grep -Fx remote-control /home/developer/.codex/argv")
-    machine.fail("grep -Fx start /home/developer/.codex/argv")
+    machine.succeed("grep -Fx start /home/developer/.codex/argv")
     machine.succeed("grep -Fx 'HOME=/home/developer' /home/developer/.codex/environment")
     machine.succeed("grep -Fx 'CODEX_HOME=/home/developer/.codex' /home/developer/.codex/environment")
     machine.succeed("grep -Fx 'PWD=/home/developer' /home/developer/.codex/environment")
     machine.succeed("grep -Fx 'CODEX_TEST=expected' /home/developer/.codex/environment")
     machine.succeed("grep -F '${fakeCodex}/bin' /home/developer/.codex/environment")
+    machine.succeed("grep -F '${pkgs.procps}/bin/ps' /home/developer/.codex/ps-path")
+    machine.succeed("kill -0 \"$(cat /home/developer/.codex/child.pid)\"")
 
     machine.succeed("systemctl stop codex-remote-control.service")
     machine.succeed("test -e /home/developer/.codex/stopped")
