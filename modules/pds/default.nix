@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.myNixOS.pds;
@@ -120,6 +120,9 @@ in
     nixpkgs.config.permittedInsecurePackages = [ "pnpm-9.15.9" ];
 
     services.bluesky-pds = {
+      # Node 24 aborts in better-sqlite3 cleanup (node::RemoveEnvironmentCleanupHook).
+      # PDS supports Node 22+, so stay on the stable Node 22 LTS runtime.
+      package = pkgs.bluesky-pds.override { nodejs_24 = pkgs.nodejs_22; };
       enable = true;
       settings = {
         PDS_HOSTNAME = cfg.hostname;

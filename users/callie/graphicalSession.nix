@@ -88,6 +88,7 @@ in
     claude-desktop
 
     inputs.codex-desktop.packages.${pkgs.stdenv.hostPlatform.system}.default
+    bubblewrap
 
     zoom-us
     obs-studio

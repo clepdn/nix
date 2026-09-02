@@ -30,6 +30,15 @@
 	networking.hostName = "sayaka";
 	users.mutableUsers = false;
 
+	# This 2 GiB host has no disk-backed swap. Keep a compressed swap tier for
+	# inactive pages so transient service spikes do not immediately cause OOM.
+	zramSwap = {
+		enable = true;
+		algorithm = "zstd";
+		memoryPercent = 100;
+	};
+	boot.kernel.sysctl."vm.swappiness" = 180;
+
 	networking.networkmanager.ensureProfiles.profiles.enp1s0 = {
 		connection = {
 			id = "enp1s0";

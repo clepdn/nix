@@ -67,6 +67,10 @@
 				flake-utils.follows = "flake-utils";
 			};
 		};
+		omp-src = {
+			url = "github:can1357/oh-my-pi/v18.0.4";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 
 		direct-vx = {
 			url = "git+https://codeberg.org/cowie/direct-vx.git";
@@ -98,7 +102,7 @@
 			flake = false;
 		};
 		pavement = {
-			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=first-class-events";
+			url = "git+ssh://git@codeberg.org/cowie/md-site.git?ref=main";
 		};
 		quickshell-config = {
 			url = "git+https://tangled.org/callie.on-her.computer/quickshell";
@@ -123,12 +127,22 @@
 	inputs @ { self, nixpkgs, flake-utils, home-manager, ... }:
 
 	let
-		mypkgs = import ./pkgs { pkgs = nixpkgs.legacyPackages.x86_64-linux; lib = nixpkgs.lib; };
+		basePkgs = import ./pkgs { pkgs = nixpkgs.legacyPackages.x86_64-linux; lib = nixpkgs.lib; };
+		mypkgs = basePkgs // {
+			omp = inputs.omp-src.packages.x86_64-linux.omp.override {
+				withWaylandScreencast = true;
+			};
+		};
 		armPkgs = import nixpkgs {
 			system = "aarch64-linux";
 			config.allowUnfree = true;
 		};
-		armMypkgs = import ./pkgs { pkgs = armPkgs; lib = nixpkgs.lib; };
+		armBasePkgs = import ./pkgs { pkgs = armPkgs; lib = nixpkgs.lib; };
+		armMypkgs = armBasePkgs // {
+			omp = inputs.omp-src.packages.aarch64-linux.omp.override {
+				withWaylandScreencast = true;
+			};
+		};
 		clockworkUserModule = { ... }: {
 			imports = [
 				(import ./users/callie/graphicalSession.nix {
