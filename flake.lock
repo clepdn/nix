@@ -533,11 +533,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787681410,
-        "narHash": "sha256-Z40eCL2y/HMg1Giv+0sprfTcZqSfxdurTFbJlMFiIac=",
+        "lastModified": 1788571248,
+        "narHash": "sha256-0b+sM1bvVmo89i5F85s51KqMlzkWgdAkwYkQrTgBGSk=",
         "ref": "refs/heads/main",
-        "rev": "6bacab06f782549dd7146d68e9b6977c6ec1aead",
-        "revCount": 268,
+        "rev": "490392b87d7736f8a1618a9292eb588871028627",
+        "revCount": 273,
         "type": "git",
         "url": "https://tangled.org/did:plc:vsjfqg3m57r3xghg4pqv4v6i"
       },
@@ -904,11 +904,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1788323062,
-        "narHash": "sha256-jKzE2Gqmm/zEGxP4bNDz0D8c2NnNeE1rvfH38wPRQGQ=",
+        "lastModified": 1788410935,
+        "narHash": "sha256-SzvEAZU0RDTSsTPgpd1IaDxXDnaMNc6i44hGrkxYxNE=",
         "ref": "main",
-        "rev": "18091f1dbcdb11bb4dc38a820f77b0d95bf031b9",
-        "revCount": 44,
+        "rev": "404678b51d0243fe160f770fde6a218dc6ce8e11",
+        "revCount": 48,
         "type": "git",
         "url": "ssh://git@codeberg.org/cowie/md-site.git"
       },

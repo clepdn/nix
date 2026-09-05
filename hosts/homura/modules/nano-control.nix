@@ -138,7 +138,7 @@ in
       # Both routes stay on Bridget's subscription-backed Codex accounts.
       # Never fail over to OpenRouter/Umans pay-per-token providers.
       model = {
-        preset = "gpt-terra";
+        preset = "gpt-sol";
       };
       fallback = {
         preset = "gpt-sol";
